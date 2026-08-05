@@ -1,0 +1,751 @@
+<div class="container-fluid user-page">
+
+
+    <!-- HEADER -->
+
+    <div class="top-section">
+
+
+        <div>
+
+            <h2>
+                <i class="bi bi-people-fill"></i>
+                User Management
+            </h2>
+
+
+            <p>
+                Manage users, roles and account access
+            </p>
+
+        </div>
+
+
+
+        <button 
+        class="btn-add"
+        (click)="addUser()">
+
+            <i class="bi bi-person-plus-fill"></i>
+
+            New User
+
+        </button>
+
+
+    </div>
+
+
+
+
+
+
+
+    <!-- FILTER CARD -->
+
+
+    <div class="filter-card">
+
+
+        <div class="row g-3">
+
+
+
+            <!-- SEARCH -->
+
+
+            <div class="col-md-5">
+
+
+                <div class="search-box">
+
+
+                    <i class="bi bi-search"></i>
+
+
+                    <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Search name, email or phone..."
+                    [(ngModel)]="searchText"
+                    (input)="filterUsers()">
+
+
+
+                </div>
+
+
+            </div>
+
+
+
+
+
+
+
+            <!-- ROLE FILTER -->
+
+
+            <!-- ROLE FILTER -->
+
+                <div class="col-md-3">
+
+
+                    <select
+                    class="form-select"
+                    [(ngModel)]="selectedRole"
+                    (change)="filterUsers()">
+
+
+
+                        <option value="">
+                            All Roles
+                        </option>
+
+
+
+                        <option
+                        *ngFor="let role of roles"
+                        [value]="role.name">
+
+                            {{role.name}}
+
+                        </option>
+
+
+
+                    </select>
+
+
+                </div>
+
+
+
+
+
+
+
+            <!-- STATUS FILTER -->
+
+
+            <div class="col-md-3">
+
+
+                <select
+                class="form-select"
+                [(ngModel)]="selectedStatus"
+                (change)="filterUsers()">
+
+
+
+                    <option value="">
+                        All Status
+                    </option>
+
+
+                    <option value="true">
+                        Active
+                    </option>
+
+
+                    <option value="false">
+                        Inactive
+                    </option>
+
+
+
+                </select>
+
+
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <!-- TABLE CARD -->
+
+
+    <div class="table-card">
+
+
+        <div class="table-responsive">
+
+
+            <table class="table align-middle">
+
+
+                <thead>
+
+                    <tr>
+
+
+                        <th>
+                            User
+                        </th>
+
+
+                        <th>
+                            Contact
+                        </th>
+
+
+                        <th>
+                            Role
+                        </th>
+
+
+                        <th>
+                            Status
+                        </th>
+
+
+                        <th>
+                            Action
+                        </th>
+
+
+                    </tr>
+
+
+                </thead>
+
+
+
+
+
+                <tbody>
+
+
+
+                    <tr 
+                    *ngFor="
+                    let user of paginatedUsers
+                    ">
+
+
+
+                        <!-- USER -->
+
+
+                        <td>
+
+
+                            <div class="user-box">
+
+
+                                <div class="avatar">
+
+
+                                    {{user.fullName.charAt(0)}}
+
+
+                                </div>
+
+
+
+                                <div>
+
+
+                                    <strong>
+                                        {{user.fullName}}
+                                    </strong>
+
+
+                                    <small>
+                                        ID: {{user.id}}
+                                    </small>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </td>
+
+
+
+
+
+
+
+
+
+
+                        <!-- CONTACT -->
+
+
+                        <td>
+
+
+                            <div>
+                                <i class="bi bi-envelope"></i>
+                                {{user.email}}
+                            </div>
+
+
+
+                            <div>
+                                <i class="bi bi-phone"></i>
+                                {{user.phoneNumber || '-'}}
+                            </div>
+
+
+                        </td>
+
+
+
+
+
+
+
+
+
+
+                        <!-- ROLE -->
+
+
+                        <td>
+
+
+                            <span
+                            *ngFor="let role of user.roles"
+                            class="role-tag"
+                            [ngClass]="getRoleClass(role)">
+
+
+                                <i 
+                                class="bi"
+                                [ngClass]="getRoleIcon(role)">
+                                </i>
+
+
+                                {{role}}
+
+
+                            </span>
+
+
+                        </td>
+
+
+
+
+
+
+
+
+
+
+
+                        <!-- STATUS -->
+
+
+                        <td>
+
+
+                            <span
+                            class="status"
+                            [class.active]="user.isActive"
+                            [class.inactive]="!user.isActive">
+
+
+
+                                <i 
+                                class="bi"
+                                [ngClass]="
+                                user.isActive
+                                ?
+                                'bi-toggle-on'
+                                :
+                                'bi-toggle-off'
+                                ">
+                                </i>
+
+
+
+                                {{user.isActive?'Active':'Inactive'}}
+
+
+
+                            </span>
+
+
+                        </td>
+
+
+
+
+
+
+
+
+
+                        <!-- ACTION -->
+
+
+                        <td class="actions">
+
+
+                        <button
+                        class="action-btn edit-btn"
+                        title="Edit User"
+                        (click)="editUser(user.id)">
+
+                        <i class="bi bi-pencil-square"></i>
+
+                        </button>
+
+
+
+
+                        <button
+                        class="action-btn status-btn"
+                        [class.activate]="!user.isActive"
+                        [class.deactivate]="user.isActive"
+                        (click)="toggleStatus(user)"
+                        title="{{user.isActive?'Deactivate User':'Activate User'}}">
+
+
+                        <i class="bi"
+                        [ngClass]="
+                        user.isActive
+                        ?
+                        'bi-person-x-fill'
+                        :
+                        'bi-person-check-fill'
+                        ">
+                        </i>
+
+
+                        </button>
+
+
+
+
+                        <button
+                        class="action-btn delete-btn"
+                        title="Delete User"
+                        (click)="deleteUser(user.id)">
+
+
+                        <i class="bi bi-trash3-fill"></i>
+
+
+                        </button>
+
+                        <!-- RESET PASSWORD -->
+
+                        <button
+                        class="action-btn password-btn"
+                        title="Reset Password"
+                        (click)="resetPassword(user.id)">
+
+                        <i class="bi bi-key-fill"></i>
+
+                        </button>
+
+
+                        </td>
+
+
+
+
+                    </tr>
+
+
+
+
+                </tbody>
+
+
+
+            </table>
+
+
+        </div>
+
+
+
+
+
+
+
+        <!-- PAGINATION -->
+
+
+        <div class="pagination-area">
+
+
+            <span>
+
+                Showing 
+                {{startIndex+1}}
+                -
+                {{endIndex}}
+                of
+                {{filteredUsers.length}}
+
+            </span>
+
+
+
+
+
+            <ul class="pagination">
+
+
+                <li 
+                class="page-item"
+                [class.disabled]="page==1">
+
+
+                    <button
+                    class="page-link"
+                    (click)="previousPage()">
+
+                        <i class="bi bi-chevron-left"></i>
+
+                    </button>
+
+
+                </li>
+
+
+
+
+
+                <li
+                class="page-item active">
+
+                    <span class="page-link">
+
+                        {{page}}
+
+                    </span>
+
+
+                </li>
+
+
+
+
+
+                <li
+                class="page-item"
+                [class.disabled]="page==totalPages">
+
+
+                    <button
+                    class="page-link"
+                    (click)="nextPage()">
+
+
+                        <i class="bi bi-chevron-right"></i>
+
+
+                    </button>
+
+
+                </li>
+
+
+            </ul>
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+</div>
+
+
+
+<!-- RESET PASSWORD MODAL -->
+
+<div 
+class="modal-backdrop"
+*ngIf="showPasswordModal">
+
+
+    <div class="password-modal">
+
+
+        <div class="modal-header">
+
+            <h4>
+                <i class="bi bi-key-fill"></i>
+                Reset Password
+            </h4>
+
+
+            <button
+            type="button"
+            class="close-btn"
+            (click)="closePasswordModal()">
+
+                <i class="bi bi-x-lg"></i>
+
+            </button>
+
+        </div>
+
+
+
+
+        <div class="modal-body">
+
+
+            <label>
+                New Password
+            </label>
+
+
+            <div class="password-input">
+
+
+                <input
+                [type]="showPassword ? 'text':'password'"
+                class="form-control"
+                placeholder="Enter new password"
+                [(ngModel)]="newPassword">
+
+
+                <button
+                type="button"
+                (click)="showPassword=!showPassword">
+
+
+                    <i 
+                    class="bi"
+                    [ngClass]="
+                    showPassword
+                    ?
+                    'bi-eye-slash'
+                    :
+                    'bi-eye'
+                    ">
+                    </i>
+
+
+                </button>
+
+
+            </div>
+
+
+
+
+
+            <label class="mt-3">
+                Confirm Password
+            </label>
+
+
+            <input
+            type="password"
+            class="form-control"
+            placeholder="Confirm password"
+            [(ngModel)]="confirmPassword">
+
+
+
+
+
+            <div 
+            class="password-error"
+            *ngIf="
+            confirmPassword &&
+            newPassword !== confirmPassword
+            ">
+
+                <i class="bi bi-exclamation-circle"></i>
+
+                Password does not match
+
+            </div>
+
+
+
+
+            <div
+            class="password-success"
+            *ngIf="
+            confirmPassword &&
+            newPassword === confirmPassword
+            ">
+
+                <i class="bi bi-check-circle"></i>
+
+                Password matched
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+
+        <div class="modal-actions">
+
+
+            <button
+            class="btn btn-primary"
+            (click)="confirmResetPassword()"
+            [disabled]="
+            !newPassword ||
+            newPassword !== confirmPassword
+            ">
+
+
+                <i class="bi bi-key-fill"></i>
+
+                Reset Password
+
+
+            </button>
+
+
+
+
+
+            <button
+            class="btn btn-secondary"
+            (click)="closePasswordModal()">
+
+
+                Cancel
+
+
+            </button>
+
+
+        </div>
+
+
+
+    </div>
+
+
+</div>

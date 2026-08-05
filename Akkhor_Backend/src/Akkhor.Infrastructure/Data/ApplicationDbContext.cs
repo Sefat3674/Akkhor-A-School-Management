@@ -15,10 +15,38 @@ public class ApplicationDbContext
     }
 
 
+    // Identity Tables
+    public DbSet<Users> Users { get; set; }
+
+    public DbSet<Roles> Roles { get; set; }
+
+
+    // Academic Module
+
+    public DbSet<AcademicYear> AcademicYears { get; set; }
+
+    public DbSet<Class> Classes { get; set; }
+
+    public DbSet<ClassSection> ClassSections { get; set; }
+
+    public DbSet<Course> Courses { get; set; }
+
+    public DbSet<Subject> Subjects { get; set; }
+
+    public DbSet<CourseSubject> CourseSubjects { get; set; }
+
+    public DbSet<StudentEnrollment> StudentEnrollments { get; set; }
+
+
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
+
+        // =====================================================
+        // Identity Table Mapping
+        // =====================================================
 
         builder.Entity<Users>()
             .ToTable("Users");
@@ -46,5 +74,166 @@ public class ApplicationDbContext
 
         builder.Entity<IdentityUserToken<string>>()
             .ToTable("UserTokens");
+
+
+
+        // =====================================================
+        // AcademicYears
+        // =====================================================
+
+        builder.Entity<AcademicYear>()
+            .ToTable("AcademicYears");
+
+
+        builder.Entity<AcademicYear>()
+            .HasMany(x => x.Classes)
+            .WithOne(x => x.AcademicYear)
+            .HasForeignKey(x => x.AcademicYearId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+
+        // =====================================================
+        // Classes
+        // =====================================================
+
+        builder.Entity<Class>()
+            .ToTable("Classes");
+
+
+        builder.Entity<Class>()
+            .HasMany(x => x.Sections)
+            .WithOne(x => x.Class)
+            .HasForeignKey(x => x.ClassId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
+        builder.Entity<Class>()
+            .HasMany(x => x.Courses)
+            .WithOne(x => x.Class)
+            .HasForeignKey(x => x.ClassId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
+
+        // =====================================================
+        // Class Sections
+        // =====================================================
+
+        builder.Entity<ClassSection>()
+            .ToTable("ClassSections");
+
+
+
+        // =====================================================
+        // Courses
+        // =====================================================
+
+        builder.Entity<Course>()
+            .ToTable("Courses");
+
+
+        builder.Entity<Course>()
+            .HasMany(x => x.CourseSubjects)
+            .WithOne(x => x.Course)
+            .HasForeignKey(x => x.CourseId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
+
+        // =====================================================
+        // Subjects
+        // =====================================================
+
+        builder.Entity<Subject>()
+            .ToTable("Subjects");
+
+
+        builder.Entity<Subject>()
+            .HasMany(x => x.CourseSubjects)
+            .WithOne(x => x.Subject)
+            .HasForeignKey(x => x.SubjectId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
+
+        // =====================================================
+        // Course Subjects
+        // =====================================================
+
+        builder.Entity<CourseSubject>()
+            .ToTable("CourseSubjects");
+
+
+        builder.Entity<CourseSubject>()
+            .HasIndex(x => new
+            {
+                x.CourseId,
+                x.SubjectId
+            })
+            .IsUnique();
+
+
+
+        // =====================================================
+        // Student Enrollment
+        // =====================================================
+
+        builder.Entity<StudentEnrollment>()
+            .ToTable("StudentEnrollments");
+
+
+        builder.Entity<StudentEnrollment>()
+            .HasOne(x => x.Student)
+            .WithMany()
+            .HasForeignKey(x => x.StudentId)
+            .HasPrincipalKey(x => x.Id)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        builder.Entity<StudentEnrollment>()
+            .HasOne(x => x.Class)
+            .WithMany(x => x.StudentEnrollments)
+            .HasForeignKey(x => x.ClassId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        builder.Entity<StudentEnrollment>()
+            .HasOne(x => x.Course)
+            .WithMany(x => x.StudentEnrollments)
+            .HasForeignKey(x => x.CourseId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        builder.Entity<StudentEnrollment>()
+            .HasOne(x => x.Section)
+            .WithMany(x => x.StudentEnrollments)
+            .HasForeignKey(x => x.SectionId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+
+
+        // =====================================================
+        // PostgreSQL Column Mapping
+        // =====================================================
+
+        builder.Entity<StudentEnrollment>()
+            .Property(x => x.StudentId)
+            .HasMaxLength(450);
+
+
+        builder.Entity<AcademicYear>()
+            .Property(x => x.CreatedBy)
+            .HasMaxLength(450);
+
+
+        builder.Entity<Class>()
+            .Property(x => x.CreatedBy)
+            .HasMaxLength(450);
+
+
+        builder.Entity<Class>()
+            .Property(x => x.UpdatedBy)
+            .HasMaxLength(450);
     }
 }

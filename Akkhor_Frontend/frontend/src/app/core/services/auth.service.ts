@@ -55,6 +55,7 @@ export class AuthService {
 
       tap(response => {
 
+        // ONLY LOGIN SAVES SESSION
         this.storeSession(response);
 
       })
@@ -73,24 +74,17 @@ export class AuthService {
 
   register(
     dto: RegisterUser
-  ): Observable<AuthResponse> {
+  ): Observable<any> {
 
 
-    return this.http.post<AuthResponse>(
+    return this.http.post<any>(
       `${environment.apiUrl}/api/Auth/register`,
       dto
-
-    ).pipe(
-
-      tap(response => {
-
-        this.storeSession(response);
-
-      })
-
     );
 
+
   }
+
 
 
 
@@ -122,11 +116,13 @@ export class AuthService {
 
 
 
+
   // =========================
   // GET TOKEN
   // =========================
 
   getToken(): string | null {
+
 
     return localStorage.getItem(
       TOKEN_KEY
@@ -139,11 +135,13 @@ export class AuthService {
 
 
 
+
   // =========================
   // LOGIN STATUS
   // =========================
 
   isLoggedIn(): boolean {
+
 
     return !!this.getToken();
 
@@ -154,13 +152,16 @@ export class AuthService {
 
 
 
+
   // =========================
   // SAVE SESSION
+  // ONLY AFTER LOGIN
   // =========================
 
   private storeSession(
     response: AuthResponse
   ): void {
+
 
 
     localStorage.setItem(
@@ -170,17 +171,24 @@ export class AuthService {
 
 
 
+
     const user: CurrentUser = {
+
 
       userId: response.userId,
 
+
       fullName: response.fullName,
+
 
       email: response.email,
 
+
       role: response.role
 
+
     };
+
 
 
 
@@ -191,7 +199,9 @@ export class AuthService {
 
 
 
+
     this.currentUser.set(user);
+
 
   }
 
@@ -201,17 +211,20 @@ export class AuthService {
 
 
 
+
   // =========================
-  // LOAD USER FROM STORAGE
+  // LOAD USER
   // =========================
 
   private readStoredUser(): CurrentUser | null {
+
 
 
     const raw =
       localStorage.getItem(
         USER_KEY
       );
+
 
 
 
@@ -223,15 +236,12 @@ export class AuthService {
 
 
 
+
     try {
 
 
-      const user: CurrentUser =
-        JSON.parse(raw);
+      return JSON.parse(raw);
 
-
-
-      return user;
 
 
     }
@@ -245,7 +255,9 @@ export class AuthService {
 
       return null;
 
+
     }
+
 
   }
 
@@ -266,8 +278,10 @@ export class AuthService {
       this.currentUser()
         ?.role
         ?.trim()
-        ?? ''
+        ??
+      ''
     );
+
 
   }
 
@@ -287,6 +301,7 @@ export class AuthService {
     return this.getRole()
       .toLowerCase()
       === 'superadmin';
+
 
   }
 
@@ -317,6 +332,7 @@ export class AuthService {
 
     );
 
+
   }
 
 
@@ -335,6 +351,7 @@ export class AuthService {
     return this.getRole()
       .toLowerCase()
       === 'teacher';
+
 
   }
 
@@ -355,6 +372,7 @@ export class AuthService {
       .toLowerCase()
       === 'student';
 
+
   }
 
 
@@ -374,6 +392,8 @@ export class AuthService {
       .toLowerCase()
       === 'normal user';
 
+
   }
+
 
 }

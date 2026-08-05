@@ -1,0 +1,170 @@
+<div class="container-fluid">
+
+
+    <div class="card">
+
+
+        <div class="card-header">
+
+            <h3>
+                Add User
+            </h3>
+
+        </div>
+
+
+
+        <div class="card-body">
+
+
+            <form 
+            (ngSubmit)="saveUser()">
+
+
+                <!-- Full Name -->
+
+                <div class="mb-3">
+
+                    <label>
+                        Full Name
+                    </label>
+
+
+                    <input 
+                    type="text"
+                    class="form-control"
+                    name="fullName"
+                    [(ngModel)]="user.fullName"
+                    required>
+
+                </div>
+
+
+
+
+
+                <!-- Email -->
+
+                <div class="mb-3">
+
+
+                    <label>
+                        Email
+                    </label>
+
+
+                    <input
+                    type="email"
+                    class="form-control"
+                    name="email"
+                    [(ngModel)]="user.email"
+                    required>
+
+
+                </div>
+
+
+
+
+
+                <!-- Password -->
+
+                <div class="mb-3">
+
+
+                    <label>
+                        Password
+                    </label>
+
+
+                    <input
+                    type="password"
+                    class="form-control"
+                    name="password"
+                    [(ngModel)]="user.password"
+                    required>
+
+
+                </div>
+
+
+
+
+
+                <!-- Role -->
+
+                <div class="mb-3">
+
+
+                    <label>
+                        Role
+                    </label>
+
+
+                    <select
+                    class="form-select"
+                    name="role"
+                    [(ngModel)]="user.role"
+                    required>
+
+
+                        <option value="">
+                            Select Role
+                        </option>
+
+
+                        <option 
+                        *ngFor="let role of roles"
+                        [value]="role">
+
+                            {{role}}
+
+                        </option>
+
+
+                    </select>
+
+
+                </div>
+
+
+
+
+
+                <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="loading">
+
+
+                    {{loading ? 'Saving...' : 'Save'}}
+
+
+                </button>
+
+
+
+
+                <button
+                type="button"
+                class="btn btn-secondary ms-2"
+                (click)="cancel()">
+
+
+                    Cancel
+
+
+                </button>
+
+
+
+            </form>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>

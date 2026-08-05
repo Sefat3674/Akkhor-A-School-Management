@@ -1,0 +1,1282 @@
+.user-page {
+
+    padding: 25px;
+    background: #f8fafc;
+    min-height: 100vh;
+
+}
+
+
+
+/* ===========================
+   HEADER
+=========================== */
+
+
+.top-section {
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+
+}
+
+
+
+.top-section h2 {
+
+    font-size:28px;
+    font-weight:800;
+    color:#0f172a;
+    margin:0;
+
+}
+
+
+
+.top-section h2 i {
+
+    color:#2563eb;
+    margin-right:8px;
+
+}
+
+
+
+.top-section p {
+
+    margin-top:6px;
+    color:#64748b;
+    font-size:15px;
+
+}
+
+
+
+
+
+/* ===========================
+   ADD BUTTON
+=========================== */
+
+
+.btn-add {
+
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+
+
+    color:white;
+
+    border:none;
+
+    padding:12px 24px;
+
+    border-radius:12px;
+
+    font-weight:700;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    box-shadow:
+    0 8px 18px rgba(37,99,235,.25);
+
+    transition:.3s;
+
+
+}
+
+
+
+.btn-add:hover {
+
+
+    transform:
+    translateY(-3px);
+
+
+    box-shadow:
+    0 12px 25px rgba(37,99,235,.35);
+
+
+}
+
+
+
+
+
+
+/* ===========================
+   FILTER CARD
+=========================== */
+
+
+.filter-card {
+
+
+    background:white;
+
+    padding:22px;
+
+    border-radius:18px;
+
+    margin-bottom:25px;
+
+
+    box-shadow:
+    0 8px 25px rgba(15,23,42,.08);
+
+
+}
+
+
+
+
+.search-box {
+
+
+    position:relative;
+
+
+}
+
+
+
+.search-box i {
+
+
+    position:absolute;
+
+    left:15px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    color:#64748b;
+
+    font-size:17px;
+
+
+}
+
+
+
+.search-box input {
+
+
+    height:46px;
+
+    padding-left:45px;
+
+    border-radius:12px;
+
+    border:1px solid #e2e8f0;
+
+
+}
+
+
+
+.search-box input:focus {
+
+
+    border-color:#2563eb;
+
+    box-shadow:
+    0 0 0 3px rgba(37,99,235,.15);
+
+
+}
+
+
+
+
+
+.form-select {
+
+
+    height:46px;
+
+    border-radius:12px;
+
+    border:1px solid #e2e8f0;
+
+
+}
+
+
+
+.form-select:focus {
+
+
+    border-color:#2563eb;
+
+    box-shadow:
+    0 0 0 3px rgba(37,99,235,.15);
+
+
+}
+
+
+
+
+
+
+
+/* ===========================
+   TABLE CARD
+=========================== */
+
+
+.table-card {
+
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:25px;
+
+
+    box-shadow:
+
+    0 10px 30px rgba(15,23,42,.08);
+
+
+}
+
+
+
+
+
+.table {
+
+
+    margin:0;
+
+}
+
+
+
+
+thead {
+
+
+    background:#f8fafc;
+
+
+}
+
+
+
+thead th {
+
+
+    padding:16px;
+
+    color:#475569;
+
+    font-size:13px;
+
+    text-transform:uppercase;
+
+    letter-spacing:.5px;
+
+    font-weight:800;
+
+
+}
+
+
+
+tbody td {
+
+
+    padding:18px 16px;
+
+    border-bottom:1px solid #f1f5f9;
+
+
+}
+
+
+
+tbody tr {
+
+
+    transition:.25s;
+
+
+}
+
+
+
+tbody tr:hover {
+
+
+    background:#f8fafc;
+
+    transform:scale(1.002);
+
+
+}
+
+
+
+
+
+
+
+/* ===========================
+   USER PROFILE
+=========================== */
+
+
+.user-box {
+
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+
+}
+
+
+
+.avatar {
+
+
+    width:48px;
+
+    height:48px;
+
+
+    border-radius:50%;
+
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+
+    background:
+    linear-gradient(
+    135deg,
+    #2563eb,
+    #60a5fa
+    );
+
+
+    color:white;
+
+
+    font-size:18px;
+
+    font-weight:800;
+
+
+}
+
+
+
+.user-box strong {
+
+
+    display:block;
+
+    color:#0f172a;
+
+
+}
+
+
+
+.user-box small {
+
+
+    color:#94a3b8;
+
+    font-size:12px;
+
+
+}
+
+
+
+
+
+
+
+
+/* ===========================
+   ROLE BADGES
+=========================== */
+
+
+.role-tag {
+
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:6px;
+
+
+    padding:7px 13px;
+
+
+    border-radius:30px;
+
+
+    font-size:12px;
+
+
+    font-weight:700;
+
+
+    margin-right:6px;
+
+
+}
+
+
+
+
+.role-admin {
+
+
+    background:#ede9fe;
+
+    color:#6d28d9;
+
+}
+
+
+
+.role-teacher {
+
+
+    background:#dbeafe;
+
+    color:#1d4ed8;
+
+}
+
+
+
+.role-student {
+
+
+    background:#dcfce7;
+
+    color:#15803d;
+
+}
+
+
+
+.role-user {
+
+
+    background:#f1f5f9;
+
+    color:#475569;
+
+}
+
+
+
+
+
+
+
+
+
+/* ===========================
+   STATUS BADGE
+=========================== */
+
+
+.status {
+
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:7px;
+
+
+    padding:8px 16px;
+
+
+    border-radius:30px;
+
+
+    font-size:13px;
+
+    font-weight:800;
+
+
+}
+
+
+
+.status.active {
+
+
+    background:#dcfce7;
+
+    color:#15803d;
+
+    border:1px solid #86efac;
+
+
+}
+
+
+
+.status.inactive {
+
+
+    background:#fee2e2;
+
+    color:#b91c1c;
+
+    border:1px solid #fca5a5;
+
+
+}
+
+
+
+
+
+
+
+
+/* ===========================
+   ACTION BUTTONS
+=========================== */
+
+
+.actions {
+
+
+    display:flex;
+
+    gap:10px;
+
+
+}
+
+
+
+
+.action-btn {
+
+
+    width:42px;
+
+    height:42px;
+
+
+    border:none;
+
+
+    border-radius:12px;
+
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+
+    color:white;
+
+
+    font-size:18px;
+
+
+    cursor:pointer;
+
+
+    transition:.25s;
+
+
+    box-shadow:
+
+    0 5px 12px rgba(0,0,0,.15);
+
+
+}
+
+
+
+
+.action-btn:hover {
+
+
+    transform:
+
+    translateY(-3px)
+    scale(1.05);
+
+
+}
+
+
+
+
+
+
+/* EDIT */
+
+
+.edit-btn {
+
+
+    background:
+
+    linear-gradient(
+    135deg,
+    #2563eb,
+    #1d4ed8
+    );
+
+
+}
+
+
+
+
+
+/* ACTIVATE */
+
+
+.activate {
+
+
+    background:
+
+    linear-gradient(
+    135deg,
+    #16a34a,
+    #15803d
+    );
+
+
+}
+
+
+
+
+
+/* DEACTIVATE */
+
+
+.deactivate {
+
+
+    background:
+
+    linear-gradient(
+    135deg,
+    #f59e0b,
+    #d97706
+    );
+
+
+}
+
+
+
+
+
+
+/* DELETE */
+
+
+.delete-btn {
+
+
+    background:
+
+    linear-gradient(
+    135deg,
+    #ef4444,
+    #991b1b
+    );
+
+
+}
+
+
+
+
+
+
+
+
+/* ===========================
+   PAGINATION
+=========================== */
+
+
+.pagination-area {
+
+
+    margin-top:25px;
+
+
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    align-items:center;
+
+
+    color:#64748b;
+
+
+}
+
+
+
+
+.pagination {
+
+
+    margin:0;
+
+
+}
+
+
+
+.page-link {
+
+
+    border:none;
+
+
+    width:38px;
+
+
+    height:38px;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    border-radius:10px!important;
+
+
+    margin:0 4px;
+
+
+    color:#475569;
+
+
+}
+
+
+
+
+
+.page-item.active .page-link {
+
+
+    background:#2563eb;
+
+
+    color:white;
+
+
+}
+
+
+
+
+
+.page-item.disabled .page-link {
+
+
+    opacity:.5;
+
+    cursor:not-allowed;
+
+
+}
+
+
+
+
+
+
+
+/* ===========================
+   EMPTY / LOADING
+=========================== */
+
+
+.empty {
+
+
+    text-align:center;
+
+    padding:50px;
+
+    color:#64748b;
+
+    font-size:18px;
+
+
+}
+
+
+
+.loading-box {
+
+
+    text-align:center;
+
+    padding:50px;
+
+    color:#64748b;
+
+
+}
+
+
+
+
+.spin {
+
+
+    animation:spin 1s linear infinite;
+
+
+}
+
+
+
+@keyframes spin {
+
+
+    from {
+
+        transform:rotate(0deg);
+
+    }
+
+
+    to {
+
+        transform:rotate(360deg);
+
+    }
+
+
+}
+
+
+
+
+
+
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+
+@media(max-width:768px){
+
+
+    .top-section {
+
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:15px;
+
+
+    }
+
+
+
+    .pagination-area {
+
+
+        flex-direction:column;
+
+        gap:15px;
+
+
+    }
+
+
+
+}
+
+.password-btn {
+
+    background:#7c3aed;
+
+}
+
+
+.password-btn:hover {
+
+    background:#6d28d9;
+
+}
+
+/* ================================
+   RESET PASSWORD MODAL
+================================ */
+
+.modal-backdrop {
+
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0,0,0,0.45);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 1050;
+
+}
+
+
+
+.password-modal {
+
+    width: 420px;
+
+    background: #ffffff;
+
+    border-radius: 14px;
+
+    box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+
+    overflow: hidden;
+
+    animation: modalOpen .25s ease-in-out;
+
+}
+
+
+
+/* HEADER */
+
+.modal-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 18px 22px;
+
+    border-bottom: 1px solid #eee;
+
+
+    h4 {
+
+        margin: 0;
+
+        font-size: 20px;
+
+        font-weight: 600;
+
+        color: #333;
+
+
+        i {
+
+            color: #0d6efd;
+
+            margin-right: 8px;
+
+        }
+
+    }
+
+}
+
+
+
+.close-btn {
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
+    color: #777;
+
+
+    &:hover {
+
+        color: #dc3545;
+
+    }
+
+}
+
+
+
+
+/* BODY */
+
+.modal-body {
+
+    padding: 22px;
+
+
+    label {
+
+        font-weight: 600;
+
+        margin-bottom: 8px;
+
+        display: block;
+
+        color: #444;
+
+    }
+
+}
+
+
+
+.password-input {
+
+    position: relative;
+
+
+    input {
+
+        padding-right: 45px;
+
+        height: 42px;
+
+    }
+
+
+    button {
+
+        position: absolute;
+
+        right: 10px;
+
+        top: 50%;
+
+        transform: translateY(-50%);
+
+
+        border: none;
+
+        background: transparent;
+
+        cursor: pointer;
+
+        color: #666;
+
+
+        &:hover {
+
+            color: #0d6efd;
+
+        }
+
+    }
+
+}
+
+
+
+
+
+/* PASSWORD VALIDATION */
+
+
+.password-error {
+
+    margin-top: 10px;
+
+    color: #dc3545;
+
+    font-size: 14px;
+
+
+    i {
+
+        margin-right: 5px;
+
+    }
+
+}
+
+
+
+.password-success {
+
+    margin-top: 10px;
+
+    color: #198754;
+
+    font-size: 14px;
+
+
+    i {
+
+        margin-right: 5px;
+
+    }
+
+}
+
+
+
+
+/* ACTION BUTTON */
+
+
+.modal-actions {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 12px;
+
+    padding: 18px 22px;
+
+    border-top: 1px solid #eee;
+
+
+    button {
+
+        min-width: 120px;
+
+        border-radius: 8px;
+
+        font-weight: 500;
+
+    }
+
+}
+
+
+
+
+
+
+/* RESET PASSWORD ICON BUTTON */
+
+
+.password-btn {
+
+    background: #ffc107;
+
+    color: #fff;
+
+
+    &:hover {
+
+        background: #e0a800;
+
+        transform: translateY(-2px);
+
+    }
+
+}
+
+
+
+
+
+/* ANIMATION */
+
+
+@keyframes modalOpen {
+
+
+    from {
+
+        opacity: 0;
+
+        transform: translateY(-20px);
+
+    }
+
+
+    to {
+
+        opacity: 1;
+
+        transform: translateY(0);
+
+    }
+
+
+}
+
+
+
+
+
+
+/* MOBILE RESPONSIVE */
+
+
+@media(max-width:576px){
+
+
+    .password-modal {
+
+        width: 90%;
+
+    }
+
+
+}

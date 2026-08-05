@@ -14,11 +14,10 @@
 
 
       <div class="name">
-
         AKKHOR
 
         <span>
-          School Management System
+          Assignment Management System
         </span>
 
       </div>
@@ -33,7 +32,7 @@
     <nav>
 
 
-      <!-- ALL USER -->
+      <!-- COMMON DASHBOARD -->
       <a
         routerLink="/dashboard"
         routerLinkActive="active"
@@ -48,112 +47,142 @@
 
 
 
+      <!-- ================= ADMIN ================= -->
 
-      <!-- SUPER ADMIN + ADMIN -->
       <ng-container *ngIf="auth.isAdmin()">
 
 
 
+        <!-- User Management -->
         <a
-          routerLink="/students"
+          routerLink="/admin/users"
           routerLinkActive="active">
 
-          <i class="bi bi-person-vcard"></i>
-          Students
+          <i class="bi bi-people-fill"></i>
+          User Management
 
         </a>
 
 
-
+        <!-- Academic Years -->
         <a
-          routerLink="/teachers"
+          routerLink="/admin/academic-years"
           routerLinkActive="active">
 
-          <i class="bi bi-person-workspace"></i>
-          Teachers
+          <i class="bi bi-calendar-range"></i>
+          Academic Years
 
         </a>
 
 
-
+        <!-- Classes -->
         <a
-          routerLink="/classes"
+          routerLink="/admin/classes"
           routerLinkActive="active">
 
-          <i class="bi bi-building"></i>
+          <i class="bi bi-mortarboard-fill"></i>
           Classes
 
         </a>
 
 
-
+        <!-- Sections -->
         <a
-          routerLink="/subjects"
+          routerLink="/admin/sections"
           routerLinkActive="active">
 
-          <i class="bi bi-book"></i>
+          <i class="bi bi-diagram-3-fill"></i>
+          Sections
+
+        </a>
+
+
+        <!-- Courses -->
+        <a
+          routerLink="/admin/courses"
+          routerLinkActive="active">
+
+          <i class="bi bi-journal-bookmark-fill"></i>
+          Courses
+
+        </a>
+
+
+        <!-- Subjects -->
+        <a
+          routerLink="/admin/subjects"
+          routerLinkActive="active">
+
+          <i class="bi bi-book-half"></i>
           Subjects
 
         </a>
 
 
-
+        <!-- Course Subjects -->
         <a
-          routerLink="/attendance"
+          routerLink="/admin/course-subjects"
           routerLinkActive="active">
 
-          <i class="bi bi-calendar-check"></i>
-          Attendance
+          <i class="bi bi-journal-text"></i>
+          Course Subjects
 
         </a>
 
 
-
+        <!-- Student Enrollment -->
         <a
-          routerLink="/exams"
+          routerLink="/admin/student-enrollment"
           routerLinkActive="active">
 
-          <i class="bi bi-file-earmark-text"></i>
-          Exams
+          <i class="bi bi-person-plus-fill"></i>
+          Student Enrollment
 
         </a>
 
 
-
+        <!-- Assign Teachers -->
         <a
-          routerLink="/fees"
+          routerLink="/admin/teacher-assignment"
           routerLinkActive="active">
 
-          <i class="bi bi-cash"></i>
-          Fees
+          <i class="bi bi-person-workspace"></i>
+          Assign Teachers
 
         </a>
 
 
-
-
-        <!-- ADMIN MANAGEMENT -->
-
+        <!-- All Assignments -->
         <a
-          routerLink="/users"
+          routerLink="/admin/assignments"
           routerLinkActive="active">
 
-          <i class="bi bi-people-fill"></i>
-          Users
+          <i class="bi bi-file-earmark-text-fill"></i>
+          All Assignments
 
         </a>
 
 
-
+        <!-- All Submissions -->
         <a
-          routerLink="/settings"
+          routerLink="/admin/submissions"
           routerLinkActive="active">
 
-          <i class="bi bi-gear-fill"></i>
-          School Settings
+          <i class="bi bi-file-earmark-check-fill"></i>
+          All Submissions
 
         </a>
 
+
+        <!-- Application Settings -->
+        <a
+          routerLink="/admin/settings"
+          routerLinkActive="active">
+
+          <i class="bi bi-sliders"></i>
+          Application Settings
+
+        </a>
 
 
       </ng-container>
@@ -164,14 +193,15 @@
 
 
 
-      <!-- TEACHER -->
+      <!-- ================= TEACHER ================= -->
+
 
       <ng-container *ngIf="auth.isTeacher()">
 
 
 
         <a
-          routerLink="/my-classes"
+          routerLink="/teacher/classes"
           routerLinkActive="active">
 
           <i class="bi bi-building"></i>
@@ -181,34 +211,37 @@
 
 
 
+
         <a
-          routerLink="/marks"
+          routerLink="/teacher/assignments"
+          routerLinkActive="active">
+
+          <i class="bi bi-journal-plus"></i>
+          Assignments
+
+        </a>
+
+
+
+
+        <a
+          routerLink="/teacher/submissions"
+          routerLinkActive="active">
+
+          <i class="bi bi-file-earmark-check"></i>
+          Review Submissions
+
+        </a>
+
+
+
+
+        <a
+          routerLink="/teacher/marks"
           routerLinkActive="active">
 
           <i class="bi bi-pencil-square"></i>
-          Marks Entry
-
-        </a>
-
-
-
-        <a
-          routerLink="/teacher-attendance"
-          routerLinkActive="active">
-
-          <i class="bi bi-calendar"></i>
-          Attendance
-
-        </a>
-
-
-
-        <a
-          routerLink="/assignments"
-          routerLinkActive="active">
-
-          <i class="bi bi-journal-text"></i>
-          Assignments
+          Marks & Feedback
 
         </a>
 
@@ -223,14 +256,51 @@
 
 
 
-      <!-- STUDENT -->
+      <!-- ================= STUDENT ================= -->
+
 
       <ng-container *ngIf="auth.isStudent()">
 
 
 
         <a
-          routerLink="/profile"
+          routerLink="/student/assignments"
+          routerLinkActive="active">
+
+          <i class="bi bi-journal-text"></i>
+          My Assignments
+
+        </a>
+
+
+
+
+        <a
+          routerLink="/student/submissions"
+          routerLinkActive="active">
+
+          <i class="bi bi-upload"></i>
+          My Submissions
+
+        </a>
+
+
+
+
+        <a
+          routerLink="/student/results"
+          routerLinkActive="active">
+
+          <i class="bi bi-award"></i>
+          Marks & Feedback
+
+        </a>
+
+
+
+
+        <a
+          routerLink="/student/profile"
           routerLinkActive="active">
 
           <i class="bi bi-person"></i>
@@ -240,39 +310,6 @@
 
 
 
-        <a
-          routerLink="/my-result"
-          routerLinkActive="active">
-
-          <i class="bi bi-award"></i>
-          Results
-
-        </a>
-
-
-
-        <a
-          routerLink="/my-assignments"
-          routerLinkActive="active">
-
-          <i class="bi bi-journal"></i>
-          Assignments
-
-        </a>
-
-
-
-        <a
-          routerLink="/my-fees"
-          routerLinkActive="active">
-
-          <i class="bi bi-cash"></i>
-          Fees
-
-        </a>
-
-
-
       </ng-container>
 
 
@@ -282,7 +319,9 @@
 
 
 
-      <!-- NORMAL USER -->
+
+      <!-- ================= NORMAL USER ================= -->
+
 
       <ng-container *ngIf="auth.isNormalUser()">
 
@@ -318,6 +357,7 @@
     <div class="sidebar-foot">
 
 
+
       <div class="avatar">
 
         {{ initials() }}
@@ -327,7 +367,9 @@
 
 
 
+
       <div class="user-details">
+
 
 
         <div class="who">
@@ -338,11 +380,13 @@
 
 
 
+
         <div class="email">
 
           {{ auth.currentUser()?.email }}
 
         </div>
+
 
 
 
@@ -360,10 +404,13 @@
 
 
 
+
+
       <button
         class="logout-btn"
         type="button"
         (click)="logout()">
+
 
 
         <i class="bi bi-box-arrow-right"></i>
@@ -371,12 +418,12 @@
         Logout
 
 
+
       </button>
 
 
 
     </div>
-
 
 
 
@@ -389,13 +436,17 @@
 
 
 
+
   <!-- CONTENT -->
+
 
   <main class="main-content">
 
     <router-outlet></router-outlet>
 
   </main>
+
+
 
 
 

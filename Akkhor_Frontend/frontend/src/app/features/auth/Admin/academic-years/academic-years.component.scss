@@ -1,0 +1,311 @@
+.academic-page {
+
+
+    padding: 25px;
+
+
+
+    .top-section {
+
+        display:flex;
+
+        justify-content:space-between;
+
+        align-items:center;
+
+        margin-bottom:25px;
+
+
+
+        h2 {
+
+            font-size:26px;
+
+            font-weight:700;
+
+            color:#1f2937;
+
+
+            i {
+
+                margin-right:10px;
+
+                color:#2563eb;
+
+            }
+
+        }
+
+
+
+        p {
+
+            margin-top:5px;
+
+            color:#6b7280;
+
+        }
+
+
+
+    }
+
+
+
+    .btn-add {
+
+
+        background:#2563eb;
+
+        color:white;
+
+        border:none;
+
+        padding:12px 20px;
+
+        border-radius:8px;
+
+        font-weight:600;
+
+
+        i {
+
+            margin-right:8px;
+
+        }
+
+
+        &:hover {
+
+            background:#1d4ed8;
+
+        }
+
+    }
+
+
+
+
+    .content-card {
+
+
+        background:white;
+
+        border-radius:14px;
+
+        padding:20px;
+
+        box-shadow:
+        0 4px 20px rgba(0,0,0,.08);
+
+
+
+    }
+
+
+
+
+    table {
+
+
+        thead {
+
+
+            background:#f8fafc;
+
+
+            th {
+
+                padding:15px;
+
+                font-size:14px;
+
+                color:#475569;
+
+            }
+
+        }
+
+
+
+        tbody {
+
+
+            td {
+
+                padding:15px;
+
+                vertical-align:middle;
+
+            }
+
+
+            tr:hover {
+
+                background:#f8fafc;
+
+            }
+
+
+        }
+
+
+    }
+
+
+
+
+
+    .year-name {
+
+
+        display:flex;
+
+        align-items:center;
+
+        gap:12px;
+
+
+        .icon-box {
+
+
+            width:40px;
+
+            height:40px;
+
+            border-radius:10px;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            background:#eff6ff;
+
+
+            i {
+
+                color:#2563eb;
+
+                font-size:20px;
+
+            }
+
+
+        }
+
+
+        span {
+
+            font-weight:600;
+
+            color:#111827;
+
+        }
+
+
+    }
+
+
+
+
+
+    .status {
+
+
+        padding:6px 14px;
+
+        border-radius:20px;
+
+        background:#fee2e2;
+
+        color:#dc2626;
+
+        font-size:13px;
+
+        font-weight:600;
+
+
+        i {
+
+            margin-right:5px;
+
+        }
+
+
+        &.active {
+
+            background:#dcfce7;
+
+            color:#16a34a;
+
+        }
+
+
+    }
+
+
+
+
+
+    .action-btn {
+
+
+        width:38px;
+
+        height:38px;
+
+        border:none;
+
+        border-radius:8px;
+
+        margin:0 4px;
+
+
+        i {
+
+            font-size:16px;
+
+        }
+
+
+
+        &.edit {
+
+            background:#eff6ff;
+
+            color:#2563eb;
+
+        }
+
+
+
+        &.delete {
+
+            background:#fee2e2;
+
+            color:#dc2626;
+
+        }
+
+
+
+    }
+
+
+
+
+    .empty {
+
+
+        text-align:center;
+
+        padding:40px;
+
+        color:#6b7280;
+
+    }
+
+
+}

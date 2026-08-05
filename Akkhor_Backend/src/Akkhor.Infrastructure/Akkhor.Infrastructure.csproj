@@ -16,5 +16,11 @@
     <ProjectReference Include="..\Akkhor.Domain\Akkhor.Domain.csproj" />
     <ProjectReference Include="..\Akkhor.Application\Akkhor.Application.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <EditorConfigFiles Remove="D:\Akkhor1\Akkhor\Akkhor_Backend\src\Akkhor.Infrastructure\Repositories\.editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\Akkhor1\Akkhor\Akkhor_Backend\src\Akkhor.Infrastructure\Repositories\.editorconfig" />
+  </ItemGroup>
 </Project>
 

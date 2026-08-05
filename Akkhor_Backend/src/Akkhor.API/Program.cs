@@ -1,4 +1,5 @@
 using Akkhor.Application.Interfaces;
+using Akkhor.Application.Interfaces.Repositories;
 using Akkhor.Application.Services;
 using Akkhor.Domain.Entities;
 using Akkhor.Infrastructure.Data;
@@ -200,6 +201,8 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserManagementService, UserManagementService>();
+builder.Services.AddScoped<IAcademicYearRepository, AcademicYearRepository>();
 
 
 

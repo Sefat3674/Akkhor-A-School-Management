@@ -46,13 +46,17 @@ form = this.fb.group({
  ]
 
 
+
 });
 
 
 
 loading = signal(false);
 
-errorMessage = signal<string|null>(null);
+errorMessage = signal<string | null>(null);
+
+successMessage = signal<string | null>(null);
+
 
 
 
@@ -64,60 +68,88 @@ constructor(
 
 
 
+
 submit(){
 
 
-if(this.form.invalid)
-{
- this.form.markAllAsTouched();
- return;
+ if(this.form.invalid)
+ {
+   this.form.markAllAsTouched();
+   return;
+ }
+
+
+
+ this.loading.set(true);
+
+ this.errorMessage.set(null);
+
+ this.successMessage.set(null);
+
+
+
+ this.auth.register(
+   this.form.value as any
+ )
+ .subscribe({
+
+
+
+   next:(res)=>{
+
+
+     this.loading.set(false);
+
+
+     this.successMessage.set(
+       'Registration successful. Redirecting to login...'
+     );
+
+
+     this.form.reset();
+
+
+
+     setTimeout(()=>{
+
+
+       this.router.navigate([
+         '/login'
+       ]);
+
+
+     },1500);
+
+
+
+   },
+
+
+
+
+   error:(err)=>{
+
+
+     this.loading.set(false);
+
+
+
+     this.errorMessage.set(
+       err?.error?.message ??
+       err?.error?.errors?.join(', ') ??
+       "Registration failed"
+     );
+
+
+   }
+
+
+
+ });
+
+
 }
 
-
-this.loading.set(true);
-
-this.errorMessage.set(null);
-
-
-
-this.auth.register(
- this.form.value as any
-)
-.subscribe({
-
-next:(res)=>{
-
-
-this.loading.set(false);
-
-
-this.router.navigate([
- '/login'
-]);
-
-
-},
-
-
-error:(err)=>{
-
-
-this.loading.set(false);
-
-
-this.errorMessage.set(
- err?.error?.message ??
- err?.error?.errors?.join(', ') ??
- "Registration failed"
-);
-
-
-}
-
-
-});
-
-}
 
 
 }

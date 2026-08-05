@@ -1,0 +1,243 @@
+<div class="login-screen">
+
+  <div class="login-hero">
+
+    <div class="brandmark">
+
+      <div class="seal">
+        <i class="fas fa-graduation-cap"></i>
+      </div>
+
+      <div class="name">
+        AKKHOR
+        <span>School Management System</span>
+      </div>
+
+    </div>
+
+    <div class="hero-quote">
+
+      <span class="cite-no">
+        Education Management Platform
+      </span>
+
+      <h1>
+        Empowering Education Through Technology
+      </h1>
+
+      <p>
+        Manage students, teachers, attendance, examinations,
+        assignments, results, fees, and academic activities
+        through one secure School Management System.
+      </p>
+
+    </div>
+
+    <div class="hero-foot">
+
+      <div>
+        <b>2500+</b>
+        Students
+      </div>
+
+      <div>
+        <b>180+</b>
+        Teachers
+      </div>
+
+      <div>
+        <b>75+</b>
+        Staff
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="login-form-wrap">
+
+    <div class="login-form">
+
+      <div class="eyebrow">
+        AKKHOR School Portal
+      </div>
+
+      <h2>Welcome Back</h2>
+
+      <p class="sub">
+        Sign in using your registered email address.
+      </p>
+
+      <form
+        [formGroup]="form"
+        (ngSubmit)="submit()"
+        novalidate>
+
+        <div class="mb-3">
+
+          <label
+            for="email"
+            class="form-label">
+            Email Address
+          </label>
+
+          <div class="input-group">
+
+            <span class="input-group-text">
+              <i class="fas fa-envelope"></i>
+            </span>
+
+            <input
+              id="email"
+              type="email"
+              class="form-control"
+              formControlName="email"
+              placeholder="example@akkhor.edu"
+              autocomplete="email"
+              [class.is-invalid]="
+                form.controls.email.invalid &&
+                form.controls.email.touched
+              ">
+
+          </div>
+
+          <div
+            class="invalid-feedback d-block"
+            *ngIf="
+              form.controls.email.hasError('required') &&
+              form.controls.email.touched
+            ">
+            Email address is required.
+          </div>
+
+          <div
+            class="invalid-feedback d-block"
+            *ngIf="
+              form.controls.email.hasError('email') &&
+              form.controls.email.touched
+            ">
+            Enter a valid email address.
+          </div>
+
+        </div>
+
+        <div class="mb-3">
+
+          <label
+            for="password"
+            class="form-label">
+            Password
+          </label>
+
+          <div class="input-group">
+
+            <span class="input-group-text">
+              <i class="fas fa-lock"></i>
+            </span>
+
+            <input
+              id="password"
+              [type]="showPassword() ? 'text' : 'password'"
+              class="form-control"
+              formControlName="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              [class.is-invalid]="
+                form.controls.password.invalid &&
+                form.controls.password.touched
+              ">
+
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="togglePassword()"
+              [attr.aria-label]="
+                showPassword() ? 'Hide password' : 'Show password'
+              ">
+
+              <i
+                class="fas"
+                [ngClass]="
+                  showPassword() ? 'fa-eye-slash' : 'fa-eye'
+                ">
+              </i>
+
+            </button>
+
+          </div>
+
+          <div
+            class="invalid-feedback d-block"
+            *ngIf="
+              form.controls.password.hasError('required') &&
+              form.controls.password.touched
+            ">
+            Password is required.
+          </div>
+
+          <div
+            class="invalid-feedback d-block"
+            *ngIf="
+              form.controls.password.hasError('minlength') &&
+              form.controls.password.touched
+            ">
+            Password must contain at least 8 characters.
+          </div>
+
+        </div>
+
+        <div class="d-flex justify-content-end mb-3">
+
+          <a
+            routerLink="/forgot-password"
+            class="text-decoration-none small">
+            Forgot Password?
+          </a>
+
+        </div>
+
+        <div
+          class="alert alert-danger py-2"
+          role="alert"
+          *ngIf="errorMessage()">
+          {{ errorMessage() }}
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary w-100"
+          [disabled]="loading()">
+
+          <span
+            *ngIf="loading()"
+            class="spinner-border spinner-border-sm me-2">
+          </span>
+
+          <i
+            *ngIf="!loading()"
+            class="fas fa-sign-in-alt me-2">
+          </i>
+
+          {{ loading() ? 'Signing In...' : 'Sign In' }}
+
+        </button>
+
+      </form>
+
+      <p class="login-foot-note mt-4">
+
+        Don't have an account?
+
+        <a
+          routerLink="/register"
+          class="link-muted">
+          Create Account
+        </a>
+
+      </p>
+
+    </div>
+
+  </div>
+
+</div>

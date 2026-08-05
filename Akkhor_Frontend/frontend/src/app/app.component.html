@@ -1,0 +1,417 @@
+<div class="app-shell" *ngIf="auth.isLoggedIn(); else authOnly">
+
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+
+    <!-- BRAND -->
+    <div class="sidebar-brand">
+
+      <div class="seal">
+        <i class="bi bi-mortarboard-fill"></i>
+      </div>
+
+
+      <div class="name">
+
+        AKKHOR
+
+        <span>
+          School Management System
+        </span>
+
+      </div>
+
+    </div>
+
+
+
+
+
+    <!-- MENU -->
+    <nav>
+
+
+      <!-- ALL USER -->
+      <a
+        routerLink="/dashboard"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact:true }">
+
+        <i class="bi bi-speedometer2"></i>
+        Dashboard
+
+      </a>
+
+
+
+
+
+
+      <!-- SUPER ADMIN + ADMIN -->
+      <ng-container *ngIf="auth.isAdmin()">
+
+
+
+        <a
+          routerLink="/students"
+          routerLinkActive="active">
+
+          <i class="bi bi-person-vcard"></i>
+          Students
+
+        </a>
+
+
+
+        <a
+          routerLink="/teachers"
+          routerLinkActive="active">
+
+          <i class="bi bi-person-workspace"></i>
+          Teachers
+
+        </a>
+
+
+
+        <a
+          routerLink="/classes"
+          routerLinkActive="active">
+
+          <i class="bi bi-building"></i>
+          Classes
+
+        </a>
+
+
+
+        <a
+          routerLink="/subjects"
+          routerLinkActive="active">
+
+          <i class="bi bi-book"></i>
+          Subjects
+
+        </a>
+
+
+
+        <a
+          routerLink="/attendance"
+          routerLinkActive="active">
+
+          <i class="bi bi-calendar-check"></i>
+          Attendance
+
+        </a>
+
+
+
+        <a
+          routerLink="/exams"
+          routerLinkActive="active">
+
+          <i class="bi bi-file-earmark-text"></i>
+          Exams
+
+        </a>
+
+
+
+        <a
+          routerLink="/fees"
+          routerLinkActive="active">
+
+          <i class="bi bi-cash"></i>
+          Fees
+
+        </a>
+
+
+
+
+        <!-- ADMIN MANAGEMENT -->
+
+        <a
+          routerLink="/users"
+          routerLinkActive="active">
+
+          <i class="bi bi-people-fill"></i>
+          Users
+
+        </a>
+
+
+
+        <a
+          routerLink="/settings"
+          routerLinkActive="active">
+
+          <i class="bi bi-gear-fill"></i>
+          School Settings
+
+        </a>
+
+
+
+      </ng-container>
+
+
+
+
+
+
+
+      <!-- TEACHER -->
+
+      <ng-container *ngIf="auth.isTeacher()">
+
+
+
+        <a
+          routerLink="/my-classes"
+          routerLinkActive="active">
+
+          <i class="bi bi-building"></i>
+          My Classes
+
+        </a>
+
+
+
+        <a
+          routerLink="/marks"
+          routerLinkActive="active">
+
+          <i class="bi bi-pencil-square"></i>
+          Marks Entry
+
+        </a>
+
+
+
+        <a
+          routerLink="/teacher-attendance"
+          routerLinkActive="active">
+
+          <i class="bi bi-calendar"></i>
+          Attendance
+
+        </a>
+
+
+
+        <a
+          routerLink="/assignments"
+          routerLinkActive="active">
+
+          <i class="bi bi-journal-text"></i>
+          Assignments
+
+        </a>
+
+
+
+      </ng-container>
+
+
+
+
+
+
+
+
+      <!-- STUDENT -->
+
+      <ng-container *ngIf="auth.isStudent()">
+
+
+
+        <a
+          routerLink="/profile"
+          routerLinkActive="active">
+
+          <i class="bi bi-person"></i>
+          My Profile
+
+        </a>
+
+
+
+        <a
+          routerLink="/my-result"
+          routerLinkActive="active">
+
+          <i class="bi bi-award"></i>
+          Results
+
+        </a>
+
+
+
+        <a
+          routerLink="/my-assignments"
+          routerLinkActive="active">
+
+          <i class="bi bi-journal"></i>
+          Assignments
+
+        </a>
+
+
+
+        <a
+          routerLink="/my-fees"
+          routerLinkActive="active">
+
+          <i class="bi bi-cash"></i>
+          Fees
+
+        </a>
+
+
+
+      </ng-container>
+
+
+
+
+
+
+
+
+      <!-- NORMAL USER -->
+
+      <ng-container *ngIf="auth.isNormalUser()">
+
+
+
+        <a
+          routerLink="/profile"
+          routerLinkActive="active">
+
+          <i class="bi bi-person"></i>
+          Profile
+
+        </a>
+
+
+
+      </ng-container>
+
+
+
+    </nav>
+
+
+
+
+
+
+
+
+
+    <!-- USER INFO -->
+
+    <div class="sidebar-foot">
+
+
+      <div class="avatar">
+
+        {{ initials() }}
+
+      </div>
+
+
+
+
+      <div class="user-details">
+
+
+        <div class="who">
+
+          {{ auth.currentUser()?.fullName }}
+
+        </div>
+
+
+
+        <div class="email">
+
+          {{ auth.currentUser()?.email }}
+
+        </div>
+
+
+
+        <div class="role">
+
+          {{ auth.getRole() }}
+
+        </div>
+
+
+
+      </div>
+
+
+
+
+
+      <button
+        class="logout-btn"
+        type="button"
+        (click)="logout()">
+
+
+        <i class="bi bi-box-arrow-right"></i>
+
+        Logout
+
+
+      </button>
+
+
+
+    </div>
+
+
+
+
+  </aside>
+
+
+
+
+
+
+
+
+  <!-- CONTENT -->
+
+  <main class="main-content">
+
+    <router-outlet></router-outlet>
+
+  </main>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- LOGIN / REGISTER -->
+
+<ng-template #authOnly>
+
+  <router-outlet></router-outlet>
+
+</ng-template>

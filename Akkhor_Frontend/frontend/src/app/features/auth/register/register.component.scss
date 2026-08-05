@@ -1,0 +1,532 @@
+.login-screen {
+
+  min-height: 100vh;
+  display: flex;
+  background: #f8fafc;
+  font-family: "Inter", sans-serif;
+
+}
+
+
+/* =========================
+   HERO SECTION
+========================= */
+
+.login-hero {
+
+  flex: 1;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0f172a,
+      #1e40af
+    );
+
+  color: white;
+
+  padding: 60px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: space-between;
+
+}
+
+
+
+
+.brandmark {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+
+
+  .seal {
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.15);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:32px;
+
+  }
+
+
+
+  .name {
+
+    font-size:34px;
+
+    font-weight:800;
+
+    letter-spacing:2px;
+
+
+    span {
+
+      display:block;
+
+      font-size:14px;
+
+      font-weight:400;
+
+      opacity:.8;
+
+      letter-spacing:0;
+
+      margin-top:5px;
+
+    }
+
+  }
+
+}
+
+
+
+
+
+/* =========================
+ REGISTER HERO CONTENT
+========================= */
+
+
+.hero-quote {
+
+
+  .cite-no {
+
+    font-size:13px;
+
+    text-transform:uppercase;
+
+    letter-spacing:2px;
+
+    opacity:.75;
+
+  }
+
+
+
+  h1 {
+
+    margin-top:20px;
+
+    font-size:45px;
+
+    font-weight:800;
+
+    line-height:1.2;
+
+  }
+
+
+
+  p {
+
+    margin-top:20px;
+
+    max-width:600px;
+
+    font-size:17px;
+
+    line-height:1.7;
+
+    opacity:.85;
+
+  }
+
+
+}
+
+
+
+
+
+.hero-foot {
+
+
+  display:flex;
+
+  gap:45px;
+
+
+
+  div {
+
+    display:flex;
+
+    flex-direction:column;
+
+    font-size:14px;
+
+    opacity:.85;
+
+
+
+    b {
+
+      font-size:30px;
+
+      font-weight:800;
+
+      color:white;
+
+    }
+
+  }
+
+}
+
+
+
+
+
+/* =========================
+ REGISTER FORM AREA
+========================= */
+
+
+.login-form-wrap {
+
+
+  width:480px;
+
+  background:white;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+
+}
+
+
+
+
+
+.login-form {
+
+
+  width:380px;
+
+}
+
+
+
+
+
+.eyebrow {
+
+
+  color:#2563eb;
+
+  font-size:13px;
+
+  font-weight:700;
+
+  text-transform:uppercase;
+
+  letter-spacing:1px;
+
+  margin-bottom:15px;
+
+}
+
+
+
+
+
+h2 {
+
+  font-size:34px;
+
+  font-weight:800;
+
+  color:#0f172a;
+
+  margin-bottom:10px;
+
+}
+
+
+
+
+
+.sub {
+
+  color:#64748b;
+
+  font-size:15px;
+
+  line-height:1.6;
+
+  margin-bottom:30px;
+
+}
+
+
+
+
+
+.form-label {
+
+  font-weight:600;
+
+  color:#334155;
+
+  margin-bottom:8px;
+
+}
+
+
+
+
+
+.form-control {
+
+
+  height:48px;
+
+  background:#f1f5f9;
+
+  border:none;
+
+  border-radius:8px;
+
+  padding:0 15px;
+
+
+  &:focus {
+
+    background:white;
+
+    border:1px solid #2563eb;
+
+    box-shadow:0 0 0 3px rgba(37,99,235,.15);
+
+  }
+
+
+}
+
+
+
+
+
+.alert {
+
+
+  font-size:14px;
+
+  border-radius:8px;
+
+}
+
+
+
+
+
+.btn-primary {
+
+
+  height:50px;
+
+  background:#2563eb;
+
+  border:none;
+
+  border-radius:8px;
+
+  font-weight:700;
+
+  font-size:16px;
+
+
+  transition:.3s;
+
+
+
+  &:hover {
+
+    background:#1d4ed8;
+
+    transform:translateY(-1px);
+
+  }
+
+
+
+  &:disabled {
+
+    opacity:.7;
+
+    cursor:not-allowed;
+
+  }
+
+
+}
+
+
+
+
+
+.login-foot-note {
+
+
+  margin-top:25px;
+
+  text-align:center;
+
+  font-size:14px;
+
+  color:#64748b;
+
+
+
+}
+
+
+
+
+
+.link-muted {
+
+
+  color:#2563eb;
+
+  font-weight:600;
+
+  text-decoration:none;
+
+
+
+  &:hover {
+
+    text-decoration:underline;
+
+  }
+
+}
+
+
+
+
+
+/* =========================
+ RESPONSIVE
+========================= */
+
+
+@media(max-width:992px){
+
+
+  .login-screen {
+
+    flex-direction:column;
+
+  }
+
+
+
+  .login-hero {
+
+    padding:40px;
+
+  }
+
+
+
+  .hero-quote h1 {
+
+    font-size:36px;
+
+  }
+
+
+
+  .login-form-wrap {
+
+    width:100%;
+
+    padding:50px 0;
+
+  }
+
+
+}
+
+
+
+
+
+@media(max-width:576px){
+
+
+  .login-hero {
+
+    padding:25px;
+
+  }
+
+
+
+  .brandmark {
+
+
+    .name {
+
+      font-size:26px;
+
+    }
+
+  }
+
+
+
+
+  .hero-foot {
+
+    gap:20px;
+
+    flex-wrap:wrap;
+
+  }
+
+
+
+  .login-form {
+
+    width:90%;
+
+  }
+
+
+
+  h2 {
+
+    font-size:28px;
+
+  }
+
+
+}

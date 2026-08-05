@@ -1,0 +1,462 @@
+.login-screen {
+
+  min-height: 100vh;
+  display: flex;
+  background: #f8fafc;
+  font-family: "Inter", sans-serif;
+
+}
+
+
+/* =========================
+   HERO SECTION
+========================= */
+
+.login-hero {
+
+  flex: 1;
+  background:
+    linear-gradient(
+      135deg,
+      #0f172a,
+      #1e3a8a
+    );
+
+  color: white;
+
+  padding: 60px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+
+}
+
+
+
+.brandmark {
+
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+
+  .seal {
+
+    width: 70px;
+    height: 70px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.15);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size: 32px;
+
+  }
+
+
+  .name {
+
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: 2px;
+
+
+    span {
+
+      display:block;
+
+      font-size:14px;
+
+      font-weight:400;
+
+      letter-spacing:0;
+
+      opacity:.8;
+
+      margin-top:5px;
+
+    }
+
+  }
+
+}
+
+
+
+
+/* =========================
+ HERO CONTENT
+========================= */
+
+
+.hero-quote {
+
+
+  .cite-no {
+
+    font-size:13px;
+
+    text-transform:uppercase;
+
+    letter-spacing:2px;
+
+    opacity:.7;
+
+  }
+
+
+
+  h1 {
+
+    margin-top:20px;
+
+    font-size:48px;
+
+    line-height:1.2;
+
+    font-weight:800;
+
+  }
+
+
+
+  p {
+
+    margin-top:20px;
+
+    max-width:600px;
+
+    font-size:17px;
+
+    line-height:1.7;
+
+    opacity:.85;
+
+  }
+
+
+}
+
+
+
+
+
+.hero-foot {
+
+
+  display:flex;
+
+  gap:40px;
+
+
+
+  div {
+
+    display:flex;
+
+    flex-direction:column;
+
+    font-size:14px;
+
+    opacity:.8;
+
+
+    b {
+
+      font-size:30px;
+
+      color:white;
+
+      opacity:1;
+
+    }
+
+  }
+
+
+}
+
+
+
+
+
+/* =========================
+ LOGIN FORM
+========================= */
+
+
+.login-form-wrap {
+
+
+  width:480px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  background:white;
+
+
+}
+
+
+
+
+.login-form {
+
+
+  width:380px;
+
+
+}
+
+
+
+
+.eyebrow {
+
+
+  color:#2563eb;
+
+  font-size:13px;
+
+  font-weight:700;
+
+  text-transform:uppercase;
+
+  letter-spacing:1px;
+
+  margin-bottom:15px;
+
+
+}
+
+
+
+
+
+h2 {
+
+  font-size:34px;
+
+  font-weight:800;
+
+  color:#0f172a;
+
+}
+
+
+
+
+
+.sub {
+
+  color:#64748b;
+
+  margin-bottom:30px;
+
+  line-height:1.6;
+
+}
+
+
+
+
+
+
+.form-label {
+
+  font-weight:600;
+
+  color:#334155;
+
+}
+
+
+
+
+
+.input-group {
+
+
+  .input-group-text {
+
+
+    background:#f1f5f9;
+
+    border:none;
+
+    color:#2563eb;
+
+  }
+
+
+
+  .form-control {
+
+
+    height:48px;
+
+    border:none;
+
+    background:#f1f5f9;
+
+
+    &:focus {
+
+      box-shadow:none;
+
+      border:1px solid #2563eb;
+
+    }
+
+
+  }
+
+}
+
+
+
+
+
+
+.btn-primary {
+
+
+  height:50px;
+
+  background:#2563eb;
+
+  border:none;
+
+  font-weight:700;
+
+  font-size:16px;
+
+
+  &:hover {
+
+    background:#1d4ed8;
+
+  }
+
+}
+
+
+
+
+
+.login-foot-note {
+
+
+  font-size:14px;
+
+  color:#64748b;
+
+  text-align:center;
+
+
+  code {
+
+    color:#2563eb;
+
+    background:#eff6ff;
+
+    padding:3px 7px;
+
+    border-radius:5px;
+
+  }
+
+
+}
+
+
+
+.link-muted {
+
+
+  color:#2563eb;
+
+  font-weight:600;
+
+}
+
+
+
+
+
+/* =========================
+ RESPONSIVE
+========================= */
+
+
+@media(max-width:992px){
+
+
+.login-screen{
+
+ flex-direction:column;
+
+}
+
+
+
+.login-hero{
+
+ padding:35px;
+
+}
+
+
+
+.hero-quote h1{
+
+ font-size:35px;
+
+}
+
+
+
+.login-form-wrap{
+
+ width:100%;
+
+ padding:40px 0;
+
+}
+
+
+
+}
+
+
+
+
+@media(max-width:576px){
+
+
+.login-form{
+
+ width:90%;
+
+}
+
+
+
+.hero-foot{
+
+ flex-wrap:wrap;
+
+}
+
+
+}

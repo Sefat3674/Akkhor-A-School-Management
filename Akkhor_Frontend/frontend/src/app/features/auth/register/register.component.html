@@ -1,0 +1,323 @@
+<div class="login-screen">
+
+
+<div class="login-hero">
+
+
+<div class="brandmark">
+
+
+<div class="seal">
+
+<i class="fas fa-user-graduate"></i>
+
+</div>
+
+
+
+<div class="name">
+
+AKKHOR
+
+<span>
+School Management System
+</span>
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="hero-quote">
+
+
+<span class="cite-no">
+Student & Staff Registration
+</span>
+
+
+
+<h1>
+Join AKKHOR Learning Community
+</h1>
+
+
+
+<p>
+
+Create your account and access the School Management System.
+
+</p>
+
+
+</div>
+
+
+
+
+
+<div class="hero-foot">
+
+
+<div>
+
+<b>
+2500+
+</b>
+
+Students
+
+</div>
+
+
+
+<div>
+
+<b>
+180+
+</b>
+
+Teachers
+
+</div>
+
+
+
+<div>
+
+<b>
+75+
+</b>
+
+Staff
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="login-form-wrap">
+
+
+<div class="login-form">
+
+
+
+<div class="eyebrow">
+
+AKKHOR School Portal
+
+</div>
+
+
+
+
+
+<h2>
+Create Account
+</h2>
+
+
+
+
+<p class="sub">
+
+Register with your name, email and password.
+
+</p>
+
+
+
+
+
+
+<form
+[formGroup]="form"
+(ngSubmit)="submit()">
+
+
+
+
+
+
+<!-- FULL NAME -->
+
+
+<div class="mb-3">
+
+
+<label class="form-label">
+Full Name
+</label>
+
+
+
+<input
+type="text"
+class="form-control"
+formControlName="fullName"
+placeholder="Enter full name">
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- EMAIL -->
+
+
+<div class="mb-3">
+
+
+<label class="form-label">
+Email Address
+</label>
+
+
+
+<input
+type="email"
+class="form-control"
+formControlName="email"
+placeholder="example@akkhor.edu">
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- PASSWORD -->
+
+
+<div class="mb-3">
+
+
+<label class="form-label">
+Password
+</label>
+
+
+
+<input
+type="password"
+class="form-control"
+formControlName="password"
+placeholder="Minimum 8 characters">
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- ERROR -->
+
+
+<div
+class="alert alert-danger py-2"
+*ngIf="errorMessage()">
+
+{{errorMessage()}}
+
+</div>
+
+
+
+
+
+
+
+
+<button
+type="submit"
+class="btn btn-primary w-100"
+[disabled]="form.invalid || loading()">
+
+
+
+<span
+*ngIf="loading()"
+class="spinner-border spinner-border-sm me-2">
+
+</span>
+
+
+
+Create Account
+
+
+</button>
+
+
+
+
+
+</form>
+
+
+
+
+
+
+
+
+<p class="login-foot-note mt-4">
+
+
+Already have an account?
+
+
+
+<a
+routerLink="/login"
+class="link-muted">
+
+Login
+
+</a>
+
+
+
+</p>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+</div>

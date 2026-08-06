@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Akkhor.Infrastructure.Repositories;
 
-public class AcademicYearRepository : IAcademicYearRepository
+public class AcademicYearRepository
+    : IAcademicYearRepository
 {
     private readonly ApplicationDbContext _context;
 
@@ -46,6 +47,8 @@ public class AcademicYearRepository : IAcademicYearRepository
     public async Task AddAsync(
         AcademicYear academicYear)
     {
+        academicYear.CreatedAt = DateTime.UtcNow;
+
         await _context.AcademicYears
             .AddAsync(academicYear);
     }
@@ -55,6 +58,8 @@ public class AcademicYearRepository : IAcademicYearRepository
     public Task UpdateAsync(
         AcademicYear academicYear)
     {
+        academicYear.UpdatedAt = DateTime.UtcNow;
+
         _context.AcademicYears
             .Update(academicYear);
 

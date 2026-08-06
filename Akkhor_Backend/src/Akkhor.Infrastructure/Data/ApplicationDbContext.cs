@@ -235,5 +235,30 @@ public class ApplicationDbContext
         builder.Entity<Class>()
             .Property(x => x.UpdatedBy)
             .HasMaxLength(450);
+
+
+        // =====================================================
+        // Academic Year Date Configuration
+        // =====================================================
+
+        builder.Entity<AcademicYear>()
+            .Property(x => x.StartDate)
+            .HasColumnType("date");
+
+
+        builder.Entity<AcademicYear>()
+            .Property(x => x.EndDate)
+            .HasColumnType("date");
+
+
+
+        builder.Entity<AcademicYear>()
+     .Property(x => x.CreatedAt)
+     .HasColumnType("timestamp with time zone");
+
+
+        builder.Entity<AcademicYear>()
+            .Property(x => x.UpdatedAt)
+            .HasColumnType("timestamp with time zone");
     }
 }

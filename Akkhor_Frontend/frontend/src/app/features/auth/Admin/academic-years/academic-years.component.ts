@@ -2,150 +2,307 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { AcademicYearService } from '../../../../core/services/academic-year.service';
-import { AcademicYear } from '../../../../core/models/academic-year.model';
+import { AcademicYearService } 
+from '../../../../core/services/academic-year.service';
+
+import { AcademicYear } 
+from '../../../../core/models/academic-year.model';
+
+import { EditAcademicYearComponent } 
+from './edit-academic-year/edit-academic-year.component';
+
 
 
 @Component({
-  selector: 'app-academic-years',
-  standalone: true,
-  imports: [
-    CommonModule
-  ],
-  templateUrl: './academic-years.component.html',
-  styleUrls: ['./academic-years.component.scss']
+
+selector:'app-academic-years',
+
+standalone:true,
+
+imports:[
+
+    CommonModule,
+
+    EditAcademicYearComponent
+
+],
+
+templateUrl:'./academic-years.component.html',
+
+styleUrls:[
+    './academic-years.component.scss'
+]
+
 })
+
+
 export class AcademicYearsComponent implements OnInit {
 
 
-  years: AcademicYear[] = [];
 
+years:AcademicYear[]=[];
 
-  loading = false;
 
+loading=false;
 
 
-  constructor(
-    private academicYearService: AcademicYearService,
-    private router: Router
-  ) {}
 
+// EDIT MODAL
 
+showEditModal=false;
 
-  ngOnInit(): void {
 
-    this.loadAcademicYears();
+selectedAcademicYearId:string='';
 
-  }
 
 
 
 
 
-  loadAcademicYears(): void {
+constructor(
 
+private academicYearService:AcademicYearService,
 
-    this.loading = true;
+private router:Router
 
+){}
 
-    this.academicYearService.getAll()
-      .subscribe({
 
-        next: (response) => {
 
-          this.years = response;
 
-          this.loading = false;
 
-        },
 
 
-        error: (error) => {
+ngOnInit():void{
 
-          console.error(
-            'Failed to load academic years',
-            error
-          );
 
-          this.loading = false;
+this.loadAcademicYears();
 
-        }
 
-      });
+}
 
 
-  }
 
 
 
 
 
-  addAcademicYear(): void {
 
-    this.router.navigate(
-      ['/admin/academic-years/create']
-    );
+loadAcademicYears():void{
 
-  }
 
+this.loading=true;
 
 
 
+this.academicYearService
+.getAll()
 
-  editAcademicYear(id: string): void {
+.subscribe({
 
-    this.router.navigate(
-      ['/admin/academic-years/edit', id]
-    );
 
-  }
+next:(response)=>{
 
 
+this.years=response;
 
 
+this.loading=false;
 
-  delete(id: string): void {
 
+},
 
-    const confirmDelete =
-      confirm(
-        'Are you sure you want to delete this academic year?'
-      );
 
 
+error:(error)=>{
 
-    if(!confirmDelete)
-    {
-      return;
-    }
 
+console.error(
+'Failed to load academic years',
+error
+);
 
 
+this.loading=false;
 
-    this.academicYearService.delete(id)
-      .subscribe({
 
-        next: () => {
+}
 
-          this.loadAcademicYears();
 
-        },
 
+});
 
-        error: (error) => {
 
-          console.error(
-            'Delete failed',
-            error
-          );
 
-        }
+}
 
-      });
 
 
 
-  }
+
+
+
+
+
+// CREATE PAGE
+
+
+addAcademicYear():void{
+
+
+this.router.navigate(
+
+[
+'/admin/academic-years/create'
+]
+
+);
+
+
+}
+
+
+
+
+
+
+
+
+
+// OPEN EDIT MODAL
+
+
+editAcademicYear(id:string):void{
+
+
+this.selectedAcademicYearId=id;
+
+
+this.showEditModal=true;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// CLOSE EDIT MODAL
+
+
+closeEditModal():void{
+
+
+this.showEditModal=false;
+
+
+this.selectedAcademicYearId='';
+
+
+
+}
+
+
+
+
+
+
+
+
+// AFTER UPDATE
+
+
+reloadAcademicYears():void{
+
+
+this.closeEditModal();
+
+
+this.loadAcademicYears();
+
+
+}
+
+
+
+
+
+
+
+
+
+// DELETE
+
+
+delete(id:string):void{
+
+
+const confirmDelete = confirm(
+
+'Are you sure you want to delete this academic year?'
+
+);
+
+
+
+if(!confirmDelete)
+{
+
+return;
+
+}
+
+
+
+
+
+
+this.academicYearService
+
+.delete(id)
+
+.subscribe({
+
+
+
+next:()=>{
+
+
+this.loadAcademicYears();
+
+
+},
+
+
+
+
+error:(error)=>{
+
+
+console.error(
+
+'Delete failed',
+
+error
+
+);
+
+
+}
+
+
+
+});
+
+
+
+}
+
 
 
 }

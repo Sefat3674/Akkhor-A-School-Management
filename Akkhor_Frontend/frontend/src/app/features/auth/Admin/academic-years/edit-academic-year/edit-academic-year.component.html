@@ -1,7 +1,12 @@
-<div class="modal-overlay">
+<div 
+class="modal-overlay"
+(click)="cancel()">
 
 
-<div class="edit-modal">
+
+<div 
+class="edit-modal"
+(click)="$event.stopPropagation()">
 
 
 
@@ -63,7 +68,6 @@ placeholder="Enter academic year"
 
 
 
-
 <div class="form-row">
 
 
@@ -83,6 +87,7 @@ class="form-control"
 
 
 </div>
+
 
 
 
@@ -113,7 +118,6 @@ class="form-control"
 
 
 
-
 <div class="active-box">
 
 
@@ -122,10 +126,9 @@ type="checkbox"
 [(ngModel)]="model.isActive">
 
 
+
 <label>
-
 Active Academic Year
-
 </label>
 
 
@@ -134,7 +137,9 @@ Active Academic Year
 
 
 
+
 </div>
+
 
 
 
@@ -162,6 +167,7 @@ Cancel
 
 
 
+
 <button
 class="btn-update"
 (click)="update()"
@@ -171,7 +177,7 @@ class="btn-update"
 <i class="bi bi-check-circle"></i>
 
 
-Update
+{{loading ? 'Updating...' : 'Update'}}
 
 
 </button>
@@ -179,6 +185,8 @@ Update
 
 
 </div>
+
+
 
 
 

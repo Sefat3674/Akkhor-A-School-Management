@@ -9,11 +9,8 @@
         <div>
 
             <h2>
-
                 <i class="bi bi-calendar-range"></i>
-
                 Academic Years
-
             </h2>
 
 
@@ -26,17 +23,20 @@
 
 
 
-        <button 
-            class="btn-add"
-            (click)="addAcademicYear()">
 
 
-            <i class="bi bi-plus-circle"></i>
+        <button
+        class="btn-add"
+        (click)="addAcademicYear()">
 
-            Add Academic Year
+
+            <i class="bi bi-calendar-plus-fill"></i>
+
+            New Academic Year
 
 
         </button>
+
 
 
     </div>
@@ -45,21 +45,27 @@
 
 
 
+
+
+
     <!-- TABLE CARD -->
 
 
-    <div class="content-card">
+    <div class="table-card">
 
 
         <div class="table-responsive">
 
 
-            <table class="table">
+            <table class="table align-middle">
+
 
 
                 <thead>
 
+
                     <tr>
+
 
                         <th>
                             Academic Year
@@ -81,37 +87,96 @@
                         </th>
 
 
-                        <th class="text-center">
+                        <th>
                             Action
                         </th>
 
 
                     </tr>
 
+
                 </thead>
+
+
+
 
 
 
                 <tbody>
 
 
-                    <tr *ngFor="let year of years">
+
+
+                    <tr
+                    *ngFor="let year of years">
+
+
+
+
+
+                        <!-- YEAR -->
 
 
                         <td>
 
-                            <div class="year-name">
 
-                                <div class="icon-box">
+                            <div class="year-box">
+
+
+                                <div class="year-icon">
+
 
                                     <i class="bi bi-calendar-event"></i>
+
 
                                 </div>
 
 
-                                <span>
-                                    {{year.name}}
-                                </span>
+
+                                <div>
+
+
+                                    <strong>
+                                        {{year.name}}
+                                    </strong>
+
+
+                                    <small>
+                                        Academic Session
+                                    </small>
+
+
+                                </div>
+
+
+
+                            </div>
+
+
+
+                        </td>
+
+
+
+
+
+
+
+
+
+                        <!-- START DATE -->
+
+
+                        <td>
+
+
+                            <div class="date-box">
+
+
+                                <i class="bi bi-calendar-check"></i>
+
+
+                                {{year.startDate | date:'dd MMM yyyy'}}
 
 
                             </div>
@@ -121,38 +186,71 @@
 
 
 
+
+
+
+
+
+
+                        <!-- END DATE -->
+
+
                         <td>
 
-                            {{year.startDate | date:'dd MMM yyyy'}}
+
+                            <div class="date-box">
+
+
+                                <i class="bi bi-calendar-x"></i>
+
+
+                                {{year.endDate | date:'dd MMM yyyy'}}
+
+
+                            </div>
+
 
                         </td>
 
 
 
+
+
+
+
+
+
+                        <!-- STATUS -->
+
+
                         <td>
 
-                            {{year.endDate | date:'dd MMM yyyy'}}
 
-                        </td>
+                            <span
 
-
-
-
-                        <td>
-
-
-                            <span 
                             class="status"
-                            [class.active]="year.isActive">
+
+                            [class.active]="year.isActive"
+
+                            [class.inactive]="!year.isActive">
 
 
-                                <i class="bi"
-                                [class.bi-check-circle]="year.isActive"
-                                [class.bi-x-circle]="!year.isActive">
+
+                                <i
+                                class="bi"
+                                [ngClass]="
+                                year.isActive
+                                ?
+                                'bi-toggle-on'
+                                :
+                                'bi-toggle-off'
+                                ">
                                 </i>
 
 
+
                                 {{year.isActive ? 'Active':'Inactive'}}
+
 
 
                             </span>
@@ -163,12 +261,25 @@
 
 
 
-                        <td class="text-center">
 
 
-                            <button 
-                            class="action-btn edit"
+
+
+
+                        <!-- ACTION -->
+
+
+                        <td class="actions">
+
+
+                            <button
+
+                            class="action-btn edit-btn"
+
+                            title="Edit Academic Year"
+
                             (click)="editAcademicYear(year.id)">
+
 
 
                                 <i class="bi bi-pencil-square"></i>
@@ -178,12 +289,20 @@
 
 
 
-                            <button 
-                            class="action-btn delete"
+
+
+
+                            <button
+
+                            class="action-btn delete-btn"
+
+                            title="Delete Academic Year"
+
                             (click)="delete(year.id)">
 
 
-                                <i class="bi bi-trash"></i>
+
+                                <i class="bi bi-trash3-fill"></i>
 
 
                             </button>
@@ -193,15 +312,34 @@
                         </td>
 
 
+
+
+
                     </tr>
 
 
 
-                    <tr *ngIf="years.length===0">
 
 
-                        <td colspan="5"
+
+
+
+                    <!-- EMPTY -->
+
+
+                    <tr
+                    *ngIf="years.length===0">
+
+
+                        <td
+                        colspan="5"
                         class="empty">
+
+
+                            <i class="bi bi-calendar-x"></i>
+
+
+                            <br>
 
 
                             No academic years found
@@ -214,10 +352,14 @@
 
 
 
+
                 </tbody>
 
 
+
+
             </table>
+
 
 
         </div>
@@ -226,4 +368,45 @@
     </div>
 
 
+
+
+
+
 </div>
+
+
+
+
+
+
+
+
+<!-- EDIT MODAL -->
+
+
+<app-edit-academic-year
+
+*ngIf="showEditModal"
+
+[academicYearId]="selectedAcademicYearId"
+
+(close)="closeEditModal()"
+
+(updated)="reloadAcademicYears()">
+
+
+</app-edit-academic-year>
+
+
+
+<app-edit-academic-year
+
+*ngIf="showEditModal"
+
+[academicYearId]="selectedAcademicYearId"
+
+(close)="closeEditModal()"
+
+(updated)="reloadAcademicYears()">
+
+</app-edit-academic-year>

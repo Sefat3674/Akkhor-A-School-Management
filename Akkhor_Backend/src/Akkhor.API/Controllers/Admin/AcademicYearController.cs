@@ -142,23 +142,19 @@ public class AcademicYearController : ControllerBase
 
 
     // PUT: api/academic-years/{id}
+    // PUT: api/academic-years/{id}
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(
         Guid id,
         UpdateAcademicYearDto dto)
     {
-
-        var entity =
-            await _repository.GetByIdAsync(id);
-
+        var entity = await _repository.GetByIdAsync(id);
 
 
         if (entity == null)
         {
-            return NotFound(
-                "Academic year not found");
+            return NotFound("Academic year not found");
         }
-
 
 
         if (dto.EndDate <= dto.StartDate)
@@ -166,7 +162,6 @@ public class AcademicYearController : ControllerBase
             return BadRequest(
                 "End date must be greater than start date");
         }
-
 
 
         entity.Name = dto.Name;
@@ -177,14 +172,13 @@ public class AcademicYearController : ControllerBase
 
         entity.IsActive = dto.IsActive;
 
-        entity.UpdatedAt = DateTime.UtcNow;
 
+        entity.UpdatedAt = DateTime.UtcNow;
 
 
         await _repository.UpdateAsync(entity);
 
         await _repository.SaveChangesAsync();
-
 
 
         return Ok(new

@@ -1,222 +1,358 @@
-import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { 
+Component, 
+Input, 
+Output, 
+EventEmitter, 
+OnChanges,
+SimpleChanges
+} from '@angular/core';
 
-import { AcademicYearService } from '../../../../../core/services/academic-year.service';
+
+import { CommonModule } 
+from '@angular/common';
+
+
+import { FormsModule } 
+from '@angular/forms';
+
+
+import { AcademicYearService } 
+from '../../../../../core/services/academic-year.service';
+
 
 
 @Component({
-  selector: 'app-edit-academic-year',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-  templateUrl: './edit-academic-year.component.html',
-  styleUrls: ['./edit-academic-year.component.scss']
+
+selector:'app-edit-academic-year',
+
+standalone:true,
+
+imports:[
+CommonModule,
+FormsModule
+],
+
+templateUrl:'./edit-academic-year.component.html',
+
+styleUrls:[
+'./edit-academic-year.component.scss'
+]
+
 })
-export class EditAcademicYearComponent implements OnChanges {
 
 
-  @Input() academicYearId!: string;
+export class EditAcademicYearComponent 
+implements OnChanges {
 
 
-  @Output() close =
-  new EventEmitter<void>();
 
+@Input() academicYearId!:string;
 
-  @Output() updated =
-  new EventEmitter<void>();
 
 
+@Output() close =
+new EventEmitter<void>();
 
-  model = {
 
-    name:'',
 
-    startDate:'',
+@Output() updated =
+new EventEmitter<void>();
 
-    endDate:'',
 
-    isActive:true
 
-  };
 
 
 
-  loading = false;
+model={
 
 
+name:'',
 
-  constructor(
-    private service:AcademicYearService
-  ){}
+startDate:'',
 
+endDate:'',
 
+isActive:true
 
 
-  ngOnChanges()
-  {
+};
 
-    if(this.academicYearId)
-    {
-      this.loadData();
-    }
 
-  }
 
 
 
+loading=false;
 
 
 
-  loadData()
-  {
 
-    this.loading = true;
 
+constructor(
 
-    this.service.getById(
-      this.academicYearId
-    )
-    .subscribe({
+private service:AcademicYearService
 
-      next:(res)=>{
+){}
 
 
-        this.model = {
 
-          name:res.name,
 
-          startDate:
-          res.startDate
-          ? res.startDate.substring(0,10)
-          :'',
 
-          endDate:
-          res.endDate
-          ? res.endDate.substring(0,10)
-          :'',
 
-          isActive:res.isActive
 
-        };
+ngOnChanges(changes:SimpleChanges){
 
 
-        this.loading=false;
+if(
+changes['academicYearId']
+&& this.academicYearId
+){
 
-      },
+this.loadData();
 
+}
 
-      error:(err)=>{
 
-        console.log(err);
+}
 
-        this.loading=false;
 
-      }
 
-    });
 
 
-  }
 
 
 
+loadData(){
 
 
+this.loading=true;
 
 
-  update()
-  {
 
+this.service
+.getById(this.academicYearId)
 
-    if(!this.model.name)
-    {
-      alert(
-        'Academic year name required'
-      );
+.subscribe({
 
-      return;
-    }
 
 
+next:(res)=>{
 
-    if(!this.model.startDate ||
-       !this.model.endDate)
-    {
 
-      alert(
-        'Please select dates'
-      );
 
-      return;
+this.model={
 
-    }
 
+name:res.name,
 
 
 
+startDate:
+res.startDate
+?
+new Date(res.startDate)
+.toISOString()
+.substring(0,10)
+:
+'',
 
-    if(this.model.endDate <= this.model.startDate)
-    {
 
-      alert(
-        'End date must be greater than start date'
-      );
 
-      return;
+endDate:
+res.endDate
+?
+new Date(res.endDate)
+.toISOString()
+.substring(0,10)
+:
+'',
 
-    }
 
 
+isActive:res.isActive
 
 
+};
 
-    this.service.update(
 
-      this.academicYearId,
 
-      this.model
 
-    )
-    .subscribe({
+this.loading=false;
 
-      next:()=>{
 
 
-        this.updated.emit();
+},
 
 
-        this.close.emit();
 
 
-      },
+error:(err)=>{
 
 
-      error:(err)=>{
+console.error(
+'Failed loading academic year',
+err
+);
 
-        console.log(err);
 
-      }
+this.loading=false;
 
-    });
 
 
+}
 
-  }
 
 
+});
 
 
 
+}
 
-  cancel()
-  {
 
-    this.close.emit();
 
-  }
+
+
+
+
+
+
+update(){
+
+
+
+if(!this.model.name){
+
+
+alert(
+'Academic year name required'
+);
+
+
+return;
+
+
+}
+
+
+
+
+if(
+!this.model.startDate ||
+!this.model.endDate
+){
+
+
+alert(
+'Please select dates'
+);
+
+
+return;
+
+
+}
+
+
+
+
+
+
+
+if(
+this.model.endDate <=
+this.model.startDate
+){
+
+
+alert(
+'End date must be greater than start date'
+);
+
+
+return;
+
+
+}
+
+
+
+
+
+
+this.loading=true;
+
+
+
+
+
+
+this.service.update(
+
+this.academicYearId,
+
+this.model
+
+)
+
+.subscribe({
+
+
+
+next:()=>{
+
+
+this.loading=false;
+
+
+
+this.updated.emit();
+
+
+this.close.emit();
+
+
+
+},
+
+
+
+
+error:(err)=>{
+
+
+console.error(
+'Update failed',
+err
+);
+
+
+this.loading=false;
+
+
+}
+
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+
+
+cancel(){
+
+
+this.close.emit();
+
+
+}
 
 
 

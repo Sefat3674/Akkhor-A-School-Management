@@ -1,5 +1,6 @@
 using Akkhor.Application.Interfaces;
 using Akkhor.Application.Interfaces.Repositories;
+using Akkhor.Application.Interfaces.Services;
 using Akkhor.Application.Services;
 using Akkhor.Domain.Entities;
 using Akkhor.Infrastructure.Data;
@@ -203,7 +204,17 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserManagementService, UserManagementService>();
 builder.Services.AddScoped<IAcademicYearRepository, AcademicYearRepository>();
-
+builder.Services.AddScoped<IClassRepository, ClassRepository>();
+builder.Services.AddScoped<IClassService, ClassService>();
+builder.Services.AddScoped<IClassRepository, ClassRepository>();
+builder.Services.AddScoped<ISectionRepository, SectionRepository>();
+builder.Services.AddScoped<ISectionService, SectionService>();
+builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<ISubjectService, SubjectService>();
+builder.Services.AddScoped<ISubjectRepository,SubjectRepository>();
+builder.Services.AddScoped<ICourseSubjectService, CourseSubjectService>();
+builder.Services.AddScoped<ICourseSubjectRepository, CourseSubjectRepository>();
 
 
 

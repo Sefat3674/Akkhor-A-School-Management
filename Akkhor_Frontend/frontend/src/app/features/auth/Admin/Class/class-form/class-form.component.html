@@ -1,0 +1,119 @@
+<div class="card">
+
+    <div class="card-header">
+
+        <h2>
+
+            {{ isEdit ? 'Edit Class' : 'Create Class' }}
+
+        </h2>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="form-group">
+
+            <label>Academic Year</label>
+
+            <select
+                [(ngModel)]="model.academicYearId"
+                class="form-control">
+
+                <option value="">Select Academic Year</option>
+
+                <option
+                    *ngFor="let year of academicYears"
+                    [value]="year.id">
+
+                    {{ year.name }}
+
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Class Name</label>
+
+            <input
+                class="form-control"
+                [(ngModel)]="model.name">
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Class Code</label>
+
+            <input
+                class="form-control"
+                [(ngModel)]="model.code">
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Description</label>
+
+            <textarea
+                rows="3"
+                class="form-control"
+                [(ngModel)]="model.description">
+            </textarea>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Display Order</label>
+
+            <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="model.displayOrder">
+
+        </div>
+
+        <div
+            class="form-group"
+            *ngIf="isEdit">
+
+            <label>
+
+                <input
+                    type="checkbox"
+                    [(ngModel)]="isActive">
+
+                Active
+
+            </label>
+
+        </div>
+
+    </div>
+
+    <div class="card-footer">
+
+        <button
+            class="btn btn-secondary"
+            (click)="cancel()">
+
+            Cancel
+
+        </button>
+
+        <button
+            class="btn btn-primary"
+            [disabled]="saving"
+            (click)="save()">
+
+            {{ saving ? 'Saving...' : 'Save' }}
+
+        </button>
+
+    </div>
+
+</div>

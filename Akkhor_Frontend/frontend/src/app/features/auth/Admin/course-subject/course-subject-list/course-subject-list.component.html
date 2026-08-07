@@ -1,0 +1,215 @@
+<div class="course-page">
+
+  <!-- Header -->
+  <div class="top-section">
+
+    <div>
+
+      <h2>
+        <i class="bi bi-journal-text"></i>
+        Course Subjects
+      </h2>
+
+      <p>
+        Manage course and subject assignments
+      </p>
+
+    </div>
+
+    <button
+      class="btn-add"
+      (click)="add()">
+
+      <i class="bi bi-plus-circle-fill"></i>
+
+      New Course Subject
+
+    </button>
+
+  </div>
+
+
+
+  <!-- Table Card -->
+  <div class="table-card">
+
+    <div class="table-responsive">
+
+      <table class="table align-middle">
+
+        <thead>
+
+          <tr>
+
+            <th>Course</th>
+
+            <th>Subject</th>
+
+            <th>Mandatory</th>
+
+            <th>Display Order</th>
+
+            <th width="140">Action</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <!-- Loading -->
+
+          <tr *ngIf="isLoading">
+
+            <td
+              colspan="5"
+              class="empty">
+
+              <i class="bi bi-hourglass-split"></i>
+
+              <br>
+
+              Loading course subjects...
+
+            </td>
+
+          </tr>
+
+
+
+          <!-- Data -->
+
+          <tr *ngFor="let item of courseSubjects">
+
+            <!-- Course -->
+
+            <td>
+
+              <div class="course-box">
+
+                <div class="course-icon">
+
+                  <i class="bi bi-book"></i>
+
+                </div>
+
+                <div>
+
+                  <strong>
+
+                    {{ item.courseName }}
+
+                  </strong>
+
+                </div>
+
+              </div>
+
+            </td>
+
+
+
+            <!-- Subject -->
+
+            <td>
+
+              <span class="class-badge">
+
+                {{ item.subjectName }}
+
+              </span>
+
+            </td>
+
+
+
+            <!-- Mandatory -->
+
+            <td>
+
+              <span
+                class="status"
+                [class.active]="item.isMandatory"
+                [class.inactive]="!item.isMandatory">
+
+                <i
+                  class="bi"
+                  [ngClass]="item.isMandatory
+                    ? 'bi-check-circle-fill'
+                    : 'bi-x-circle-fill'">
+                </i>
+
+                {{ item.isMandatory ? 'Mandatory' : 'Optional' }}
+
+              </span>
+
+            </td>
+
+
+
+            <!-- Display Order -->
+
+            <td>
+
+              {{ item.displayOrder }}
+
+            </td>
+
+
+
+            <!-- Actions -->
+
+            <td class="actions">
+
+              <button
+                class="action-btn edit-btn"
+                title="Edit"
+                (click)="edit(item.id)">
+
+                <i class="bi bi-pencil-square"></i>
+
+              </button>
+
+              <button
+                class="action-btn delete-btn"
+                title="Delete"
+                (click)="delete(item.id)">
+
+                <i class="bi bi-trash3-fill"></i>
+
+              </button>
+
+            </td>
+
+          </tr>
+
+
+
+          <!-- Empty -->
+
+          <tr
+            *ngIf="!isLoading && courseSubjects.length === 0">
+
+            <td
+              colspan="5"
+              class="empty">
+
+              <i class="bi bi-folder-x"></i>
+
+              <br>
+
+              No course subjects found
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>

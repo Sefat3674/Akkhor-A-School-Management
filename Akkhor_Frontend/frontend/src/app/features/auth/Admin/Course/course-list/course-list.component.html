@@ -1,0 +1,212 @@
+<div class="course-page">
+
+  <!-- Header -->
+  <div class="top-section">
+
+    <div>
+
+      <h2>
+        <i class="bi bi-book-half"></i>
+        Courses
+      </h2>
+
+      <p>
+        Manage courses and course information
+      </p>
+
+    </div>
+
+    <button
+      class="btn-add"
+      (click)="add()">
+
+      <i class="bi bi-plus-circle-fill"></i>
+
+      New Course
+
+    </button>
+
+  </div>
+
+  <!-- Table -->
+  <div class="table-card">
+
+    <div class="table-responsive">
+
+      <table class="table align-middle">
+
+        <thead>
+
+          <tr>
+
+            <th>Course</th>
+
+            <th>Class</th>
+
+            <th>Code</th>
+
+            <th>Duration</th>
+
+            <th>Status</th>
+
+            <th width="140">Action</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <!-- Loading -->
+
+          <tr *ngIf="isLoading">
+
+            <td
+              colspan="6"
+              class="empty">
+
+              <i class="bi bi-hourglass-split"></i>
+
+              <br>
+
+              Loading courses...
+
+            </td>
+
+          </tr>
+
+          <!-- Data -->
+
+          <tr *ngFor="let item of courses">
+
+            <!-- Course -->
+
+            <td>
+
+              <div class="course-box">
+
+                <div class="course-icon">
+
+                  <i class="bi bi-book"></i>
+
+                </div>
+
+                <div>
+
+                  <strong>
+                    {{ item.courseName }}
+                  </strong>
+
+                  <small>
+                    {{ item.courseCode }}
+                  </small>
+
+                </div>
+
+              </div>
+
+            </td>
+
+            <!-- Class -->
+
+            <td>
+
+              <span class="class-badge">
+
+                {{ item.className }}
+
+              </span>
+
+            </td>
+
+            <!-- Code -->
+
+            <td>
+
+              {{ item.courseCode }}
+
+            </td>
+
+            <!-- Duration -->
+
+            <td>
+
+              {{ item.durationMonths || '-' }} Months
+
+            </td>
+
+            <!-- Status -->
+
+            <td>
+
+              <span
+                class="status"
+                [class.active]="item.isActive"
+                [class.inactive]="!item.isActive">
+
+                <i
+                  class="bi"
+                  [ngClass]="item.isActive
+                  ? 'bi-toggle-on'
+                  : 'bi-toggle-off'">
+                </i>
+
+                {{ item.isActive ? 'Active' : 'Inactive' }}
+
+              </span>
+
+            </td>
+
+            <!-- Actions -->
+
+            <td class="actions">
+
+              <button
+                class="action-btn edit-btn"
+                title="Edit Course"
+                (click)="edit(item.id)">
+
+                <i class="bi bi-pencil-square"></i>
+
+              </button>
+
+              <button
+                class="action-btn delete-btn"
+                title="Delete Course"
+                (click)="delete(item.id)">
+
+                <i class="bi bi-trash3-fill"></i>
+
+              </button>
+
+            </td>
+
+          </tr>
+
+          <!-- Empty -->
+
+          <tr *ngIf="!isLoading && courses.length === 0">
+
+            <td
+              colspan="6"
+              class="empty">
+
+              <i class="bi bi-folder-x"></i>
+
+              <br>
+
+              No courses found
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>

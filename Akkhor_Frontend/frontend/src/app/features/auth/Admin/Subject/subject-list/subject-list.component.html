@@ -1,0 +1,188 @@
+<div class="course-page">
+
+  <div class="top-section">
+
+    <div>
+
+      <h2>
+        <i class="bi bi-book-half"></i>
+        Subjects
+      </h2>
+
+      <p>
+        Manage subjects and subject information
+      </p>
+
+    </div>
+
+    <button
+      class="btn-add"
+      (click)="add()">
+
+      <i class="bi bi-plus-circle-fill"></i>
+
+      New Subject
+
+    </button>
+
+  </div>
+
+  <div class="table-card">
+
+    <div class="table-responsive">
+
+      <table class="table align-middle">
+
+        <thead>
+
+          <tr>
+
+            <th>Subject</th>
+
+            <th>Code</th>
+
+            <th>Credit Hours</th>
+
+            <th>Status</th>
+
+            <th width="140">Action</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <!-- Loading -->
+
+          <tr *ngIf="isLoading">
+
+            <td
+              colspan="5"
+              class="empty">
+
+              <i class="bi bi-hourglass-split"></i>
+
+              <br>
+
+              Loading subjects...
+
+            </td>
+
+          </tr>
+
+          <!-- Data -->
+
+          <tr *ngFor="let item of subjects">
+
+            <td>
+
+              <div class="course-box">
+
+                <div class="course-icon">
+
+                  <i class="bi bi-book-half"></i>
+
+                </div>
+
+                <div>
+
+                  <strong>
+
+                    {{ item.name }}
+
+                  </strong>
+
+                  <small>
+
+                    {{ item.code }}
+
+                  </small>
+
+                </div>
+
+              </div>
+
+            </td>
+
+            <td>
+
+              {{ item.code }}
+
+            </td>
+
+            <td>
+
+              {{ item.creditHours || '-' }}
+
+            </td>
+
+            <td>
+
+              <span
+                class="status"
+                [class.active]="item.isActive"
+                [class.inactive]="!item.isActive">
+
+                <i
+                  class="bi"
+                  [ngClass]="item.isActive ? 'bi-toggle-on' : 'bi-toggle-off'">
+                </i>
+
+                {{ item.isActive ? 'Active' : 'Inactive' }}
+
+              </span>
+
+            </td>
+
+            <td class="actions">
+
+              <button
+                class="action-btn edit-btn"
+                (click)="edit(item.id)"
+                title="Edit Subject">
+
+                <i class="bi bi-pencil-square"></i>
+
+              </button>
+
+              <button
+                class="action-btn delete-btn"
+                (click)="delete(item.id)"
+                title="Delete Subject">
+
+                <i class="bi bi-trash3-fill"></i>
+
+              </button>
+
+            </td>
+
+          </tr>
+
+          <!-- Empty -->
+
+          <tr *ngIf="!isLoading && subjects.length === 0">
+
+            <td
+              colspan="5"
+              class="empty">
+
+              <i class="bi bi-folder-x"></i>
+
+              <br>
+
+              No subjects found
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>

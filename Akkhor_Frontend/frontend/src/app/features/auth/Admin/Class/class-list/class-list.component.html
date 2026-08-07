@@ -1,0 +1,216 @@
+<div class="container-fluid academic-page">
+
+    <!-- HEADER -->
+
+    <div class="top-section">
+
+        <div>
+
+            <h2>
+                <i class="bi bi-mortarboard-fill"></i>
+                Classes
+            </h2>
+
+            <p>
+                Manage school classes and academic levels
+            </p>
+
+        </div>
+
+        <button
+            class="btn-add"
+            (click)="addClass()">
+
+            <i class="bi bi-plus-circle-fill"></i>
+
+            New Class
+
+        </button>
+
+    </div>
+
+
+
+    <!-- TABLE CARD -->
+
+    <div class="table-card">
+
+        <div class="table-responsive">
+
+            <table class="table align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Class</th>
+
+                        <th>Code</th>
+
+                        <th>Academic Year</th>
+
+                        <th>Sections</th>
+
+                        <th>Status</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr *ngIf="isLoading">
+                        <td colspan="6" class="empty">
+                            Loading classes...
+                        </td>
+                    </tr>
+
+                    <tr
+                        *ngFor="let item of classes">
+
+                        <!-- CLASS -->
+
+                        <td>
+
+                            <div class="year-box">
+
+                                <div class="year-icon">
+
+                                    <i class="bi bi-mortarboard-fill"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        {{ item.name }}
+                                    </strong>
+
+                                    <small>
+                                        {{ item.description || 'School Class' }}
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <!-- CODE -->
+
+                        <td>
+
+                            <span class="badge bg-primary">
+
+                                {{ item.code }}
+
+                            </span>
+
+                        </td>
+
+                        <!-- ACADEMIC YEAR -->
+
+                        <td>
+
+                            <div class="date-box">
+
+                                <i class="bi bi-calendar-range"></i>
+
+                                {{ item.academicYearName }}
+
+                            </div>
+
+                        </td>
+
+                        <!-- SECTION -->
+
+                        <td>
+
+                            <div class="date-box">
+
+                                <i class="bi bi-diagram-3"></i>
+
+                                {{ item.sectionCount }}
+
+                            </div>
+
+                        </td>
+
+                        <!-- STATUS -->
+
+                        <td>
+
+                            <span
+                                class="status"
+                                [class.active]="item.isActive"
+                                [class.inactive]="!item.isActive">
+
+                                <i
+                                    class="bi"
+                                    [ngClass]="
+                                        item.isActive
+                                        ? 'bi-toggle-on'
+                                        : 'bi-toggle-off'
+                                    ">
+                                </i>
+
+                                {{ item.isActive ? 'Active' : 'Inactive' }}
+
+                            </span>
+
+                        </td>
+
+                        <!-- ACTION -->
+
+                        <td class="actions">
+
+                            <button
+                                class="action-btn edit-btn"
+                                title="Edit Class"
+                                (click)="editClass(item.id)">
+
+                                <i class="bi bi-pencil-square"></i>
+
+                            </button>
+
+                            <button
+                                class="action-btn delete-btn"
+                                title="Delete Class"
+                                (click)="deleteClass(item.id)">
+
+                                <i class="bi bi-trash3-fill"></i>
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                    <tr
+                        *ngIf="!isLoading && classes.length===0">
+
+                        <td
+                            colspan="6"
+                            class="empty">
+
+                            <i class="bi bi-mortarboard"></i>
+
+                            <br>
+
+                            No classes found.
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

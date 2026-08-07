@@ -1,0 +1,185 @@
+<div class="container-fluid section-form-page">
+
+  <!-- HEADER -->
+
+  <div class="top-section">
+
+    <div>
+
+      <h2>
+
+        <i class="bi bi-diagram-3-fill"></i>
+
+        {{ isEdit ? 'Edit Section' : 'Create Section' }}
+
+      </h2>
+
+      <p>
+
+        {{ isEdit
+        ? 'Update section information'
+        : 'Create a new class section'
+        }}
+
+      </p>
+
+    </div>
+
+  </div>
+
+  <!-- FORM CARD -->
+
+  <div class="form-card">
+
+    <div class="row">
+
+      <!-- CLASS -->
+
+      <div class="col-md-6 mb-4">
+
+        <label class="form-label">
+
+          Class
+
+        </label>
+
+        <select
+          class="form-select"
+          [(ngModel)]="model.classId"
+          [disabled]="isEdit">
+
+          <option value="">
+
+            Select Class
+
+          </option>
+
+          <option
+            *ngFor="let item of classes"
+            [value]="item.id">
+
+            {{ item.name }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+      <!-- SECTION -->
+
+      <div class="col-md-6 mb-4">
+
+        <label class="form-label">
+
+          Section Name
+
+        </label>
+
+        <input
+          type="text"
+          class="form-control"
+          placeholder="A, B, C..."
+          [(ngModel)]="model.sectionName">
+
+      </div>
+
+      <!-- ROOM -->
+
+      <div class="col-md-6 mb-4">
+
+        <label class="form-label">
+
+          Room Number
+
+        </label>
+
+        <input
+          type="text"
+          class="form-control"
+          placeholder="101"
+          [(ngModel)]="model.roomNumber">
+
+      </div>
+
+      <!-- CAPACITY -->
+
+      <div class="col-md-6 mb-4">
+
+        <label class="form-label">
+
+          Capacity
+
+        </label>
+
+        <input
+          type="number"
+          class="form-control"
+          placeholder="40"
+          [(ngModel)]="model.capacity">
+
+      </div>
+
+      <!-- STATUS -->
+
+      <div
+        class="col-12 mb-4"
+        *ngIf="isEdit">
+
+        <div class="form-check form-switch">
+
+          <input
+            id="active"
+            type="checkbox"
+            class="form-check-input"
+            [(ngModel)]="isActive">
+
+          <label
+            for="active"
+            class="form-check-label">
+
+            Active Section
+
+          </label>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- BUTTONS -->
+
+    <div class="form-actions">
+
+      <button
+        class="btn-cancel"
+        type="button"
+        (click)="cancel()">
+
+        <i class="bi bi-arrow-left"></i>
+
+        Cancel
+
+      </button>
+
+      <button
+        class="btn-save"
+        type="button"
+        [disabled]="saving"
+        (click)="save()">
+
+        <i
+          class="bi"
+          [ngClass]="saving ? 'bi-hourglass-split' : 'bi-check-circle-fill'">
+        </i>
+
+        {{ saving ? 'Saving...' : 'Save Section' }}
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

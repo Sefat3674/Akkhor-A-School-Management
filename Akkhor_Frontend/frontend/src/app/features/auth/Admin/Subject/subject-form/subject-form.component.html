@@ -1,0 +1,150 @@
+<div class="page-header">
+
+  <h2>
+
+    {{ isEdit ? 'Edit Subject' : 'Create Subject' }}
+
+  </h2>
+
+</div>
+
+
+
+<div class="card">
+
+  <form
+    #form="ngForm"
+    (ngSubmit)="save()">
+
+    <!-- Subject Name -->
+
+    <div class="form-group">
+
+      <label>
+
+        Subject Name
+
+      </label>
+
+      <input
+        type="text"
+        name="name"
+        [(ngModel)]="model.name"
+        required
+        placeholder="Enter subject name">
+
+    </div>
+
+
+
+    <!-- Subject Code -->
+
+    <div class="form-group">
+
+      <label>
+
+        Subject Code
+
+      </label>
+
+      <input
+        type="text"
+        name="code"
+        [(ngModel)]="model.code"
+        required
+        placeholder="Enter subject code">
+
+    </div>
+
+
+
+    <!-- Credit Hours -->
+
+    <div class="form-group">
+
+      <label>
+
+        Credit Hours
+
+      </label>
+
+      <input
+        type="number"
+        name="creditHours"
+        [(ngModel)]="model.creditHours"
+        placeholder="Enter credit hours">
+
+    </div>
+
+
+
+    <!-- Description -->
+
+    <div class="form-group">
+
+      <label>
+
+        Description
+
+      </label>
+
+      <textarea
+        rows="4"
+        name="description"
+        [(ngModel)]="model.description"
+        placeholder="Enter description">
+
+      </textarea>
+
+    </div>
+
+
+
+    <!-- Active (Edit Only) -->
+
+    <div
+      class="checkbox"
+      *ngIf="isEdit">
+
+      <label>
+
+        <input
+          type="checkbox"
+          name="isActive"
+          [(ngModel)]="isActive">
+
+        Active
+
+      </label>
+
+    </div>
+
+
+
+    <!-- Buttons -->
+
+    <div class="actions">
+
+      <button
+        type="submit"
+        class="btn-save"
+        [disabled]="saving || form.invalid">
+
+        {{ saving ? 'Saving...' : 'Save' }}
+
+      </button>
+
+      <button
+        type="button"
+        class="btn-cancel"
+        (click)="cancel()">
+
+        Cancel
+
+      </button>
+
+    </div>
+
+  </form>
+
+</div>

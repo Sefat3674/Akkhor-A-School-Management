@@ -19,6 +19,8 @@ public class CourseSubject
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    public DateTime? UpdatedAt { get; set; }
+
 
 
     // Navigation

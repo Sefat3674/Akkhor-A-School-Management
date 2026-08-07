@@ -125,6 +125,140 @@ export const routes: Routes = [
       },
 
 
+      {
+        path:'admin/classes',
+        loadComponent:()=>import(
+        './features/auth/Admin/Class/class-list/class-list.component'
+        )
+        .then(m=>m.ClassListComponent)
+        },
+
+
+        {
+          path: 'admin/classes/create',
+          loadComponent: () =>
+            import('./features/auth/Admin/Class/class-form/class-form.component')
+              .then(m => m.ClassFormComponent)
+        },
+        {
+          path: 'admin/classes/edit/:id',
+          loadComponent: () =>
+            import('./features/auth/Admin/Class/class-form/class-form.component')
+              .then(m => m.ClassFormComponent)
+        },
+
+
+
+
+        {
+        path:'admin/sections',
+        loadComponent:()=>import(
+        './features/auth/Admin/Section/section-list/section-list.component'
+        )
+        .then(m=>m.SectionListComponent)
+        },
+
+
+        {
+          path: 'admin/sections/create',
+          loadComponent: () =>
+            import('./features/auth/Admin/Section/section-form/section-form.component')
+              .then(m => m.SectionFormComponent)
+        },
+        {
+          path: 'admin/sections/edit/:id',
+          loadComponent: () =>
+            import('./features/auth/Admin/Section/section-form/section-form.component')
+              .then(m => m.SectionFormComponent)
+        },
+
+
+
+        {
+        path: 'admin/courses',
+        loadComponent: () =>
+          import('./features/auth/Admin/Course/course-list/course-list.component')
+            .then(m => m.CourseListComponent)
+      },
+
+      { 
+        path: 'admin/courses/create',
+        loadComponent: () =>
+          import('./features/auth/Admin/Course/course-form/course-form.component')
+            .then(m => m.CourseFormComponent)
+      },
+
+      {
+        path: 'admin/courses/edit/:id',
+        loadComponent: () =>
+          import('./features/auth/Admin/Course/course-form/course-form.component')
+            .then(m => m.CourseFormComponent)
+      },
+
+
+
+      
+
+      {
+        path: 'admin/subjects',
+        loadComponent: () =>
+          import('./features/auth/Admin/Subject/subject-list/subject-list.component')
+            .then(m => m.SubjectListComponent)
+      },
+
+      {
+        path: 'admin/subjects/create',
+        loadComponent: () =>
+          import('./features/auth/Admin/Subject/subject-form/subject-form.component')
+            .then(m => m.SubjectFormComponent)
+      },
+
+      {
+        path: 'admin/subjects/edit/:id',
+        loadComponent: () =>
+          import('./features/auth/Admin/Subject/subject-form/subject-form.component')
+            .then(m => m.SubjectFormComponent)
+      },
+
+
+
+      // ==========================
+// COURSE SUBJECTS
+// ==========================
+
+{
+  path: 'admin/course-subjects',
+  loadComponent: () =>
+    import('./features/auth/Admin/course-subject/course-subject-list/course-subject-list.component')
+      .then(m => m.CourseSubjectListComponent)
+},
+
+
+{
+  path: 'admin/course-subjects/create',
+  loadComponent: () =>
+    import('./features/auth/Admin/course-subject/course-subject-form/course-subject-form.component')
+      .then(m => m.CourseSubjectFormComponent)
+},
+
+
+{
+  path: 'admin/course-subjects/edit/:id',
+  loadComponent: () =>
+    import('./features/auth/Admin/course-subject/course-subject-form/course-subject-form.component')
+      .then(m => m.CourseSubjectFormComponent)
+},
+
+
+        
+
+        
+
+
+
+        
+
+
 
 
       /*

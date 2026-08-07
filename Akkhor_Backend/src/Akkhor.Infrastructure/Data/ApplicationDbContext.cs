@@ -260,5 +260,19 @@ public class ApplicationDbContext
         builder.Entity<AcademicYear>()
             .Property(x => x.UpdatedAt)
             .HasColumnType("timestamp with time zone");
+
+
+        // =====================================================
+        // Course Date Configuration
+        // =====================================================
+
+        builder.Entity<Course>()
+            .Property(x => x.CreatedAt)
+            .HasColumnType("timestamp with time zone");
+
+
+        builder.Entity<Course>()
+            .Property(x => x.UpdatedAt)
+            .HasColumnType("timestamp with time zone");
     }
 }

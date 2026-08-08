@@ -1,0 +1,1022 @@
+<!-- =====================================================
+     STUDENT ENROLLMENT PAGE
+====================================================== -->
+
+<div class="student-enrollment-page">
+
+
+  <!-- ===================================================
+       PAGE HEADER
+  ==================================================== -->
+
+  <div class="top-section">
+
+  <div>
+    <h2>
+      <i class="bi bi-person-check-fill"></i>
+      Student Enrollment
+    </h2>
+
+    <p>
+      Manage student course enrollments
+    </p>
+  </div>
+
+  <button
+    type="button"
+    class="btn-add"
+    (click)="openCreate()">
+
+    <i class="bi bi-plus-circle-fill"></i>
+    Add Enrollment
+
+  </button>
+
+</div>
+
+
+
+  <!-- ===================================================
+       TABLE CARD
+  ==================================================== -->
+
+  <div class="table-card">
+
+
+    <!-- =================================================
+         CARD HEADER
+    ================================================== -->
+
+    <div class="table-card-header">
+
+      <div>
+
+        <h5>
+
+          <i class="bi bi-list-check"></i>
+
+          Enrollment List
+
+        </h5>
+
+        <span>
+
+          View and manage all student enrollments
+
+        </span>
+
+      </div>
+
+
+
+      <!-- SEARCH -->
+
+      <div class="search-box">
+
+        <i class="bi bi-search"></i>
+
+        <input
+          type="text"
+          placeholder="Search student, class, course..."
+          [(ngModel)]="searchText"
+          (input)="search()">
+
+      </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         ERROR MESSAGE
+    ================================================== -->
+
+    <!-- If you later add errorMessage property,
+         this block can be enabled -->
+
+    <!--
+    <div
+      class="error-message"
+      *ngIf="errorMessage">
+
+      <i class="bi bi-exclamation-triangle-fill"></i>
+
+      {{ errorMessage }}
+
+    </div>
+    -->
+
+
+
+    <!-- =================================================
+         TABLE
+    ================================================== -->
+
+    <div class="table-responsive">
+
+      <table class="table align-middle">
+
+
+        <!-- =================================================
+             TABLE HEADER
+        ================================================== -->
+
+        <thead>
+
+          <tr>
+
+            <th>#</th>
+
+            <th>Student</th>
+
+            <th>Class</th>
+
+            <th>Course</th>
+
+            <th>Section</th>
+
+            <th>Roll Number</th>
+
+            <th>Enrollment Date</th>
+
+            <th>Status</th>
+
+            <th width="140">Actions</th>
+
+          </tr>
+
+        </thead>
+
+
+
+        <!-- =================================================
+             TABLE BODY
+        ================================================== -->
+
+        <tbody>
+
+
+          <!-- ===============================================
+               LOADING
+          ================================================ -->
+
+          <tr *ngIf="isLoading">
+
+            <td
+              colspan="9"
+              class="empty">
+
+              <i class="bi bi-hourglass-split loading-icon"></i>
+
+              <br>
+
+              Loading enrollments...
+
+            </td>
+
+          </tr>
+
+
+
+          <!-- ===============================================
+               ENROLLMENT ROWS
+          ================================================ -->
+
+          <tr
+            *ngFor="
+              let item of filteredEnrollments;
+              let i = index
+            ">
+
+
+            <!-- =============================================
+                 NUMBER
+            ============================================== -->
+
+            <td>
+
+              <span class="row-number">
+
+                {{ i + 1 }}
+
+              </span>
+
+            </td>
+
+
+
+            <!-- =============================================
+                 STUDENT
+            ============================================== -->
+
+            <td>
+
+              <div class="student-info">
+
+                <div class="student-avatar">
+
+                  {{
+                    getInitials(
+                      item.studentName
+                    )
+                  }}
+
+                </div>
+
+
+                <div class="student-details">
+
+                  <strong>
+
+                    {{
+                      item.studentName ||
+                      'Unknown Student'
+                    }}
+
+                  </strong>
+
+                  <small>
+
+                    {{ item.studentId }}
+
+                  </small>
+
+                </div>
+
+              </div>
+
+            </td>
+
+
+
+            <!-- =============================================
+                 CLASS
+            ============================================== -->
+
+            <td>
+
+              <span class="class-badge">
+
+                <i class="bi bi-building"></i>
+
+                {{
+                  item.className || '-'
+                }}
+
+              </span>
+
+            </td>
+
+
+
+            <!-- =============================================
+                 COURSE
+            ============================================== -->
+
+            <td>
+
+              <div class="course-box">
+
+                <div class="course-icon">
+
+                  <i class="bi bi-book-fill"></i>
+
+                </div>
+
+                <strong>
+
+                  {{
+                    item.courseName || '-'
+                  }}
+
+                </strong>
+
+              </div>
+
+            </td>
+
+
+
+            <!-- =============================================
+                 SECTION
+            ============================================== -->
+
+            <td>
+
+              <span class="section-badge">
+
+                <i class="bi bi-grid-3x3-gap-fill"></i>
+
+                {{
+                  item.sectionName || '-'
+                }}
+
+              </span>
+
+            </td>
+
+
+
+            <!-- =============================================
+                 ROLL NUMBER
+            ============================================== -->
+
+            <td>
+
+              <span class="roll-number">
+
+                {{ item.rollNumber || '-' }}
+
+              </span>
+
+            </td>
+
+
+
+            <!-- =============================================
+                 ENROLLMENT DATE
+            ============================================== -->
+
+            <td>
+
+              <span class="date-text">
+
+                <i class="bi bi-calendar3"></i>
+
+                {{
+                  item.enrollmentDate
+                    | date:'dd MMM yyyy'
+                }}
+
+              </span>
+
+            </td>
+
+
+
+            <!-- =============================================
+                 STATUS
+            ============================================== -->
+
+            <td>
+
+              <span
+                class="status"
+                [ngClass]="{
+
+                  'active':
+                    item.status === 'Active',
+
+                  'inactive':
+                    item.status === 'Inactive',
+
+                  'completed':
+                    item.status === 'Completed',
+
+                  'dropped':
+                    item.status === 'Dropped'
+
+                }">
+
+
+                <!-- ACTIVE -->
+
+                <i
+                  *ngIf="item.status === 'Active'"
+                  class="bi bi-check-circle-fill">
+                </i>
+
+
+                <!-- INACTIVE -->
+
+                <i
+                  *ngIf="item.status === 'Inactive'"
+                  class="bi bi-x-circle-fill">
+                </i>
+
+
+                <!-- COMPLETED -->
+
+                <i
+                  *ngIf="item.status === 'Completed'"
+                  class="bi bi-check2-circle">
+                </i>
+
+
+                <!-- DROPPED -->
+
+                <i
+                  *ngIf="item.status === 'Dropped'"
+                  class="bi bi-dash-circle-fill">
+                </i>
+
+
+                {{ item.status }}
+
+              </span>
+
+            </td>
+
+
+
+            <!-- =============================================
+                 ACTIONS
+            ============================================== -->
+
+            <td>
+
+              <div class="action-buttons">
+
+
+                <!-- EDIT -->
+
+                <button
+                  type="button"
+                  class="action-btn edit-btn"
+                  title="Edit Enrollment"
+                  aria-label="Edit Enrollment"
+                  (click)="openEdit(item)">
+
+                  <i class="bi bi-pencil-square"></i>
+
+                </button>
+
+
+
+                <!-- DELETE -->
+
+                <button
+                  type="button"
+                  class="action-btn delete-btn"
+                  title="Delete Enrollment"
+                  aria-label="Delete Enrollment"
+                  (click)="delete(item.id)">
+
+                  <i class="bi bi-trash3-fill"></i>
+
+                </button>
+
+
+              </div>
+
+            </td>
+
+          </tr>
+
+
+
+          <!-- ===============================================
+               EMPTY
+          ================================================ -->
+
+          <tr
+            *ngIf="
+              !isLoading &&
+              filteredEnrollments.length === 0
+            ">
+
+            <td
+              colspan="9"
+              class="empty-state">
+
+              <div class="empty-icon">
+
+                <i class="bi bi-folder-x"></i>
+
+              </div>
+
+              <h4>
+
+                No enrollments found
+
+              </h4>
+
+              <p>
+
+                No student enrollment records
+                are available.
+
+              </p>
+
+            </td>
+
+          </tr>
+
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     MODAL
+====================================================== -->
+
+<div
+  class="modal-overlay"
+  *ngIf="isModalOpen"
+  (click)="onBackdropClick($event)">
+
+
+  <div class="enrollment-modal">
+
+
+    <!-- =================================================
+         MODAL HEADER
+    ================================================== -->
+
+    <div class="modal-header">
+
+      <div>
+
+        <h4>
+
+          <i
+            class="bi"
+            [ngClass]="
+              isEditMode
+                ? 'bi-pencil-square'
+                : 'bi-person-plus-fill'
+            ">
+          </i>
+
+          {{
+            isEditMode
+              ? 'Edit Enrollment'
+              : 'Add Enrollment'
+          }}
+
+        </h4>
+
+        <p>
+
+          {{
+            isEditMode
+              ? 'Update student enrollment'
+              : 'Create a new student enrollment'
+          }}
+
+        </p>
+
+      </div>
+
+
+
+      <!-- CLOSE -->
+
+      <button
+        type="button"
+        class="close-btn"
+        title="Close"
+        aria-label="Close"
+        (click)="closeModal()">
+
+        <i class="bi bi-x-lg"></i>
+
+      </button>
+
+    </div>
+
+
+
+    <!-- =================================================
+         FORM
+    ================================================== -->
+
+    <form
+      #enrollmentForm="ngForm"
+      (ngSubmit)="save()">
+
+
+      <!-- =================================================
+           MODAL BODY
+      ================================================== -->
+
+      <div class="modal-body">
+
+
+        <!-- ===============================================
+             STUDENT
+        ================================================ -->
+
+        <div class="form-group">
+
+          <label>
+
+            <i class="bi bi-person-fill"></i>
+
+            Student
+
+            <span>*</span>
+
+          </label>
+
+
+          <select
+            class="form-control"
+            name="studentId"
+            [(ngModel)]="formData.studentId"
+            required>
+
+            <option [ngValue]="''">
+
+              Select Student
+
+            </option>
+
+
+            <option
+              *ngFor="let student of students"
+              [ngValue]="student.id">
+
+              {{ student.userName }}
+
+            </option>
+
+          </select>
+
+
+          <!-- Loading -->
+
+          <small
+            *ngIf="isLoadingStudents"
+            class="loading-text">
+
+            <i class="bi bi-hourglass-split"></i>
+
+            Loading students...
+
+          </small>
+
+        </div>
+
+
+
+        <!-- ===============================================
+             CLASS
+        ================================================ -->
+
+        <div class="form-group">
+
+          <label>
+
+            <i class="bi bi-building"></i>
+
+            Class
+
+            <span>*</span>
+
+          </label>
+
+
+          <select
+            class="form-control"
+            name="classId"
+            [(ngModel)]="formData.classId"
+            (change)="onClassChange()"
+            required>
+
+            <option [ngValue]="''">
+
+              Select Class
+
+            </option>
+
+
+            <option
+              *ngFor="let classItem of classes"
+              [ngValue]="classItem.id">
+
+              {{ classItem.name }}
+
+            </option>
+
+          </select>
+
+        </div>
+
+
+
+        <!-- ===============================================
+             COURSE
+        ================================================ -->
+
+        <div class="form-group">
+
+          <label>
+
+            <i class="bi bi-book-fill"></i>
+
+            Course
+
+            <span>*</span>
+
+          </label>
+
+
+          <select
+            class="form-control"
+            name="courseId"
+            [(ngModel)]="formData.courseId"
+            [disabled]="
+              !formData.classId ||
+              isLoadingCourses
+            "
+            required>
+
+            <option [ngValue]="''">
+
+              {{
+                !formData.classId
+                  ? 'Select Class First'
+                  : 'Select Course'
+              }}
+
+            </option>
+
+
+            <option
+              *ngFor="let course of courses"
+              [ngValue]="course.id">
+
+              {{ course.courseName }}
+
+            </option>
+
+          </select>
+
+
+          <!-- Loading -->
+
+          <small
+            *ngIf="isLoadingCourses"
+            class="loading-text">
+
+            <i class="bi bi-hourglass-split"></i>
+
+            Loading courses...
+
+          </small>
+
+        </div>
+
+
+
+        <!-- ===============================================
+             SECTION
+        ================================================ -->
+
+        <div class="form-group">
+
+          <label>
+
+            <i class="bi bi-grid-3x3-gap-fill"></i>
+
+            Section
+
+          </label>
+
+
+          <select
+            class="form-control"
+            name="sectionId"
+            [(ngModel)]="formData.sectionId"
+            [disabled]="
+              !formData.classId ||
+              isLoadingSections
+            ">
+
+            <option [ngValue]="null">
+
+              {{
+                !formData.classId
+                  ? 'Select Class First'
+                  : 'Select Section'
+              }}
+
+            </option>
+
+
+            <option
+              *ngFor="let section of sections"
+              [ngValue]="section.id">
+
+              {{ section.sectionName }}
+
+            </option>
+
+          </select>
+
+
+          <!-- Loading -->
+
+          <small
+            *ngIf="isLoadingSections"
+            class="loading-text">
+
+            <i class="bi bi-hourglass-split"></i>
+
+            Loading sections...
+
+          </small>
+
+        </div>
+
+
+
+        <!-- ===============================================
+             ROLL NUMBER
+        ================================================ -->
+
+        <div class="form-group">
+
+          <label>
+
+            <i class="bi bi-123"></i>
+
+            Roll Number
+
+          </label>
+
+
+          <input
+            type="text"
+            class="form-control"
+            name="rollNumber"
+            [(ngModel)]="formData.rollNumber"
+            placeholder="Enter roll number">
+
+        </div>
+
+
+
+        <!-- ===============================================
+             ENROLLMENT DATE
+        ================================================ -->
+
+        <div class="form-group">
+
+          <label>
+
+            <i class="bi bi-calendar-event"></i>
+
+            Enrollment Date
+
+            <span>*</span>
+
+          </label>
+
+
+          <input
+            type="date"
+            class="form-control"
+            name="enrollmentDate"
+            [(ngModel)]="formData.enrollmentDate"
+            required>
+
+        </div>
+
+
+
+        <!-- ===============================================
+             STATUS
+        ================================================ -->
+
+        <div class="form-group">
+
+          <label>
+
+            <i class="bi bi-toggle-on"></i>
+
+            Status
+
+          </label>
+
+
+          <select
+            class="form-control"
+            name="status"
+            [(ngModel)]="formData.status">
+
+
+            <option value="Active">
+
+              Active
+
+            </option>
+
+
+            <option value="Inactive">
+
+              Inactive
+
+            </option>
+
+
+            <option value="Completed">
+
+              Completed
+
+            </option>
+
+
+            <option value="Dropped">
+
+              Dropped
+
+            </option>
+
+
+          </select>
+
+        </div>
+
+
+      </div>
+
+
+
+      <!-- =================================================
+           MODAL FOOTER
+      ================================================== -->
+
+      <div class="modal-footer">
+
+
+        <!-- CANCEL -->
+
+        <button
+          type="button"
+          class="btn-cancel"
+          (click)="closeModal()">
+
+          <i class="bi bi-x-circle"></i>
+
+          Cancel
+
+        </button>
+
+
+
+        <!-- SAVE / UPDATE -->
+
+        <button
+          type="submit"
+          class="btn-save"
+          [disabled]="
+            isSaving ||
+            enrollmentForm.invalid
+          ">
+
+
+          <!-- SAVING -->
+
+          <i
+            *ngIf="isSaving"
+            class="bi bi-arrow-repeat spin">
+          </i>
+
+
+          <!-- NORMAL -->
+
+          <i
+            *ngIf="!isSaving && !isEditMode"
+            class="bi bi-check-circle-fill">
+          </i>
+
+
+          <!-- UPDATE -->
+
+          <i
+            *ngIf="!isSaving && isEditMode"
+            class="bi bi-pencil-square">
+          </i>
+
+
+          {{
+            isSaving
+              ? 'Saving...'
+              : (
+                  isEditMode
+                    ? 'Update Enrollment'
+                    : 'Save Enrollment'
+                )
+          }}
+
+        </button>
+
+      </div>
+
+
+    </form>
+
+  </div>
+
+</div>

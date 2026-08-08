@@ -215,6 +215,15 @@ builder.Services.AddScoped<ISubjectService, SubjectService>();
 builder.Services.AddScoped<ISubjectRepository,SubjectRepository>();
 builder.Services.AddScoped<ICourseSubjectService, CourseSubjectService>();
 builder.Services.AddScoped<ICourseSubjectRepository, CourseSubjectRepository>();
+builder.Services.AddScoped<IStudentEnrollmentService, StudentEnrollmentService>();
+builder.Services.AddScoped<IStudentEnrollmentRepository, StudentEnrollmentRepository>();
+builder.Services.AddScoped<ITeacherAssignmentRepository, TeacherAssignmentRepository>();
+builder.Services.AddScoped<ITeacherAssignmentService,TeacherAssignmentService>();
+builder.Services.AddScoped<ITeacherClassRepository,TeacherClassRepository>();
+builder.Services.AddScoped<ITeacherClassService,TeacherClassService>();
+builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+builder.Services.AddScoped<IAssignmentService, AssignmentService>();
+
 
 
 

@@ -20,5 +20,8 @@
     <ProjectReference Include="..\Akkhor.Application\Akkhor.Application.csproj" />
     <ProjectReference Include="..\Akkhor.Infrastructure\Akkhor.Infrastructure.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\assignments\" />
+  </ItemGroup>
 </Project>
 

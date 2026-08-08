@@ -1,0 +1,1150 @@
+<div class="review-assignment-page">
+
+  <!-- =================================================
+       PAGE HEADER
+  ================================================== -->
+
+  <div class="page-header">
+
+    <div class="header-left">
+
+      <button
+        type="button"
+        class="back-btn"
+        (click)="goBack()">
+
+        <i class="fas fa-arrow-left"></i>
+
+        Back
+      </button>
+
+      <div class="header-content">
+
+        <span class="page-label">
+          ASSIGNMENT REVIEW
+        </span>
+
+        <h2>
+          {{ assignment?.title || 'Review Assignment' }}
+        </h2>
+
+        <p>
+          Review student submissions and assign marks.
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="header-actions">
+
+      <button
+        type="button"
+        class="btn btn-light"
+        (click)="refresh()">
+
+        <i class="fas fa-sync-alt"></i>
+
+        Refresh
+
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="editAssignment()">
+
+        <i class="fas fa-edit"></i>
+
+        Edit Assignment
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =================================================
+       ERROR
+  ================================================== -->
+
+  <div
+    class="alert alert-danger"
+    *ngIf="errorMessage">
+
+    <i class="fas fa-exclamation-circle"></i>
+
+    <span>
+      {{ errorMessage }}
+    </span>
+
+    <button
+      type="button"
+      class="alert-close"
+      (click)="errorMessage = ''">
+
+      ×
+
+    </button>
+
+  </div>
+
+
+  <!-- =================================================
+       SUCCESS
+  ================================================== -->
+
+  <div
+    class="alert alert-success"
+    *ngIf="successMessage">
+
+    <i class="fas fa-check-circle"></i>
+
+    <span>
+      {{ successMessage }}
+    </span>
+
+    <button
+      type="button"
+      class="alert-close"
+      (click)="successMessage = ''">
+
+      ×
+
+    </button>
+
+  </div>
+
+
+  <!-- =================================================
+       ASSIGNMENT INFORMATION
+  ================================================== -->
+
+  <div
+    class="assignment-card"
+    *ngIf="assignment">
+
+    <div class="assignment-main">
+
+      <div class="assignment-icon">
+
+        <i class="fas fa-book-open"></i>
+
+      </div>
+
+      <div class="assignment-info">
+
+        <h3>
+          {{ assignment.title }}
+        </h3>
+
+        <p
+          class="description"
+          *ngIf="assignment.description">
+
+          {{ assignment.description }}
+
+        </p>
+
+        <div class="assignment-meta">
+
+          <span>
+            <i class="fas fa-chalkboard"></i>
+
+            {{ assignment.className || 'Class' }}
+
+          </span>
+
+          <span>
+            <i class="fas fa-layer-group"></i>
+
+            {{ assignment.sectionName || 'Section' }}
+
+          </span>
+
+          <span>
+            <i class="fas fa-book"></i>
+
+            {{ assignment.courseName || 'Course' }}
+
+          </span>
+
+          <span>
+            <i class="fas fa-bookmark"></i>
+
+            {{ assignment.subjectName || 'Subject' }}
+
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="assignment-status">
+
+        <span
+          class="status-badge published"
+          *ngIf="assignment.isPublished">
+
+          <i class="fas fa-check-circle"></i>
+
+          Published
+
+        </span>
+
+        <span
+          class="status-badge draft"
+          *ngIf="!assignment.isPublished">
+
+          <i class="fas fa-file-alt"></i>
+
+          Draft
+
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="assignment-details">
+
+      <div class="detail-item">
+
+        <span class="detail-label">
+          Maximum Marks
+        </span>
+
+        <strong>
+          {{ assignment.maximumMarks }}
+        </strong>
+
+      </div>
+
+      <div class="detail-item">
+
+        <span class="detail-label">
+          Deadline
+        </span>
+
+        <strong
+          [class.expired]="isExpired(assignment.deadline)">
+
+          {{ getDeadlineText(assignment.deadline) }}
+
+        </strong>
+
+      </div>
+
+      <div class="detail-item">
+
+        <span class="detail-label">
+          Total Submissions
+        </span>
+
+        <strong>
+          {{ totalSubmissions }}
+        </strong>
+
+      </div>
+
+      <div class="detail-item">
+
+        <span class="detail-label">
+          Evaluated
+        </span>
+
+        <strong>
+          {{ evaluatedCount }}
+        </strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =================================================
+       LOADING ASSIGNMENT
+  ================================================== -->
+
+  <div
+    class="loading-card"
+    *ngIf="assignmentLoading">
+
+    <i class="fas fa-spinner fa-spin"></i>
+
+    Loading assignment...
+
+  </div>
+
+
+  <!-- =================================================
+       STATISTICS
+  ================================================== -->
+
+  <div
+    class="stats-grid"
+    *ngIf="!loading">
+
+    <div class="stat-card">
+
+      <div class="stat-icon total">
+        <i class="fas fa-users"></i>
+      </div>
+
+      <div class="stat-content">
+
+        <span>
+          Total Submissions
+        </span>
+
+        <strong>
+          {{ totalSubmissions }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon pending">
+        <i class="fas fa-clock"></i>
+      </div>
+
+      <div class="stat-content">
+
+        <span>
+          Pending Review
+        </span>
+
+        <strong>
+          {{ pendingCount }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon evaluated">
+        <i class="fas fa-check-circle"></i>
+      </div>
+
+      <div class="stat-content">
+
+        <span>
+          Evaluated
+        </span>
+
+        <strong>
+          {{ evaluatedCount }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon average">
+        <i class="fas fa-chart-line"></i>
+      </div>
+
+      <div class="stat-content">
+
+        <span>
+          Average Marks
+        </span>
+
+        <strong>
+          {{ averageMarks | number:'1.0-2' }}
+        </strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =================================================
+       TOOLBAR
+  ================================================== -->
+
+  <div class="toolbar">
+
+    <div class="search-box">
+
+      <i class="fas fa-search"></i>
+
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearch()"
+        placeholder="Search student...">
+
+    </div>
+
+
+    <div class="toolbar-actions">
+
+      <select
+        class="filter-select"
+        [(ngModel)]="statusFilter"
+        (ngModelChange)="onStatusFilterChange()">
+
+        <option value="all">
+          All Submissions
+        </option>
+
+        <option value="submitted">
+          Submitted
+        </option>
+
+        <option value="evaluated">
+          Evaluated
+        </option>
+
+        <option value="pending">
+          Pending
+        </option>
+
+      </select>
+
+
+      <select
+        class="filter-select"
+        [(ngModel)]="sortBy"
+        (ngModelChange)="onSortChange()">
+
+        <option value="latest">
+          Latest First
+        </option>
+
+        <option value="oldest">
+          Oldest First
+        </option>
+
+        <option value="student">
+          Student Name
+        </option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+
+  <!-- =================================================
+       LOADING SUBMISSIONS
+  ================================================== -->
+
+  <div
+    class="loading-card"
+    *ngIf="loading">
+
+    <i class="fas fa-spinner fa-spin"></i>
+
+    Loading submissions...
+
+  </div>
+
+
+  <!-- =================================================
+       EMPTY
+  ================================================== -->
+
+  <div
+    class="empty-state"
+    *ngIf="
+      !loading &&
+      filteredSubmissions.length === 0
+    ">
+
+    <div class="empty-icon">
+
+      <i class="fas fa-inbox"></i>
+
+    </div>
+
+    <h3>
+      No submissions found
+    </h3>
+
+    <p>
+      There are no student submissions matching your current filters.
+    </p>
+
+    <button
+      type="button"
+      class="btn btn-light"
+      (click)="searchTerm = ''; statusFilter = 'all'; applyFilters()">
+
+      Clear Filters
+
+    </button>
+
+  </div>
+
+
+  <!-- =================================================
+       SUBMISSIONS TABLE
+  ================================================== -->
+
+  <div
+    class="submissions-card"
+    *ngIf="
+      !loading &&
+      filteredSubmissions.length > 0
+    ">
+
+    <div class="card-header">
+
+      <div>
+
+        <h3>
+          Student Submissions
+        </h3>
+
+        <p>
+          {{ filteredSubmissions.length }}
+          submission(s) found
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              Student
+            </th>
+
+            <th>
+              Submitted
+            </th>
+
+            <th>
+              Attachment
+            </th>
+
+            <th>
+              Marks
+            </th>
+
+            <th>
+              Status
+            </th>
+
+            <th>
+              Action
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="
+              let submission of filteredSubmissions;
+              trackBy: trackById
+            ">
+
+            <!-- STUDENT -->
+
+            <td>
+
+              <div class="student-cell">
+
+                <div class="student-avatar">
+
+                  {{
+                    (
+                      submission.studentName ||
+                      submission.studentId ||
+                      'S'
+                    ).charAt(0).toUpperCase()
+                  }}
+
+                </div>
+
+                <div class="student-info">
+
+                  <strong>
+                    {{
+                      submission.studentName ||
+                      'Unknown Student'
+                    }}
+                  </strong>
+
+                  <span>
+                    {{ submission.studentId }}
+                  </span>
+
+                </div>
+
+              </div>
+
+            </td>
+
+
+            <!-- SUBMITTED -->
+
+            <td>
+
+              <div class="date-cell">
+
+                <strong>
+                  {{
+                    submission.submittedAt
+                      | date:'dd MMM yyyy'
+                  }}
+                </strong>
+
+                <span>
+                  {{
+                    submission.submittedAt
+                      | date:'hh:mm a'
+                  }}
+                </span>
+
+              </div>
+
+            </td>
+
+
+            <!-- ATTACHMENT -->
+
+            <td>
+
+              <button
+                type="button"
+                class="attachment-btn"
+                *ngIf="submission.attachmentUrl"
+                (click)="openAttachment(submission)">
+
+                <i class="fas fa-paperclip"></i>
+
+                {{
+                  submission.attachmentFileName ||
+                  'View File'
+                }}
+
+              </button>
+
+              <span
+                class="no-file"
+                *ngIf="!submission.attachmentUrl">
+
+                No attachment
+
+              </span>
+
+            </td>
+
+
+            <!-- MARKS -->
+
+            <td>
+
+              <div
+                class="marks-cell"
+                *ngIf="
+                  submission.marksObtained !== null &&
+                  submission.marksObtained !== undefined
+                ">
+
+                <strong>
+
+                  {{ submission.marksObtained }}
+
+                </strong>
+
+                <span
+                  *ngIf="assignment">
+
+                  /
+                  {{ assignment.maximumMarks }}
+
+                </span>
+
+              </div>
+
+              <span
+                class="not-graded"
+                *ngIf="
+                  submission.marksObtained === null ||
+                  submission.marksObtained === undefined
+                ">
+
+                Not graded
+
+              </span>
+
+            </td>
+
+
+            <!-- STATUS -->
+
+            <td>
+
+              <span
+                class="status-badge"
+                [ngClass]="
+                  getStatusClass(submission)
+                ">
+
+                <i
+                  class="fas"
+                  [ngClass]="
+                    isEvaluated(submission)
+                      ? 'fa-check-circle'
+                      : 'fa-clock'
+                  ">
+
+                </i>
+
+                {{ getStatusText(submission) }}
+
+              </span>
+
+            </td>
+
+
+            <!-- ACTION -->
+
+            <td>
+
+              <button
+                type="button"
+                class="review-btn"
+                (click)="selectSubmission(submission)">
+
+                <i
+                  class="fas"
+                  [ngClass]="
+                    isEvaluated(submission)
+                      ? 'fa-eye'
+                      : 'fa-clipboard-check'
+                  ">
+
+                </i>
+
+                {{
+                  isEvaluated(submission)
+                    ? 'View'
+                    : 'Review'
+                }}
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+  <!-- =================================================
+       REVIEW PANEL
+  ================================================== -->
+
+  <div
+    class="review-overlay"
+    *ngIf="selectedSubmission">
+
+    <div
+      class="review-panel">
+
+      <!-- PANEL HEADER -->
+
+      <div class="review-header">
+
+        <div>
+
+          <span class="panel-label">
+            SUBMISSION REVIEW
+          </span>
+
+          <h3>
+            {{
+              selectedSubmission.studentName ||
+              'Student Submission'
+            }}
+          </h3>
+
+          <p>
+            Student ID:
+            {{ selectedSubmission.studentId }}
+          </p>
+
+        </div>
+
+        <button
+          type="button"
+          class="close-btn"
+          (click)="closeReview()">
+
+          <i class="fas fa-times"></i>
+
+        </button>
+
+      </div>
+
+
+      <!-- PANEL BODY -->
+
+      <div class="review-body">
+
+        <!-- STUDENT SUMMARY -->
+
+        <div class="submission-summary">
+
+          <div class="summary-item">
+
+            <span>
+              Submitted
+            </span>
+
+            <strong>
+              {{
+                selectedSubmission.submittedAt
+                  | date:'dd MMM yyyy, hh:mm a'
+              }}
+            </strong>
+
+          </div>
+
+
+          <div class="summary-item">
+
+            <span>
+              Status
+            </span>
+
+            <span
+              class="status-badge"
+              [ngClass]="
+                getStatusClass(selectedSubmission)
+              ">
+
+              {{ getStatusText(selectedSubmission) }}
+
+            </span>
+
+          </div>
+
+
+          <div class="summary-item">
+
+            <span>
+              Current Marks
+            </span>
+
+            <strong>
+
+              {{
+                selectedSubmission.marksObtained ??
+                'Not graded'
+              }}
+
+              <span
+                *ngIf="
+                  assignment &&
+                  selectedSubmission.marksObtained !== null &&
+                  selectedSubmission.marksObtained !== undefined
+                ">
+
+                /
+                {{ assignment.maximumMarks }}
+
+              </span>
+
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- SUBMISSION TEXT -->
+
+        <div class="review-section">
+
+          <div class="section-heading">
+
+            <h4>
+              <i class="fas fa-align-left"></i>
+              Student Answer
+            </h4>
+
+          </div>
+
+          <div
+            class="submission-text"
+            *ngIf="selectedSubmission.submissionText">
+
+            {{ selectedSubmission.submissionText }}
+
+          </div>
+
+          <div
+            class="no-content"
+            *ngIf="!selectedSubmission.submissionText">
+
+            <i class="fas fa-file-alt"></i>
+
+            <span>
+              No written answer was submitted.
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- ATTACHMENT -->
+
+        <div
+          class="review-section"
+          *ngIf="
+            selectedSubmission.attachmentUrl
+          ">
+
+          <div class="section-heading">
+
+            <h4>
+
+              <i class="fas fa-paperclip"></i>
+
+              Attachment
+
+            </h4>
+
+          </div>
+
+          <div class="file-card">
+
+            <div class="file-icon">
+
+              <i class="fas fa-file"></i>
+
+            </div>
+
+            <div class="file-info">
+
+              <strong>
+                {{
+                  selectedSubmission.attachmentFileName ||
+                  'Submission File'
+                }}
+              </strong>
+
+              <span
+                *ngIf="
+                  selectedSubmission.attachmentContentType
+                ">
+
+                {{
+                  selectedSubmission.attachmentContentType
+                }}
+
+              </span>
+
+            </div>
+
+            <button
+              type="button"
+              class="btn btn-light"
+              (click)="downloadAttachment(selectedSubmission)">
+
+              <i class="fas fa-download"></i>
+
+              Open
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- EVALUATION -->
+
+        <div class="evaluation-section">
+
+          <div class="section-heading">
+
+            <h4>
+
+              <i class="fas fa-star"></i>
+
+              Evaluation
+
+            </h4>
+
+          </div>
+
+
+          <!-- MARKS -->
+
+          <div class="form-group">
+
+            <label>
+              Marks Obtained
+              <span class="required">*</span>
+            </label>
+
+            <div class="marks-input">
+
+              <input
+                type="number"
+                [(ngModel)]="evaluationMarks"
+                min="0"
+                [max]="assignment?.maximumMarks ?? 0"
+                step="0.01"
+                placeholder="Enter marks">
+
+              <span
+                *ngIf="assignment">
+
+                /
+                {{ assignment.maximumMarks }}
+
+              </span>
+
+            </div>
+
+            <small
+              class="form-help"
+              *ngIf="assignment">
+
+              Maximum marks:
+              {{ assignment.maximumMarks }}
+
+            </small>
+
+          </div>
+
+
+          <!-- FEEDBACK -->
+
+          <div class="form-group">
+
+            <label>
+              Feedback
+            </label>
+
+            <textarea
+              [(ngModel)]="evaluationFeedback"
+              rows="5"
+              placeholder="Write feedback for the student...">
+            </textarea>
+
+          </div>
+
+
+          <!-- EXISTING FEEDBACK -->
+
+          <div
+            class="existing-feedback"
+            *ngIf="
+              selectedSubmission.feedback
+            ">
+
+            <div class="feedback-title">
+
+              <i class="fas fa-comment-alt"></i>
+
+              Previous Feedback
+
+            </div>
+
+            <p>
+              {{ selectedSubmission.feedback }}
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- PANEL FOOTER -->
+
+      <div class="review-footer">
+
+        <button
+          type="button"
+          class="btn btn-light"
+          (click)="closeReview()">
+
+          Cancel
+
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="
+            evaluationLoading ||
+            evaluationMarks === null ||
+            evaluationMarks === undefined ||
+            !assignment ||
+            evaluationMarks < 0 ||
+            evaluationMarks > assignment.maximumMarks
+          "
+          (click)="evaluateSubmission()">
+
+          <i
+            class="fas"
+            [ngClass]="
+              evaluationLoading
+                ? 'fa-spinner fa-spin'
+                : 'fa-check'
+            ">
+
+          </i>
+
+          {{
+            evaluationLoading
+              ? 'Saving...'
+              : 'Save Evaluation'
+          }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

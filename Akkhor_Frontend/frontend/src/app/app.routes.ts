@@ -250,17 +250,124 @@ export const routes: Routes = [
 },
 
 
+
+{
+  path: 'admin/student-enrollment',
+  loadComponent: () =>
+    import('./features/auth/Admin/student-enrollment/student-enrollment.component')
+      .then(m => m.StudentEnrollmentComponent)
+},
+
+
+{
+        path: 'admin/assign-teacher',
+        loadComponent: () =>
+          import('./features/auth/Admin/assign-teacher/assign-teacher.component')
+            .then(m => m.AssignTeacherComponent)
+  },
         
 
         
 
 
 
-        
+  {
+  path: 'teacher/classes',
+  loadComponent: () =>
+    import(
+      './features/auth/Teacher/my-classes/my-classes.component'
+    )
+    .then(m => m.MyClassesComponent)
+},     
+
+
+    // Assignment List
+
+{
+  path: 'teacher/assignments',
+  loadComponent: () =>
+    import(
+      './features/auth/Teacher/assignments/assignment-list/assignment-list.component'
+    ).then(m => m.AssignmentListComponent)
+},
+
+
+// Create Assignment
+
+{
+  path: 'teacher/assignments/create',
+  loadComponent: () =>
+    import(
+      './features/auth/Teacher/assignments/assignment-form/assignment-form.component'
+    ).then(m => m.AssignmentFormComponent)
+},
+
+
+// Edit Assignment
+
+{
+  path: 'teacher/assignments/edit/:id',
+  loadComponent: () =>
+    import(
+      './features/auth/Teacher/assignments/assignment-form/assignment-form.component'
+    ).then(m => m.AssignmentFormComponent)
+},
+
+
+// Review Assignment Submissions
+
+{
+  path: 'teacher/assignments/review/:id',
+  loadComponent: () =>
+    import(
+      './features/auth/Teacher/assignments/review-assignment/review-assignment.component'
+    ).then(m => m.ReviewAssignmentComponent)
+},
+
+
+// --------------------------------------------------
+// SUBMISSIONS
+// --------------------------------------------------
+
+{
+  path: 'teacher/submissions',
+  loadComponent: () =>
+    import(
+      './features/auth/Teacher/assignments/review-assignment/review-assignment.component'
+    ).then(m => m.ReviewAssignmentComponent)
+},
+
+
+// --------------------------------------------------
+// MARKS & FEEDBACK
+// --------------------------------------------------
+
+{
+  path: 'teacher/marks',
+  loadComponent: () =>
+    import(
+      './features/auth/Teacher/assignments/marks-feedback/marks-feedback.component'
+    ).then(m => m.MarksFeedbackComponent)
+},
 
 
 
 
+
+
+
+
+    {
+        path: 'student/assignments',
+
+        loadComponent: () =>
+          import(
+            './features/auth/Student/student-assignment/student-assignment.component'
+          )
+          .then(m => m.StudentAssignmentComponent)
+      },
+
+      
       /*
       Future Modules
 

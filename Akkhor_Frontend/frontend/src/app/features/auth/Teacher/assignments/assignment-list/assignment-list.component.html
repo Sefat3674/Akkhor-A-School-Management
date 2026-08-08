@@ -1,0 +1,776 @@
+<div class="assignment-page">
+
+  <!-- =====================================================
+       PAGE HEADER
+       ===================================================== -->
+
+  <div class="page-header">
+
+  <div class="header-content">
+
+    <h2>
+      <i class="bi bi-journal-text"></i>
+      My Assignments
+    </h2>
+
+    <p>
+      Create, manage, publish and review your assignments.
+    </p>
+
+  </div>
+
+  <div class="header-actions">
+
+    <button
+      type="button"
+      class="btn-add"
+      (click)="openCreate()">
+
+      <i class="bi bi-plus-circle-fill"></i>
+
+      Add Assignment
+
+    </button>
+
+  </div>
+
+</div>
+
+
+  <!-- =====================================================
+       SUMMARY CARDS
+       ===================================================== -->
+
+  <div class="summary-grid">
+
+    <!-- TOTAL -->
+
+    <div class="summary-card">
+
+      <div class="summary-icon">
+
+        <i class="fas fa-tasks"></i>
+
+      </div>
+
+      <div class="summary-info">
+
+        <span class="summary-value">
+          {{ totalAssignments }}
+        </span>
+
+        <span class="summary-label">
+          Total Assignments
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- PUBLISHED -->
+
+    <div class="summary-card">
+
+      <div class="summary-icon published">
+
+        <i class="fas fa-paper-plane"></i>
+
+      </div>
+
+      <div class="summary-info">
+
+        <span class="summary-value">
+          {{ publishedCount }}
+        </span>
+
+        <span class="summary-label">
+          Published
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- DRAFT -->
+
+    <div class="summary-card">
+
+      <div class="summary-icon draft">
+
+        <i class="fas fa-file-alt"></i>
+
+      </div>
+
+      <div class="summary-info">
+
+        <span class="summary-value">
+          {{ draftCount }}
+        </span>
+
+        <span class="summary-label">
+          Draft
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- ACTIVE -->
+
+    <div class="summary-card">
+
+      <div class="summary-icon active">
+
+        <i class="fas fa-check-circle"></i>
+
+      </div>
+
+      <div class="summary-info">
+
+        <span class="summary-value">
+          {{ activeCount }}
+        </span>
+
+        <span class="summary-label">
+          Active
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       ERROR
+       ===================================================== -->
+
+  <div
+    *ngIf="errorMessage"
+    class="error-message">
+
+    <i class="fas fa-exclamation-circle"></i>
+
+    <span>
+      {{ errorMessage }}
+    </span>
+
+  </div>
+
+
+  <!-- =====================================================
+       FILTER SECTION
+       ===================================================== -->
+
+  <div class="filter-section">
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+      <i class="fas fa-search"></i>
+
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+        placeholder="Search assignment, class, course or subject..."
+      />
+
+    </div>
+
+
+    <!-- FILTER -->
+
+    <div class="filter-controls">
+
+      <select
+        [(ngModel)]="statusFilter"
+        (change)="onStatusFilterChange()">
+
+        <option value="all">
+          All Assignments
+        </option>
+
+        <option value="published">
+          Published
+        </option>
+
+        <option value="draft">
+          Draft
+        </option>
+
+        <option value="active">
+          Active
+        </option>
+
+        <option value="inactive">
+          Inactive
+        </option>
+
+      </select>
+
+
+      <!-- REFRESH -->
+
+      <button
+        type="button"
+        class="btn-refresh"
+        (click)="loadAssignments()">
+
+        <i class="fas fa-sync-alt"></i>
+
+        Refresh
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       LOADING
+       ===================================================== -->
+
+  <div
+    *ngIf="loading"
+    class="loading-state">
+
+    <div class="spinner"></div>
+
+    <span>
+      Loading assignments...
+    </span>
+
+  </div>
+
+
+  <!-- =====================================================
+       TABLE CARD
+       ===================================================== -->
+
+  <div
+    *ngIf="!loading"
+    class="table-card">
+
+
+    <!-- TABLE HEADER -->
+
+    <div class="table-header">
+
+      <div>
+
+        <h5>
+          My Assignment List
+        </h5>
+
+        <span>
+          {{ filteredAssignments.length }} assignment(s)
+        </span>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="header-refresh"
+        (click)="loadAssignments()"
+        title="Refresh">
+
+        <i class="fas fa-sync-alt"></i>
+
+      </button>
+
+    </div>
+
+
+    <!-- ===================================================
+         TABLE WRAPPER
+         =================================================== -->
+
+    <div class="table-wrapper">
+
+      <table class="assignment-table">
+
+        <thead>
+
+          <tr>
+
+            <th>
+              #
+            </th>
+
+            <th>
+              Assignment
+            </th>
+
+            <th>
+              Class
+            </th>
+
+            <th>
+              Course
+            </th>
+
+            <th>
+              Subject
+            </th>
+
+            <th>
+              Deadline
+            </th>
+
+            <th>
+              Marks
+            </th>
+
+            <th>
+              Submissions
+            </th>
+
+            <th>
+              Status
+            </th>
+
+            <th>
+              Attachment
+            </th>
+
+            <th>
+              Actions
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+
+          <!-- =============================================
+               ASSIGNMENT ROW
+               ============================================= -->
+
+          <tr
+            *ngFor="
+              let assignment of filteredAssignments;
+              let i = index;
+              trackBy: trackById
+            ">
+
+
+            <!-- NUMBER -->
+
+            <td>
+
+              <span class="row-number">
+                {{ i + 1 }}
+              </span>
+
+            </td>
+
+
+            <!-- ASSIGNMENT -->
+
+            <td>
+
+              <div class="assignment-info">
+
+                <div class="assignment-icon">
+
+                  <i class="fas fa-file-alt"></i>
+
+                </div>
+
+
+                <div class="assignment-details">
+
+                  <strong>
+                    {{ assignment.title }}
+                  </strong>
+
+                  <small
+                    *ngIf="assignment.description">
+
+                    {{ assignment.description }}
+
+                  </small>
+
+                </div>
+
+              </div>
+
+            </td>
+
+
+            <!-- CLASS -->
+
+            <td>
+
+              <div class="academic-info">
+
+                <strong>
+                  {{ assignment.className || '-' }}
+                </strong>
+
+                <span
+                  *ngIf="assignment.sectionName">
+
+                  Section:
+                  {{ assignment.sectionName }}
+
+                </span>
+
+              </div>
+
+            </td>
+
+
+            <!-- COURSE -->
+
+            <td>
+
+              <span class="course-name">
+
+                {{ assignment.courseName || '-' }}
+
+              </span>
+
+            </td>
+
+
+            <!-- SUBJECT -->
+
+            <td>
+
+              <span class="subject-name">
+
+                {{ assignment.subjectName || '-' }}
+
+              </span>
+
+            </td>
+
+
+            <!-- DEADLINE -->
+
+            <td>
+
+              <div
+                class="deadline"
+                [class.expired]="
+                  isExpired(assignment.deadline)
+                ">
+
+                <i class="far fa-calendar-alt"></i>
+
+                <span>
+
+                  {{ assignment.deadline | date:'dd MMM yyyy' }}
+
+                </span>
+
+              </div>
+
+
+              <small
+                *ngIf="isExpired(assignment.deadline)"
+                class="expired-text">
+
+                Expired
+
+              </small>
+
+            </td>
+
+
+            <!-- MARKS -->
+
+            <td>
+
+              <span class="marks">
+
+                {{ assignment.maximumMarks }}
+
+              </span>
+
+            </td>
+
+
+            <!-- SUBMISSIONS -->
+
+            <td>
+
+              <button
+                type="button"
+                class="submission-count"
+                (click)="reviewAssignment(assignment)">
+
+                <i class="fas fa-users"></i>
+
+                <span>
+                  {{ assignment.submissionCount || 0 }}
+                </span>
+
+              </button>
+
+            </td>
+
+
+            <!-- STATUS -->
+
+            <td>
+
+              <span
+                class="status-badge"
+                [ngClass]="
+                  getStatusClass(assignment)
+                ">
+
+                <i
+                  class="fas"
+                  [ngClass]="{
+
+                    'fa-check-circle':
+                      assignment.isPublished &&
+                      assignment.isActive,
+
+                    'fa-file-alt':
+                      !assignment.isPublished &&
+                      assignment.isActive,
+
+                    'fa-ban':
+                      !assignment.isActive
+
+                  }">
+
+                </i>
+
+                {{ getStatusText(assignment) }}
+
+              </span>
+
+            </td>
+
+
+            <!-- ATTACHMENT -->
+
+            <!-- ATTACHMENT -->
+
+             <!-- ATTACHMENT -->
+
+<td>
+
+  <button
+    *ngIf="assignment.attachmentFileName"
+    type="button"
+    class="attachment-download"
+    (click)="downloadAttachment(assignment)"
+    [title]="'Download ' + assignment.attachmentFileName">
+
+    <i class="bi bi-download"></i>
+
+  </button>
+
+  <span
+    *ngIf="!assignment.attachmentFileName"
+    class="no-attachment">
+
+    <i class="bi bi-dash"></i>
+    None
+
+  </span>
+
+</td>
+
+
+            <td class="actions">
+
+  <!-- VIEW -->
+
+  <button
+    type="button"
+    class="action-btn view-btn"
+    title="View Assignment"
+    (click)="openView(assignment)">
+
+    <i class="bi bi-eye-fill"></i>
+
+  </button>
+
+
+  <!-- EDIT -->
+
+  <button
+    type="button"
+    class="action-btn edit-btn"
+    title="Edit Assignment"
+    (click)="openEdit(assignment)">
+
+    <i class="bi bi-pencil-square"></i>
+
+  </button>
+
+
+  <!-- REVIEW -->
+
+  <button
+    type="button"
+    class="action-btn review-btn"
+    title="Review Submissions"
+    (click)="reviewAssignment(assignment)">
+
+    <i class="bi bi-person-check-fill"></i>
+
+  </button>
+
+
+  <!-- PUBLISH -->
+
+  <button
+    *ngIf="
+      !assignment.isPublished &&
+      assignment.isActive
+    "
+    type="button"
+    class="action-btn publish-btn"
+    title="Publish Assignment"
+    (click)="publish(assignment)">
+
+    <i class="bi bi-send-fill"></i>
+
+  </button>
+
+
+  <!-- MOVE TO DRAFT -->
+
+  <button
+    *ngIf="
+      assignment.isPublished &&
+      assignment.isActive
+    "
+    type="button"
+    class="action-btn draft-btn"
+    title="Move To Draft"
+    (click)="unpublish(assignment)">
+
+    <i class="bi bi-file-earmark-text-fill"></i>
+
+  </button>
+
+
+  <!-- TOGGLE ACTIVE -->
+
+  <button
+    type="button"
+    class="action-btn toggle-btn"
+    [title]="
+      assignment.isActive
+        ? 'Deactivate Assignment'
+        : 'Activate Assignment'
+    "
+    (click)="toggleActive(assignment)">
+
+    <i
+      class="bi"
+      [ngClass]="
+        assignment.isActive
+          ? 'bi-toggle-on'
+          : 'bi-toggle-off'
+      ">
+    </i>
+
+  </button>
+
+
+  <!-- DELETE -->
+
+  <button
+    type="button"
+    class="action-btn delete-btn"
+    title="Delete Assignment"
+    (click)="deleteAssignment(assignment)">
+
+    <i class="bi bi-trash3-fill"></i>
+
+  </button>
+
+</td>
+
+          </tr>
+
+
+          <!-- =============================================
+               EMPTY STATE
+               ============================================= -->
+
+          <tr
+            *ngIf="filteredAssignments.length === 0">
+
+            <td
+              colspan="11"
+              class="empty-state">
+
+              <div class="empty-content">
+
+                <div class="empty-icon">
+
+                  <i class="fas fa-tasks"></i>
+
+                </div>
+
+
+                <h4>
+                  No assignments found
+                </h4>
+
+
+                <p
+                  *ngIf="searchTerm">
+
+                  Try changing your search or filter.
+
+                </p>
+
+
+                <p
+                  *ngIf="!searchTerm">
+
+                  You haven't created any assignments yet.
+
+                </p>
+
+
+                <button
+                  *ngIf="!searchTerm"
+                  type="button"
+                  class="btn-add empty-add"
+                  (click)="openCreate()">
+
+                  <i class="fas fa-plus"></i>
+
+                  Create Assignment
+
+                </button>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>

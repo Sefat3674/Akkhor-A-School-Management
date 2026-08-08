@@ -1,14 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <!-- Student Enrollment Lookup DTO -->
+  <ItemGroup>
+    <Compile Remove="DTOs\StudentEnrollmentLookupDto.cs" />
+    <None Include="DTOs\StudentEnrollmentLookupDto.cs" />
+  </ItemGroup>
+
+  <!-- NuGet Packages -->
   <ItemGroup>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
   </ItemGroup>
+
+  <!-- Project References -->
   <ItemGroup>
     <ProjectReference Include="..\Akkhor.Domain\Akkhor.Domain.csproj" />
   </ItemGroup>
-</Project>
 
+  <!-- ASP.NET Core types such as IFormFile -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+</Project>

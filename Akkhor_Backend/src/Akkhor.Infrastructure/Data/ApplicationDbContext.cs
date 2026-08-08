@@ -37,6 +37,12 @@ public class ApplicationDbContext
 
     public DbSet<StudentEnrollment> StudentEnrollments { get; set; }
 
+    public DbSet<TeacherAssignment> TeacherAssignments { get; set; }
+     public DbSet<AssignmentSubmission> AssignmentSubmissions { get; set; }
+
+    public DbSet<Assignment> Assignments { get; set; }
+
+
 
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -274,5 +280,281 @@ public class ApplicationDbContext
         builder.Entity<Course>()
             .Property(x => x.UpdatedAt)
             .HasColumnType("timestamp with time zone");
+
+
+        // =====================================================
+        // Teacher Assignment
+        // =====================================================
+
+        builder.Entity<TeacherAssignment>()
+            .ToTable("TeacherAssignments");
+
+
+        builder.Entity<TeacherAssignment>()
+            .HasKey(x => x.Id);
+
+
+        // Teacher
+        builder.Entity<TeacherAssignment>()
+            .HasOne(x => x.Teacher)
+            .WithMany()
+            .HasForeignKey(x => x.TeacherId)
+            .HasPrincipalKey(x => x.Id)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        // Academic Year
+        builder.Entity<TeacherAssignment>()
+            .HasOne(x => x.AcademicYear)
+            .WithMany()
+            .HasForeignKey(x => x.AcademicYearId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        // Class
+        builder.Entity<TeacherAssignment>()
+            .HasOne(x => x.Class)
+            .WithMany()
+            .HasForeignKey(x => x.ClassId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        // Section
+        builder.Entity<TeacherAssignment>()
+            .HasOne(x => x.Section)
+            .WithMany()
+            .HasForeignKey(x => x.SectionId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+
+        // Course
+        builder.Entity<TeacherAssignment>()
+            .HasOne(x => x.Course)
+            .WithMany()
+            .HasForeignKey(x => x.CourseId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        // Subject
+        builder.Entity<TeacherAssignment>()
+            .HasOne(x => x.Subject)
+            .WithMany()
+            .HasForeignKey(x => x.SubjectId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        // TeacherId PostgreSQL varchar
+        builder.Entity<TeacherAssignment>()
+            .Property(x => x.TeacherId)
+            .HasMaxLength(450);
+
+
+        // Audit fields
+        builder.Entity<TeacherAssignment>()
+            .Property(x => x.CreatedBy)
+            .HasMaxLength(450);
+
+        builder.Entity<TeacherAssignment>()
+            .Property(x => x.UpdatedBy)
+            .HasMaxLength(450);
+
+
+        // Date fields
+        builder.Entity<TeacherAssignment>()
+            .Property(x => x.CreatedAt)
+            .HasColumnType("timestamp with time zone");
+
+        builder.Entity<TeacherAssignment>()
+            .Property(x => x.UpdatedAt)
+            .HasColumnType("timestamp with time zone");
+
+
+        // Prevent duplicate teacher assignment
+        builder.Entity<TeacherAssignment>()
+            .HasIndex(x => new
+            {
+                x.TeacherId,
+                x.AcademicYearId,
+                x.ClassId,
+                x.SectionId,
+                x.CourseId,
+                x.SubjectId
+            })
+            .IsUnique();
+
+
+
+        // =====================================================
+        // ASSIGNMENTS
+        // =====================================================
+
+        builder.Entity<Assignment>()
+            .ToTable("Assignments");
+
+        builder.Entity<Assignment>()
+            .HasKey(x => x.Id);
+
+
+        // -----------------------------------------------------
+        // Teacher
+        // -----------------------------------------------------
+
+        builder.Entity<Assignment>()
+            .HasOne(x => x.Teacher)
+            .WithMany()
+            .HasForeignKey(x => x.TeacherId)
+            .HasPrincipalKey(x => x.Id)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        // -----------------------------------------------------
+        // Academic Year
+        // -----------------------------------------------------
+
+        builder.Entity<Assignment>()
+            .HasOne(x => x.AcademicYear)
+            .WithMany()
+            .HasForeignKey(x => x.AcademicYearId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        // -----------------------------------------------------
+        // Class
+        // -----------------------------------------------------
+
+        builder.Entity<Assignment>()
+            .HasOne(x => x.Class)
+            .WithMany()
+            .HasForeignKey(x => x.ClassId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        // -----------------------------------------------------
+        // Section
+        // -----------------------------------------------------
+
+        builder.Entity<Assignment>()
+            .HasOne(x => x.Section)
+            .WithMany()
+            .HasForeignKey(x => x.SectionId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+
+        // -----------------------------------------------------
+        // Course
+        // -----------------------------------------------------
+
+        builder.Entity<Assignment>()
+            .HasOne(x => x.Course)
+            .WithMany()
+            .HasForeignKey(x => x.CourseId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        // -----------------------------------------------------
+        // Subject
+        // -----------------------------------------------------
+
+        builder.Entity<Assignment>()
+            .HasOne(x => x.Subject)
+            .WithMany()
+            .HasForeignKey(x => x.SubjectId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        // -----------------------------------------------------
+        // TeacherId
+        // -----------------------------------------------------
+
+        builder.Entity<Assignment>()
+            .Property(x => x.TeacherId)
+            .HasMaxLength(450);
+
+
+        // -----------------------------------------------------
+        // Title
+        // -----------------------------------------------------
+
+        builder.Entity<Assignment>()
+            .Property(x => x.Title)
+            .IsRequired()
+            .HasMaxLength(250);
+
+
+        // -----------------------------------------------------
+        // Description
+        // -----------------------------------------------------
+
+        builder.Entity<Assignment>()
+            .Property(x => x.Description)
+            .HasMaxLength(5000);
+
+
+        // -----------------------------------------------------
+        // Status
+        // -----------------------------------------------------
+
+        builder.Entity<Assignment>()
+            .Property(x => x.IsPublished)
+            .IsRequired()
+            .HasMaxLength(30);
+
+
+        // -----------------------------------------------------
+        // Max Marks
+        // -----------------------------------------------------
+
+        builder.Entity<Assignment>()
+            .Property(x => x.MaximumMarks)
+            .HasPrecision(10, 2);
+
+
+        // -----------------------------------------------------
+        // Date fields
+        // -----------------------------------------------------
+
+        builder.Entity<Assignment>()
+            .Property(x => x.Deadline)
+            .HasColumnType("timestamp with time zone");
+
+        builder.Entity<Assignment>()
+            .Property(x => x.CreatedAt)
+            .HasColumnType("timestamp with time zone");
+
+        builder.Entity<Assignment>()
+            .Property(x => x.UpdatedAt)
+            .HasColumnType("timestamp with time zone");
+
+
+        // -----------------------------------------------------
+        // Audit fields
+        // -----------------------------------------------------
+
+        builder.Entity<Assignment>()
+            .Property(x => x.CreatedBy)
+            .HasMaxLength(450);
+
+        builder.Entity<Assignment>()
+            .Property(x => x.UpdatedBy)
+            .HasMaxLength(450);
+
+
+        // -----------------------------------------------------
+        // Indexes
+        // -----------------------------------------------------
+
+        builder.Entity<Assignment>()
+            .HasIndex(x => x.TeacherId);
+
+        builder.Entity<Assignment>()
+            .HasIndex(x => new
+            {
+                x.ClassId,
+                x.CourseId,
+                x.SubjectId
+            });
+
+        builder.Entity<Assignment>()
+            .HasIndex(x => x.Deadline);
     }
 }

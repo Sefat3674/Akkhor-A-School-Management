@@ -1,0 +1,738 @@
+<div class="marks-feedback-page">
+
+  <!-- =====================================================
+       LOADING
+  ====================================================== -->
+
+  <div
+    class="loading-state"
+    *ngIf="loading"
+  >
+    <div class="spinner"></div>
+
+    <p>
+      Loading submission...
+    </p>
+  </div>
+
+
+  <!-- =====================================================
+       ERROR
+  ====================================================== -->
+
+  <div
+    class="alert alert-error"
+    *ngIf="!loading && errorMessage"
+  >
+    <i class="fas fa-exclamation-circle"></i>
+
+    <span>
+      {{ errorMessage }}
+    </span>
+  </div>
+
+
+  <!-- =====================================================
+       SUCCESS
+  ====================================================== -->
+
+  <div
+    class="alert alert-success"
+    *ngIf="successMessage"
+  >
+    <i class="fas fa-check-circle"></i>
+
+    <span>
+      {{ successMessage }}
+    </span>
+  </div>
+
+
+  <!-- =====================================================
+       CONTENT
+  ====================================================== -->
+
+  <div
+    class="content"
+    *ngIf="!loading && submission"
+  >
+
+    <!-- ===================================================
+         HEADER
+    ==================================================== -->
+
+    <div class="page-header">
+
+      <div class="header-left">
+
+        <button
+          type="button"
+          class="back-button"
+          (click)="goBack()"
+        >
+          <i class="fas fa-arrow-left"></i>
+
+          Back to Submissions
+        </button>
+
+
+        <div class="title-area">
+
+          <h2>
+            Marks &amp; Feedback
+          </h2>
+
+          <p>
+            Review and evaluate this student submission.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="status-badge"
+        [ngClass]="getStatusClass()"
+      >
+
+        <span class="status-dot"></span>
+
+        {{ getStatusText() }}
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         ASSIGNMENT
+    ==================================================== -->
+
+    <div class="card assignment-card">
+
+      <div class="card-header">
+
+        <div class="card-title">
+
+          <div class="title-icon">
+            <i class="fas fa-file-alt"></i>
+          </div>
+
+          <div>
+
+            <h3>
+              Assignment
+            </h3>
+
+            <p>
+              Assignment information
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="assignment-content">
+
+        <div class="assignment-main">
+
+          <h2>
+            {{ submission.assignmentTitle || 'Assignment' }}
+          </h2>
+
+
+          <div class="assignment-meta">
+
+            <span>
+              <i class="fas fa-user-graduate"></i>
+
+              {{ submission.studentName || 'Student' }}
+            </span>
+
+
+            <span>
+              <i class="fas fa-calendar-alt"></i>
+
+              Submitted:
+              {{ formatDate(submission.submittedAt) }}
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="maximum-marks">
+
+          <span class="label">
+            Maximum Marks
+          </span>
+
+          <strong>
+            {{ maximumMarks }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         STUDENT INFORMATION
+    ==================================================== -->
+
+    <div class="card student-card">
+
+      <div class="card-header">
+
+        <div class="card-title">
+
+          <div class="title-icon student-icon">
+            <i class="fas fa-user-graduate"></i>
+          </div>
+
+          <div>
+
+            <h3>
+              Student Information
+            </h3>
+
+            <p>
+              Student submission details
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="student-grid">
+
+        <div class="info-item">
+
+          <span class="info-label">
+            Student Name
+          </span>
+
+          <span class="info-value">
+            {{ submission.studentName || '-' }}
+          </span>
+
+        </div>
+
+
+        <div class="info-item">
+
+          <span class="info-label">
+            Student ID
+          </span>
+
+          <span class="info-value">
+            {{ submission.studentId || '-' }}
+          </span>
+
+        </div>
+
+
+        <div class="info-item">
+
+          <span class="info-label">
+            Submitted At
+          </span>
+
+          <span class="info-value">
+            {{ formatDate(submission.submittedAt) }}
+          </span>
+
+        </div>
+
+
+        <div class="info-item">
+
+          <span class="info-label">
+            Status
+          </span>
+
+          <span
+            class="mini-status"
+            [ngClass]="getStatusClass()"
+          >
+            {{ getStatusText() }}
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         STUDENT SUBMISSION
+    ==================================================== -->
+
+    <div class="card submission-card">
+
+      <div class="card-header">
+
+        <div class="card-title">
+
+          <div class="title-icon submission-icon">
+            <i class="fas fa-paper-plane"></i>
+          </div>
+
+          <div>
+
+            <h3>
+              Student Submission
+            </h3>
+
+            <p>
+              Review the student's submitted work.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="submission-content">
+
+        <!-- SUBMISSION TEXT -->
+
+        <div class="submission-text-section">
+
+          <div class="section-label">
+
+            <i class="fas fa-align-left"></i>
+
+            Submission Text
+
+          </div>
+
+
+          <div
+            class="submission-text"
+            *ngIf="submission.submissionText"
+          >
+            {{ submission.submissionText }}
+          </div>
+
+
+          <div
+            class="empty-submission"
+            *ngIf="!submission.submissionText"
+          >
+
+            <i class="fas fa-file-alt"></i>
+
+            <p>
+              No submission text was provided.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- ATTACHMENT -->
+
+        <div
+          class="attachment-section"
+          *ngIf="hasAttachment()"
+        >
+
+          <div class="section-label">
+
+            <i class="fas fa-paperclip"></i>
+
+            Attachment
+
+          </div>
+
+
+          <div class="attachment-box">
+
+            <div class="file-icon">
+
+              <i class="fas fa-file"></i>
+
+            </div>
+
+
+            <div class="file-info">
+
+              <strong>
+                {{
+                  submission.attachmentFileName ||
+                  'Submitted File'
+                }}
+              </strong>
+
+
+              <span>
+
+                {{
+                  submission.attachmentContentType ||
+                  'File'
+                }}
+
+                •
+                
+                {{
+                  formatFileSize(
+                    submission.attachmentFileSize
+                  )
+                }}
+
+              </span>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="download-button"
+              (click)="downloadAttachment()"
+            >
+
+              <i class="fas fa-download"></i>
+
+              Open File
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- NO ATTACHMENT -->
+
+        <div
+          class="no-attachment"
+          *ngIf="!hasAttachment()"
+        >
+
+          <i class="fas fa-paperclip"></i>
+
+          No attachment submitted.
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         MARKS & FEEDBACK
+    ==================================================== -->
+
+    <div class="card evaluation-card">
+
+      <div class="card-header">
+
+        <div class="card-title">
+
+          <div class="title-icon evaluation-icon">
+
+            <i class="fas fa-star"></i>
+
+          </div>
+
+          <div>
+
+            <h3>
+              Marks &amp; Feedback
+            </h3>
+
+            <p>
+              Enter marks and provide feedback.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="evaluation-content">
+
+        <!-- MARKS -->
+
+        <div class="marks-section">
+
+          <label
+            for="marksObtained"
+            class="form-label"
+          >
+
+            Marks Obtained
+
+            <span class="required">
+              *
+            </span>
+
+          </label>
+
+
+          <div class="marks-input-wrapper">
+
+            <input
+              id="marksObtained"
+              type="number"
+              class="marks-input"
+              [(ngModel)]="marksObtained"
+              (ngModelChange)="onMarksChange()"
+              min="0"
+              [max]="maximumMarks"
+              step="0.01"
+              placeholder="Enter marks"
+            />
+
+
+            <span class="marks-total">
+              / {{ maximumMarks }}
+            </span>
+
+          </div>
+
+
+          <div
+            class="field-error"
+            *ngIf="
+              marksObtained !== null &&
+              !isMarksValid()
+            "
+          >
+
+            <i class="fas fa-exclamation-circle"></i>
+
+            {{ getMarksError() }}
+
+          </div>
+
+
+          <div
+            class="marks-summary"
+            *ngIf="isMarksValid()"
+          >
+
+            <div class="percentage">
+
+              <span>
+                Percentage
+              </span>
+
+              <strong>
+                {{ getMarksPercentage() | number:'1.0-2' }}%
+              </strong>
+
+            </div>
+
+
+            <div class="grade">
+
+              <span>
+                Grade
+              </span>
+
+              <strong>
+                {{ getGrade() }}
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- FEEDBACK -->
+
+        <div class="feedback-section">
+
+          <label
+            for="feedback"
+            class="form-label"
+          >
+
+            Feedback
+
+            <span class="optional">
+              Optional
+            </span>
+
+          </label>
+
+
+          <textarea
+            id="feedback"
+            class="feedback-input"
+            [(ngModel)]="feedback"
+            (ngModelChange)="onFeedbackChange()"
+            rows="7"
+            maxlength="2000"
+            placeholder="Write feedback for the student..."
+          ></textarea>
+
+
+          <div class="character-count">
+
+            {{ feedback.length }} / 2000
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         PREVIOUS EVALUATION
+    ==================================================== -->
+
+    <div
+      class="card previous-evaluation-card"
+      *ngIf="isEvaluated()"
+    >
+
+      <div class="card-header">
+
+        <div class="card-title">
+
+          <div class="title-icon evaluated-icon">
+
+            <i class="fas fa-check-double"></i>
+
+          </div>
+
+          <div>
+
+            <h3>
+              Previous Evaluation
+            </h3>
+
+            <p>
+              Existing grading information
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="previous-evaluation">
+
+        <div class="previous-item">
+
+          <span>
+            Graded At
+          </span>
+
+          <strong>
+            {{ formatDate(submission.gradedAt) }}
+          </strong>
+
+        </div>
+
+
+        <div class="previous-item">
+
+          <span>
+            Graded By
+          </span>
+
+          <strong>
+            {{ submission.gradedBy || '-' }}
+          </strong>
+
+        </div>
+
+
+        <div class="previous-item">
+
+          <span>
+            Marks
+          </span>
+
+          <strong>
+            {{ submission.marksObtained ?? '-' }}
+            / {{ maximumMarks }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         ACTION BUTTONS
+    ==================================================== -->
+
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="cancel()"
+        [disabled]="saving"
+      >
+
+        <i class="fas fa-arrow-left"></i>
+
+        Cancel
+
+      </button>
+
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="saveEvaluation()"
+        [disabled]="
+          saving ||
+          !submission ||
+          !isMarksValid()
+        "
+      >
+
+        <span
+          class="button-spinner"
+          *ngIf="saving"
+        ></span>
+
+
+        <i
+          class="fas fa-save"
+          *ngIf="!saving"
+        ></i>
+
+
+        {{ saving ? 'Saving...' : 'Save Marks & Feedback' }}
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

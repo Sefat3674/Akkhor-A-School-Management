@@ -1,0 +1,635 @@
+<div class="container-fluid my-classes-page">
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <div class="top-section">
+
+    <div>
+
+      <h2>
+        <i class="bi bi-building"></i>
+        My Classes
+      </h2>
+
+      <p>
+        View your assigned classes, sections, rooms and subjects
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       ERROR MESSAGE
+  ====================================================== -->
+
+  <div
+    *ngIf="errorMessage"
+    class="alert alert-danger">
+
+    <i class="bi bi-exclamation-circle-fill"></i>
+
+    <span>
+      {{ errorMessage }}
+    </span>
+
+    <button
+      type="button"
+      class="alert-close"
+      (click)="errorMessage = ''">
+
+      ×
+
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       SUMMARY CARDS
+  ====================================================== -->
+
+  <div class="summary-wrapper">
+
+  <!-- TOTAL ASSIGNMENTS -->
+  <div class="summary-card">
+
+    <div class="summary-icon blue">
+      <i class="bi bi-building"></i>
+    </div>
+
+    <div>
+      <span>Total Assigned Classes </span>
+
+      <strong>
+        {{ recordCount }}
+      </strong>
+    </div>
+
+  </div>
+
+
+  <!-- PRIMARY CLASSES -->
+  <div class="summary-card">
+
+    <div class="summary-icon green">
+      <i class="bi bi-star-fill"></i>
+    </div>
+
+    <div>
+      <span>Primary Classes</span>
+
+      <strong>
+        {{ primaryCount }}
+      </strong>
+    </div>
+
+  </div>
+
+
+  <!-- ACTIVE -->
+  <div class="summary-card">
+
+    <div class="summary-icon purple">
+      <i class="bi bi-check-circle-fill"></i>
+    </div>
+
+    <div>
+      <span>Active</span>
+
+      <strong>
+        {{ activeCount }}
+      </strong>
+    </div>
+
+  </div>
+
+</div>
+
+
+  <!-- =====================================================
+       TABLE CARD
+  ====================================================== -->
+
+  <div class="table-card">
+
+
+    <!-- ===================================================
+         TABLE HEADER
+    ==================================================== -->
+
+    <div class="table-header">
+
+
+      <div>
+
+        <h5>
+          Assigned Classes
+        </h5>
+
+        <span class="record-count">
+
+          {{ filteredClasses.length }}
+
+          assign Class(es)
+
+        </span>
+
+      </div>
+
+
+      <!-- SEARCH -->
+
+      <div class="search-box">
+
+        <i class="bi bi-search"></i>
+
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="Search class, section, room, course, subject..."
+        />
+
+
+        <button
+          *ngIf="searchTerm"
+          type="button"
+          class="clear-search"
+          (click)="searchTerm = ''">
+
+          ×
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         FILTERS
+    ==================================================== -->
+
+    <div class="filter-section">
+
+
+      <!-- ACADEMIC YEAR -->
+
+      <div class="filter-group">
+
+        <label>
+          Academic Year
+        </label>
+
+        <select
+          [(ngModel)]="selectedAcademicYear"
+          (ngModelChange)="onAcademicYearChange()">
+
+          <option value="">
+            All Academic Years
+          </option>
+
+          <option
+            *ngFor="let year of academicYears"
+            [value]="year.academicYearId">
+
+            {{ year.academicYearName }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- CLASS -->
+
+      <div class="filter-group">
+
+        <label>
+          Class
+        </label>
+
+        <select
+          [(ngModel)]="selectedClass"
+          (ngModelChange)="onClassChange()">
+
+          <option value="">
+            All Classes
+          </option>
+
+          <option
+            *ngFor="let item of availableClasses"
+            [value]="item.classId">
+
+            {{ item.className }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- SECTION -->
+
+      <div class="filter-group">
+
+        <label>
+          Section
+        </label>
+
+        <select
+          [(ngModel)]="selectedSection">
+
+          <option value="">
+            All Sections
+          </option>
+
+          <option
+            *ngFor="let item of availableSections"
+            [value]="item.sectionId">
+
+            {{ item.sectionName || 'All Sections' }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- CLEAR -->
+
+      <button
+        type="button"
+        class="btn-clear"
+        (click)="clearFilters()">
+
+        <i class="bi bi-arrow-counterclockwise"></i>
+
+        Clear
+
+      </button>
+
+    </div>
+
+
+    <!-- ===================================================
+         LOADING
+    ==================================================== -->
+
+    <div
+      *ngIf="loading"
+      class="loading-container">
+
+      <div class="spinner"></div>
+
+      <span>
+        Loading your classes...
+      </span>
+
+    </div>
+
+
+    <!-- ===================================================
+         TABLE
+    ==================================================== -->
+
+    <div
+      *ngIf="!loading"
+      class="table-responsive">
+
+
+      <table class="table align-middle">
+
+
+        <thead>
+
+          <tr>
+
+            <th>
+              Class
+            </th>
+
+            <th>
+              Academic Year
+            </th>
+
+            <th>
+              Section
+            </th>
+
+            <th>
+              Room
+            </th>
+
+            <th>
+              Course
+            </th>
+
+            <th>
+              Subject
+            </th>
+
+            <th>
+              Type
+            </th>
+
+            <th>
+              Status
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+
+          <!-- =================================================
+               DATA
+          ================================================== -->
+
+          <tr
+            *ngFor="
+              let item of filteredClasses;
+              let i = index;
+              trackBy: trackByAssignmentId
+            ">
+
+
+            <!-- CLASS -->
+
+            <td>
+
+              <div class="class-box">
+
+                <div class="class-icon">
+
+                  <i class="bi bi-mortarboard-fill"></i>
+
+                </div>
+
+                <div>
+
+                  <strong>
+                    {{ item.className }}
+                  </strong>
+
+                  <small>
+                    Class
+                  </small>
+
+                </div>
+
+              </div>
+
+            </td>
+
+
+            <!-- ACADEMIC YEAR -->
+
+            <td>
+
+              <div class="year-box">
+
+                <i class="bi bi-calendar-range"></i>
+
+                {{ item.academicYearName }}
+
+              </div>
+
+            </td>
+
+
+            <!-- SECTION -->
+
+            <td>
+
+              <span
+                *ngIf="item.sectionName"
+                class="section-badge">
+
+                <i class="bi bi-diagram-3-fill"></i>
+
+                {{ item.sectionName }}
+
+              </span>
+
+
+              <span
+                *ngIf="!item.sectionName"
+                class="all-section">
+
+                All Sections
+
+              </span>
+
+            </td>
+
+
+            <!-- ROOM -->
+
+            <td>
+
+              <div class="room-box">
+
+                <i class="bi bi-door-open-fill"></i>
+
+                <span>
+
+                  {{
+                    item.roomNumber ||
+                    'Not Assigned'
+                  }}
+
+                </span>
+
+              </div>
+
+            </td>
+
+
+            <!-- COURSE -->
+
+            <td>
+
+              <div class="course-box">
+
+                <i class="bi bi-journal-bookmark-fill"></i>
+
+                <span>
+                  {{ item.courseName || '-' }}
+                </span>
+
+              </div>
+
+            </td>
+
+
+            <!-- SUBJECT -->
+
+            <td>
+
+              <div class="subject-box">
+
+                <i class="bi bi-book-half"></i>
+
+                <strong>
+                  {{ item.subjectName || '-' }}
+                </strong>
+
+              </div>
+
+            </td>
+
+
+            <!-- TYPE -->
+
+            <td>
+
+              <span
+                *ngIf="item.isPrimary"
+                class="primary-badge">
+
+                <i class="bi bi-star-fill"></i>
+
+                Primary
+
+              </span>
+
+
+              <span
+                *ngIf="!item.isPrimary"
+                class="secondary-badge">
+
+                Secondary
+
+              </span>
+
+            </td>
+
+
+            <!-- STATUS -->
+
+            <td>
+
+              <span
+                class="status"
+                [class.active]="item.isActive"
+                [class.inactive]="!item.isActive">
+
+                <i
+                  class="bi"
+                  [ngClass]="
+                    item.isActive
+                      ? 'bi-toggle-on'
+                      : 'bi-toggle-off'
+                  ">
+                </i>
+
+                {{
+                  item.isActive
+                    ? 'Active'
+                    : 'Inactive'
+                }}
+
+              </span>
+
+            </td>
+
+
+          </tr>
+
+
+          <!-- =================================================
+               EMPTY
+          ================================================== -->
+
+          <tr
+            *ngIf="
+              filteredClasses.length === 0 &&
+              !loading
+            ">
+
+            <td
+              colspan="8"
+              class="empty">
+
+
+              <div class="empty-icon">
+
+                <i class="bi bi-building-x"></i>
+
+              </div>
+
+
+              <h4>
+                No Classes Found
+              </h4>
+
+
+              <p
+                *ngIf="
+                  searchTerm ||
+                  selectedAcademicYear ||
+                  selectedClass ||
+                  selectedSection
+                ">
+
+                Try changing your search or filters.
+
+              </p>
+
+
+              <p
+                *ngIf="
+                  !searchTerm &&
+                  !selectedAcademicYear &&
+                  !selectedClass &&
+                  !selectedSection
+                ">
+
+                No classes have been assigned to you yet.
+
+              </p>
+
+
+              <button
+                *ngIf="
+                  searchTerm ||
+                  selectedAcademicYear ||
+                  selectedClass ||
+                  selectedSection
+                "
+                type="button"
+                class="btn-clear-empty"
+                (click)="clearFilters()">
+
+                <i class="bi bi-arrow-counterclockwise"></i>
+
+                Clear Filters
+
+              </button>
+
+
+            </td>
+
+          </tr>
+
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+  </div>
+
+</div>

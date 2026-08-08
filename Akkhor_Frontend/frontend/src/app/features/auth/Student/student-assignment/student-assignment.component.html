@@ -1,0 +1,639 @@
+<!-- =====================================================
+     PAGE HEADER
+====================================================== -->
+
+<div class="header-content">
+
+  <h2>
+    <i class="fas fa-tasks"></i>
+    My Assignments
+  </h2>
+
+  <p>
+    View and submit your course assignments
+  </p>
+
+</div>
+
+
+<!-- Refresh -->
+
+<button
+  type="button"
+  class="btn-refresh"
+  (click)="refresh()"
+  [disabled]="loading">
+
+  <i class="fas fa-sync-alt"></i>
+
+  Refresh
+
+</button>
+
+
+<!-- =====================================================
+     ERROR
+====================================================== -->
+
+<div
+  class="error-message"
+  *ngIf="errorMessage">
+
+  <i class="fas fa-exclamation-circle"></i>
+
+  <span>
+    {{ errorMessage }}
+  </span>
+
+  <button
+    type="button"
+    class="retry-btn"
+    (click)="refresh()">
+
+    Try Again
+
+  </button>
+
+</div>
+
+
+<!-- =====================================================
+     SEARCH + FILTER
+====================================================== -->
+
+<div class="filters">
+
+
+  <!-- Search -->
+
+  <div class="search-box">
+
+    <i class="fas fa-search"></i>
+
+    <input
+      type="text"
+      [(ngModel)]="searchText"
+      (input)="onSearch()"
+      placeholder="Search assignment, course or subject..."
+    />
+
+
+    <button
+      type="button"
+      class="clear-search"
+      *ngIf="searchText"
+      (click)="clearSearch()">
+
+      <i class="fas fa-times"></i>
+
+    </button>
+
+  </div>
+
+
+  <!-- Status -->
+
+  <div class="status-filter">
+
+    <label>
+      Status
+    </label>
+
+    <select
+      [(ngModel)]="selectedStatus"
+      (change)="onStatusChange()">
+
+      <option value="all">
+        All Assignments
+      </option>
+
+      <option value="pending">
+        Pending
+      </option>
+
+      <option value="submitted">
+        Submitted
+      </option>
+
+      <option value="evaluated">
+        Evaluated
+      </option>
+
+      <option value="overdue">
+        Overdue
+      </option>
+
+    </select>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     LOADING
+====================================================== -->
+
+<div
+  class="loading-state"
+  *ngIf="loading">
+
+  <div class="spinner"></div>
+
+  <p>
+    Loading assignments...
+  </p>
+
+</div>
+
+
+<!-- =====================================================
+     MAIN CONTENT
+====================================================== -->
+
+<ng-container *ngIf="!loading">
+
+
+  <!-- ===================================================
+       SUMMARY
+  ==================================================== -->
+
+  <div
+    class="assignment-summary"
+    *ngIf="assignments.length > 0">
+
+
+    <!-- Total -->
+
+    <div class="summary-item">
+
+      <span class="summary-label">
+        Total
+      </span>
+
+      <strong>
+        {{ totalCount }}
+      </strong>
+
+    </div>
+
+
+    <!-- Pending -->
+
+    <div class="summary-item">
+
+      <span class="summary-label">
+        Pending
+      </span>
+
+      <strong>
+        {{ pendingCount }}
+      </strong>
+
+    </div>
+
+
+    <!-- Submitted -->
+
+    <div class="summary-item">
+
+      <span class="summary-label">
+        Submitted
+      </span>
+
+      <strong>
+        {{ submittedCount }}
+      </strong>
+
+    </div>
+
+
+    <!-- Evaluated -->
+
+    <div class="summary-item">
+
+      <span class="summary-label">
+        Evaluated
+      </span>
+
+      <strong>
+        {{ evaluatedCount }}
+      </strong>
+
+    </div>
+
+
+    <!-- Overdue -->
+
+    <div class="summary-item">
+
+      <span class="summary-label">
+        Overdue
+      </span>
+
+      <strong>
+        {{ overdueCount }}
+      </strong>
+
+    </div>
+
+  </div>
+
+
+  <!-- ===================================================
+       NO ASSIGNMENTS
+  ==================================================== -->
+
+  <div
+    class="empty-state"
+    *ngIf="assignments.length === 0">
+
+    <div class="empty-icon">
+
+      <i class="fas fa-clipboard-list"></i>
+
+    </div>
+
+    <h3>
+      No Assignments
+    </h3>
+
+    <p>
+      There are currently no assignments available for you.
+    </p>
+
+    <button
+      type="button"
+      class="btn-primary"
+      (click)="refresh()">
+
+      <i class="fas fa-sync-alt"></i>
+
+      Refresh
+
+    </button>
+
+  </div>
+
+
+  <!-- ===================================================
+       NO SEARCH RESULT
+  ==================================================== -->
+
+  <div
+    class="empty-state"
+    *ngIf="
+      assignments.length > 0 &&
+      filteredAssignments.length === 0
+    ">
+
+    <div class="empty-icon">
+
+      <i class="fas fa-search"></i>
+
+    </div>
+
+    <h3>
+      No Matching Assignments
+    </h3>
+
+    <p>
+      No assignments match your current search or filter.
+    </p>
+
+    <button
+      type="button"
+      class="btn-secondary"
+      (click)="clearSearch(); selectedStatus = 'all'; onStatusChange()">
+
+      <i class="fas fa-filter-circle-xmark"></i>
+
+      Clear Filters
+
+    </button>
+
+  </div>
+
+
+  <!-- ===================================================
+       ASSIGNMENT LIST
+  ==================================================== -->
+
+  <div
+    class="assignment-list"
+    *ngIf="filteredAssignments.length > 0">
+
+
+    <div
+      class="assignment-card"
+      *ngFor="
+        let assignment of filteredAssignments;
+        trackBy: trackByAssignmentId
+      ">
+
+
+      <!-- ===============================================
+           CARD HEADER
+      ================================================ -->
+
+      <div class="assignment-card-header">
+
+        <div class="assignment-title-section">
+
+          <div class="assignment-icon">
+
+            <i class="fas fa-file-alt"></i>
+
+          </div>
+
+
+          <div>
+
+            <h3>
+              {{ assignment.title }}
+            </h3>
+
+
+            <span
+              class="subject-name"
+              *ngIf="assignment.subjectName">
+
+              {{ assignment.subjectName }}
+
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- Status -->
+
+        <span
+          class="status-badge"
+          [ngClass]="getStatusClass(assignment)">
+
+          {{ getStatusLabel(assignment) }}
+
+        </span>
+
+      </div>
+
+
+      <!-- ===============================================
+           DESCRIPTION
+      ================================================ -->
+
+      <div
+        class="assignment-description"
+        *ngIf="assignment.description">
+
+        <p>
+          {{ assignment.description }}
+        </p>
+
+      </div>
+
+
+      <!-- ===============================================
+           INFORMATION
+      ================================================ -->
+
+      <div class="assignment-info">
+
+
+        <!-- Course -->
+
+        <div class="info-item">
+
+          <span class="info-label">
+
+            <i class="fas fa-book"></i>
+
+            Course
+
+          </span>
+
+          <span class="info-value">
+
+            {{ assignment.courseName || '-' }}
+
+          </span>
+
+        </div>
+
+
+        <!-- Subject -->
+
+        <div class="info-item">
+
+          <span class="info-label">
+
+            <i class="fas fa-book-open"></i>
+
+            Subject
+
+          </span>
+
+          <span class="info-value">
+
+            {{ assignment.subjectName || '-' }}
+
+          </span>
+
+        </div>
+
+
+        <!-- Teacher -->
+
+        <div class="info-item">
+
+          <span class="info-label">
+
+            <i class="fas fa-user"></i>
+
+            Teacher
+
+          </span>
+
+          <span class="info-value">
+
+            {{ assignment.teacherName || '-' }}
+
+          </span>
+
+        </div>
+
+
+        <!-- Maximum Marks -->
+
+        <div class="info-item">
+
+          <span class="info-label">
+
+            <i class="fas fa-star"></i>
+
+            Maximum Marks
+
+          </span>
+
+          <span class="info-value marks">
+
+            {{ assignment.maximumMarks }}
+
+          </span>
+
+        </div>
+
+
+        <!-- Deadline -->
+
+        <div
+          class="info-item deadline-item"
+          [class.deadline-overdue]="
+            isOverdue(assignment) &&
+            !isSubmitted(assignment.id)
+          ">
+
+          <span class="info-label">
+
+            <i class="fas fa-calendar-alt"></i>
+
+            Deadline
+
+          </span>
+
+          <span class="info-value">
+
+            {{ formatDeadline(assignment.deadline) }}
+
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- ===============================================
+           ATTACHMENT
+      ================================================ -->
+
+      <div
+        class="assignment-attachment"
+        *ngIf="assignment.attachmentUrl">
+
+        <a
+          [href]="assignment.attachmentUrl"
+          target="_blank"
+          rel="noopener noreferrer">
+
+          <i class="fas fa-paperclip"></i>
+
+          {{
+            assignment.attachmentFileName
+            || 'View Assignment File'
+          }}
+
+        </a>
+
+      </div>
+
+
+      <!-- ===============================================
+           CARD FOOTER
+      ================================================ -->
+
+      <div class="assignment-card-footer">
+
+
+        <!-- Created -->
+
+        <div class="created-info">
+
+          <i class="fas fa-clock"></i>
+
+          Created:
+
+          {{ assignment.createdAt | date:'dd MMM yyyy' }}
+
+        </div>
+
+
+        <!-- Actions -->
+
+        <div class="card-actions">
+
+
+          <!-- View -->
+
+          <button
+            type="button"
+            class="btn-view"
+            (click)="viewAssignment(assignment)">
+
+            <i class="fas fa-eye"></i>
+
+            View
+
+          </button>
+
+
+          <!-- Submit -->
+
+          <button
+            type="button"
+            class="btn-submit"
+            *ngIf="
+              !isSubmitted(assignment.id) &&
+              !isOverdue(assignment)
+            "
+            (click)="submitAssignment(assignment)">
+
+            <i class="fas fa-upload"></i>
+
+            Submit
+
+          </button>
+
+
+          <!-- Submitted -->
+
+          <button
+            type="button"
+            class="btn-submitted"
+            *ngIf="isSubmitted(assignment.id)"
+            disabled>
+
+            <i class="fas fa-check-circle"></i>
+
+            Submitted
+
+          </button>
+
+
+          <!-- Overdue -->
+
+          <button
+            type="button"
+            class="btn-overdue"
+            *ngIf="
+              !isSubmitted(assignment.id) &&
+              isOverdue(assignment)
+            "
+            disabled>
+
+            <i class="fas fa-exclamation-triangle"></i>
+
+            Deadline Passed
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</ng-container>

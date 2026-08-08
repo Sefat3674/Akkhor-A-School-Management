@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 import { Observable } from 'rxjs';
 
@@ -16,7 +17,7 @@ import {
 export class CourseService {
 
 
-  private apiUrl = 'https://localhost:50268/api/courses';
+  private apiUrl = `${environment.apiUrl}/api/courses`;
 
 
 

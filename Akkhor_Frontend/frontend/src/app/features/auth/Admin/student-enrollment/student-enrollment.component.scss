@@ -1,0 +1,1387 @@
+// =====================================================
+// STUDENT ENROLLMENT PAGE
+// =====================================================
+
+.enrollment-page {
+  padding: 25px;
+  background: #f8fafc;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+
+// =====================================================
+// HEADER
+// =====================================================
+
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 25px;
+
+  .btn-add {
+    margin-left: auto;
+  }
+}
+
+
+// =====================================================
+// ADD BUTTON
+// =====================================================
+
+.btn-add {
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #1d4ed8
+  );
+
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+
+  padding: 12px 24px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+
+  box-shadow:
+    0 8px 18px rgba(37, 99, 235, 0.25);
+
+  i {
+    font-size: 16px;
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+      0 12px 24px rgba(37, 99, 235, 0.35);
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+
+// =====================================================
+// ALERT
+// =====================================================
+
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 13px 16px;
+  margin-bottom: 20px;
+
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.alert-danger {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+
+// =====================================================
+// TABLE CARD
+// =====================================================
+
+.table-card {
+  background: #fff;
+
+  border-radius: 20px;
+
+  padding: 24px;
+
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+
+// =====================================================
+// TABLE HEADER
+// =====================================================
+
+.table-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 20px;
+
+  h5 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 18px;
+    font-weight: 800;
+
+    i {
+      color: #2563eb;
+    }
+  }
+
+  span {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+  }
+}
+
+
+// =====================================================
+// SEARCH
+// =====================================================
+
+.search-box {
+  position: relative;
+  width: 300px;
+
+  i {
+    position: absolute;
+
+    left: 13px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #94a3b8;
+
+    font-size: 14px;
+
+    pointer-events: none;
+  }
+
+  input {
+    width: 100%;
+    height: 42px;
+
+    padding: 0 14px 0 38px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #f8fafc;
+
+    color: #334155;
+
+    font-size: 13px;
+
+    box-sizing: border-box;
+
+    transition: 0.2s;
+
+    &::placeholder {
+      color: #94a3b8;
+    }
+
+    &:focus {
+      background: #fff;
+
+      border-color: #2563eb;
+
+      box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
+    }
+  }
+}
+
+
+// =====================================================
+// TABLE RESPONSIVE
+// =====================================================
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+
+// =====================================================
+// TABLE
+// =====================================================
+
+.table {
+  width: 100%;
+
+  min-width: 1250px;
+
+  margin: 0;
+
+  border-collapse: collapse;
+
+  thead {
+    background: #f8fafc;
+
+    th {
+      padding: 16px;
+
+      color: #475569;
+
+      font-size: 12px;
+
+      font-weight: 800;
+
+      text-transform: uppercase;
+
+      white-space: nowrap;
+
+      border-bottom:
+        1px solid #e2e8f0;
+    }
+  }
+
+  tbody {
+    tr {
+      transition: 0.2s;
+
+      &:hover {
+        background: #f8fafc;
+      }
+
+      &:last-child td {
+        border-bottom: none;
+      }
+    }
+
+    td {
+      padding: 18px 16px;
+
+      border-bottom:
+        1px solid #f1f5f9;
+
+      vertical-align: middle;
+
+      color: #475569;
+
+      font-size: 14px;
+
+      white-space: nowrap;
+    }
+  }
+}
+
+
+// =====================================================
+// ROW NUMBER
+// =====================================================
+
+.row-number {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+
+  border-radius: 9px;
+
+  background: #eff6ff;
+
+  color: #2563eb;
+
+  font-size: 12px;
+
+  font-weight: 800;
+}
+
+
+// =====================================================
+// STUDENT
+// =====================================================
+
+.student-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  min-width: 210px;
+}
+
+
+// =====================================================
+// STUDENT AVATAR
+// =====================================================
+
+.student-avatar {
+  width: 46px;
+  height: 46px;
+
+  min-width: 46px;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #60a5fa
+    );
+
+  color: #fff;
+
+  font-size: 14px;
+
+  font-weight: 800;
+
+  box-shadow:
+    0 5px 12px
+    rgba(37, 99, 235, 0.20);
+}
+
+.student-info strong {
+  display: block;
+
+  color: #0f172a;
+
+  font-size: 14px;
+
+  font-weight: 700;
+}
+
+.student-info small {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #94a3b8;
+
+  font-size: 11px;
+}
+
+
+// =====================================================
+// COURSE NAME
+// =====================================================
+
+.course-name {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 8px 13px;
+
+  border-radius: 30px;
+
+  background: #dbeafe;
+
+  color: #1d4ed8;
+
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+
+// =====================================================
+// CLASS
+// =====================================================
+
+.class-badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 8px 13px;
+
+  border-radius: 30px;
+
+  background: #dbeafe;
+
+  color: #1d4ed8;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+
+// =====================================================
+// SECTION
+// =====================================================
+
+.section-badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 8px 13px;
+
+  border-radius: 30px;
+
+  background: #ede9fe;
+
+  color: #6d28d9;
+
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+
+// =====================================================
+// ROLL NUMBER
+// =====================================================
+
+.roll-number {
+  display: inline-block;
+
+  padding: 7px 12px;
+
+  border-radius: 8px;
+
+  background: #f1f5f9;
+
+  color: #334155;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+
+// =====================================================
+// DATE
+// =====================================================
+
+.date-text {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color: #64748b;
+
+  font-size: 13px;
+
+  i {
+    color: #2563eb;
+  }
+}
+
+
+// =====================================================
+// STATUS BADGE
+// =====================================================
+
+.status-badge {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 85px;
+
+  padding: 8px 14px;
+
+  border-radius: 30px;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  text-align: center;
+
+  &.active {
+    background: #dcfce7;
+
+    color: #15803d;
+
+    border: 1px solid #86efac;
+  }
+
+  &.inactive {
+    background: #fee2e2;
+
+    color: #b91c1c;
+
+    border: 1px solid #fca5a5;
+  }
+
+  &.completed {
+    background: #dbeafe;
+
+    color: #1d4ed8;
+
+    border: 1px solid #93c5fd;
+  }
+
+  &.dropped {
+    background: #fef3c7;
+
+    color: #b45309;
+
+    border: 1px solid #fcd34d;
+  }
+}
+
+
+// =====================================================
+// ACTION BUTTONS
+// =====================================================
+
+.action-buttons {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+
+// =====================================================
+// ACTION BUTTON
+// =====================================================
+
+.action-btn {
+  width: 42px;
+  height: 42px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  color: #fff;
+
+  font-size: 16px;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+
+  box-shadow:
+    0 5px 12px rgba(0, 0, 0, 0.15);
+
+  &:hover {
+    transform:
+      translateY(-3px)
+      scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+  }
+}
+
+
+// =====================================================
+// EDIT BUTTON
+// =====================================================
+
+.edit-btn {
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #1d4ed8
+    );
+
+  &:hover {
+    box-shadow:
+      0 8px 18px
+      rgba(37, 99, 235, 0.35);
+  }
+}
+
+
+// =====================================================
+// DELETE BUTTON
+// =====================================================
+
+.delete-btn {
+  background:
+    linear-gradient(
+      135deg,
+      #ef4444,
+      #991b1b
+    );
+
+  &:hover {
+    box-shadow:
+      0 8px 18px
+      rgba(239, 68, 68, 0.35);
+  }
+}
+
+
+// =====================================================
+// EMPTY STATE
+// =====================================================
+
+.empty-state {
+  text-align: center;
+
+  padding: 60px 20px !important;
+
+  color: #64748b;
+
+  i {
+    display: inline-block;
+
+    margin-bottom: 15px;
+
+    font-size: 42px;
+
+    color: #94a3b8;
+  }
+
+  h4 {
+    margin: 0 0 8px;
+
+    color: #475569;
+
+    font-size: 17px;
+
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+  }
+}
+
+
+// =====================================================
+// LOADING
+// =====================================================
+
+.loading-state {
+  text-align: center;
+
+  padding: 50px;
+
+  color: #64748b;
+
+  font-size: 14px;
+
+  i {
+    margin-right: 8px;
+
+    color: #2563eb;
+  }
+}
+
+
+// =====================================================
+// MODAL OVERLAY
+// =====================================================
+
+.modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background:
+    rgba(15, 23, 42, 0.60);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  z-index: 9999;
+
+  padding: 20px;
+
+  overflow-y: auto;
+
+  box-sizing: border-box;
+
+  backdrop-filter: blur(3px);
+}
+
+
+// =====================================================
+// MODAL
+// =====================================================
+
+.enrollment-modal {
+  width: 100%;
+
+  max-width: 650px;
+
+  max-height: 90vh;
+
+  background: #fff;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 25px 60px
+    rgba(15, 23, 42, 0.25);
+
+  overflow: hidden;
+
+  display: flex;
+
+  flex-direction: column;
+
+  animation:
+    enrollment-modal-show
+    0.25s ease;
+}
+
+
+// =====================================================
+// MODAL HEADER
+// =====================================================
+
+.enrollment-modal .modal-header {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  padding: 22px 24px;
+
+  border-bottom:
+    1px solid #e5e7eb;
+
+  h4 {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 20px;
+
+    font-weight: 800;
+  }
+
+  p {
+    margin: 5px 0 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+  }
+}
+
+
+// =====================================================
+// CLOSE BUTTON
+// =====================================================
+
+.close-btn {
+  width: 38px;
+  height: 38px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #f1f5f9;
+
+  color: #64748b;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+
+  font-size: 15px;
+
+  &:hover {
+    background: #fee2e2;
+
+    color: #dc2626;
+
+    transform: rotate(5deg);
+  }
+}
+
+
+// =====================================================
+// MODAL BODY
+// =====================================================
+
+.enrollment-modal .modal-body {
+  padding: 24px;
+
+  overflow-y: auto;
+
+  max-height:
+    calc(90vh - 155px);
+
+  box-sizing: border-box;
+}
+
+
+// =====================================================
+// FORM GROUP
+// =====================================================
+
+.form-group {
+  margin-bottom: 18px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #334155;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    span {
+      color: #dc2626;
+    }
+  }
+}
+
+
+// =====================================================
+// FORM CONTROL
+// =====================================================
+
+.form-control {
+  width: 100%;
+
+  height: 42px;
+
+  padding: 0 13px;
+
+  border:
+    1px solid #dbe2ea;
+
+  border-radius: 10px;
+
+  background: #fff;
+
+  color: #334155;
+
+  font-size: 14px;
+
+  outline: none;
+
+  box-sizing: border-box;
+
+  transition: all 0.2s ease;
+
+  &:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+      0 0 0 3px
+      rgba(37, 99, 235, 0.10);
+  }
+
+  &:hover:not(:focus) {
+    border-color: #94a3b8;
+  }
+
+  &:disabled {
+    background: #f1f5f9;
+
+    color: #94a3b8;
+
+    cursor: not-allowed;
+  }
+}
+
+
+// =====================================================
+// SELECT
+// =====================================================
+
+select.form-control {
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+
+// =====================================================
+// LOADING TEXT
+// =====================================================
+
+.text-muted {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+}
+
+
+// =====================================================
+// MODAL FOOTER
+// =====================================================
+
+.enrollment-modal .modal-footer {
+  display: flex;
+
+  justify-content: flex-end;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 16px 24px;
+
+  border-top:
+    1px solid #e5e7eb;
+
+  background: #f8fafc;
+}
+
+
+// =====================================================
+// CANCEL BUTTON
+// =====================================================
+
+.btn-cancel {
+  height: 42px;
+
+  padding: 0 20px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #e2e8f0;
+
+  color: #475569;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #cbd5e1;
+
+    transform: translateY(-1px);
+  }
+}
+
+
+// =====================================================
+// SAVE BUTTON
+// =====================================================
+
+.btn-save {
+  height: 42px;
+
+  padding: 0 20px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #1d4ed8
+    );
+
+  color: #fff;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 5px 12px
+    rgba(37, 99, 235, 0.20);
+
+  transition: all 0.25s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+
+    box-shadow:
+      0 8px 18px
+      rgba(37, 99, 235, 0.30);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+
+    box-shadow: none;
+  }
+}
+
+
+// =====================================================
+// BOOTSTRAP BUTTON COMPATIBILITY
+// =====================================================
+
+.btn-primary {
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #1d4ed8
+    ) !important;
+
+  border: none !important;
+
+  border-radius: 10px !important;
+
+  font-weight: 700;
+
+  &:hover:not(:disabled) {
+    background:
+      linear-gradient(
+        135deg,
+        #1d4ed8,
+        #1e40af
+      ) !important;
+  }
+}
+
+.btn-secondary {
+  background: #e2e8f0 !important;
+
+  border: none !important;
+
+  color: #475569 !important;
+
+  border-radius: 10px !important;
+
+  font-weight: 700;
+
+  &:hover {
+    background: #cbd5e1 !important;
+  }
+}
+
+
+// =====================================================
+// SPINNER
+// =====================================================
+
+.spin {
+  animation:
+    enrollment-spin
+    1s linear infinite;
+}
+
+
+// =====================================================
+// FONT AWESOME SPINNER
+// =====================================================
+
+.fa-spin {
+  animation:
+    enrollment-spin
+    1s linear infinite;
+}
+
+
+// =====================================================
+// MODAL ANIMATION
+// =====================================================
+
+@keyframes enrollment-modal-show {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(20px)
+      scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+// =====================================================
+// SPINNER ANIMATION
+// =====================================================
+
+@keyframes enrollment-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+// =====================================================
+// TABLET
+// =====================================================
+
+@media (max-width: 992px) {
+
+  .enrollment-page {
+    padding: 20px;
+  }
+
+  .table {
+    min-width: 1150px;
+  }
+
+  .table-card {
+    padding: 20px;
+  }
+}
+
+
+// =====================================================
+// MOBILE
+// =====================================================
+
+@media (max-width: 768px) {
+
+  .enrollment-page {
+    padding: 15px;
+  }
+
+  .top-section {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+
+    width: 100%;
+
+    .btn-add {
+      width: 100%;
+    }
+  }
+
+  .table-card {
+    padding: 16px;
+
+    border-radius: 15px;
+  }
+
+  .table-card-header {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 15px;
+
+    .search-box {
+      width: 100%;
+    }
+  }
+
+  .modal-overlay {
+    padding: 10px;
+
+    align-items: flex-start;
+  }
+
+  .enrollment-modal {
+    margin-top: 10px;
+
+    max-height: 95vh;
+
+    border-radius: 15px;
+  }
+
+  .enrollment-modal .modal-header {
+    padding: 18px;
+  }
+
+  .enrollment-modal .modal-body {
+    padding: 18px;
+  }
+
+  .enrollment-modal .modal-footer {
+    padding: 14px 18px;
+  }
+}
+
+
+// =====================================================
+// SMALL MOBILE
+// =====================================================
+
+@media (max-width: 480px) {
+
+  .enrollment-page {
+    padding: 10px;
+  }
+
+  .top-section {
+
+    h2 {
+      font-size: 22px;
+    }
+
+    p {
+      font-size: 13px;
+    }
+  }
+
+  .table-card {
+    padding: 12px;
+
+    border-radius: 12px;
+  }
+
+  .enrollment-modal {
+    width: 100%;
+
+    max-height: 98vh;
+  }
+
+  .enrollment-modal .modal-header {
+    padding: 15px;
+  }
+
+  .enrollment-modal .modal-body {
+    padding: 15px;
+  }
+
+  .enrollment-modal .modal-footer {
+    padding: 12px 15px;
+
+    flex-direction: column-reverse;
+  }
+
+  .btn-cancel,
+  .btn-save,
+  .modal-footer .btn {
+    width: 100%;
+  }
+
+  .action-btn {
+    width: 40px;
+
+    height: 40px;
+
+    border-radius: 10px;
+  }
+
+  .student-info {
+    min-width: 190px;
+  }
+
+  .student-avatar {
+    width: 40px;
+    height: 40px;
+
+    min-width: 40px;
+
+    font-size: 12px;
+  }
+}

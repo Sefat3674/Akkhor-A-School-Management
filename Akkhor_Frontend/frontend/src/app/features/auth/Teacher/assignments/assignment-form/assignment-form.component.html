@@ -1,0 +1,743 @@
+<div class="assignment-form-page">
+
+  <!-- =====================================================
+       PAGE HEADER
+  ====================================================== -->
+
+  <div class="page-header">
+
+
+<div class="header-content">
+
+  <div class="back-button" (click)="goBack()">
+    <i class="fas fa-arrow-left"></i>
+    <span>Back to Assignments</span>
+  </div>
+
+  <h2>
+    {{ isEditMode ? 'Edit Assignment' : 'Create Assignment' }}
+  </h2>
+
+  <p>
+    {{
+      isEditMode
+        ? 'Update assignment information and settings'
+        : 'Create and assign a new assignment to students'
+    }}
+  </p>
+
+</div>
+
+
+  </div>
+
+  <!-- =====================================================
+       LOADING
+  ====================================================== -->
+
+  <div class="loading-state" *ngIf="loading">
+
+
+<div class="spinner"></div>
+
+<span>Loading assignment...</span>
+
+
+  </div>
+
+  <!-- =====================================================
+       FORM
+  ====================================================== -->
+
+  <form
+    *ngIf="!loading"
+    [formGroup]="assignmentForm"
+    (ngSubmit)="onSubmit()"
+    class="assignment-form"
+  >
+
+
+<!-- ===================================================
+     ASSIGNMENT TARGET
+==================================================== -->
+
+<div class="form-card">
+
+  <div class="card-header">
+
+    <div class="card-icon">
+      <i class="fas fa-graduation-cap"></i>
+    </div>
+
+    <div>
+      <h3>Assignment Target</h3>
+
+      <p>
+        Select the academic class, course and subject
+      </p>
+    </div>
+
+  </div>
+
+
+  <div class="form-grid">
+
+    <!-- Academic Year -->
+
+    <div class="form-group">
+
+      <label for="academicYearId">
+        Academic Year
+        <span class="required">*</span>
+      </label>
+
+      <select
+        id="academicYearId"
+        formControlName="academicYearId"
+        [class.invalid]="
+          isFieldInvalid('academicYearId')
+        "
+      >
+
+        <option value="">
+          Select academic year
+        </option>
+
+        <option
+          *ngFor="let year of academicYears"
+          [value]="year.id"
+        >
+          {{ year.name }}
+        </option>
+
+      </select>
+
+      <div
+        class="error-message"
+        *ngIf="isFieldInvalid('academicYearId')"
+      >
+        Academic year is required.
+      </div>
+
+    </div>
+
+
+    <!-- Class -->
+
+    <div class="form-group">
+
+      <label for="classId">
+        Class
+        <span class="required">*</span>
+      </label>
+
+      <select
+        id="classId"
+        formControlName="classId"
+        [class.invalid]="
+          isFieldInvalid('classId')
+        "
+      >
+
+        <option value="">
+          Select class
+        </option>
+
+        <option
+          *ngFor="let item of classes"
+          [value]="item.id"
+        >
+          {{ item.name }}
+        </option>
+
+      </select>
+
+      <div
+        class="error-message"
+        *ngIf="isFieldInvalid('classId')"
+      >
+        Class is required.
+      </div>
+
+    </div>
+
+
+    <!-- Section -->
+
+    <div class="form-group">
+
+      <label for="sectionId">
+        Section
+      </label>
+
+      <select
+        id="sectionId"
+        formControlName="sectionId"
+      >
+
+        <option value="">
+          Select section
+        </option>
+
+        <option
+          *ngFor="let section of sections"
+          [value]="section.id"
+        >
+          {{ section.sectionName }}
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- Course -->
+
+    <div class="form-group">
+
+      <label for="courseId">
+        Course
+        <span class="required">*</span>
+      </label>
+
+      <select
+        id="courseId"
+        formControlName="courseId"
+        [class.invalid]="
+          isFieldInvalid('courseId')
+        "
+      >
+
+        <option value="">
+          Select course
+        </option>
+
+        <option
+          *ngFor="let course of courses"
+          [value]="course.id"
+        >
+          {{ course.courseName  }}
+        </option>
+
+      </select>
+
+      <div
+        class="error-message"
+        *ngIf="isFieldInvalid('courseId')"
+      >
+        Course is required.
+      </div>
+
+    </div>
+
+
+    <!-- Subject -->
+
+    <div class="form-group">
+
+      <label for="subjectId">
+        Subject
+        <span class="required">*</span>
+      </label>
+
+      <select
+        id="subjectId"
+        formControlName="subjectId"
+        [class.invalid]="
+          isFieldInvalid('subjectId')
+        "
+      >
+
+        <option value="">
+          Select subject
+        </option>
+
+        <option
+          *ngFor="let subject of subjects"
+          [value]="subject.id"
+        >
+          {{ subject.name }}
+        </option>
+
+      </select>
+
+      <div
+        class="error-message"
+        *ngIf="isFieldInvalid('subjectId')"
+      >
+        Subject is required.
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ===================================================
+     ASSIGNMENT INFORMATION
+==================================================== -->
+
+<div class="form-card">
+
+  <div class="card-header">
+
+    <div class="card-icon">
+      <i class="fas fa-file-alt"></i>
+    </div>
+
+    <div>
+      <h3>Assignment Information</h3>
+
+      <p>
+        Enter the assignment details
+      </p>
+    </div>
+
+  </div>
+
+
+  <div class="form-grid">
+
+    <!-- Title -->
+
+    <div class="form-group full-width">
+
+      <label for="title">
+        Assignment Title
+        <span class="required">*</span>
+      </label>
+
+      <input
+        id="title"
+        type="text"
+        formControlName="title"
+        maxlength="250"
+        placeholder="Enter assignment title"
+        [class.invalid]="
+          isFieldInvalid('title')
+        "
+      />
+
+      <div class="input-footer">
+
+        <div
+          class="error-message"
+          *ngIf="isFieldInvalid('title')"
+        >
+          <span *ngIf="assignmentForm.get('title')?.errors?.['required']">
+            Assignment title is required.
+          </span>
+
+          <span *ngIf="assignmentForm.get('title')?.errors?.['maxlength']">
+            Title cannot exceed 250 characters.
+          </span>
+        </div>
+
+        <span class="character-count">
+          {{ assignmentForm.get('title')?.value?.length || 0 }}/250
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- Description -->
+
+    <div class="form-group full-width">
+
+      <label for="description">
+        Description
+      </label>
+
+      <textarea
+        id="description"
+        rows="5"
+        formControlName="description"
+        placeholder="Enter assignment instructions or description"
+      ></textarea>
+
+    </div>
+
+
+    <!-- Deadline -->
+
+    <div class="form-group">
+
+      <label for="deadline">
+        Deadline
+        <span class="required">*</span>
+      </label>
+
+      <div class="input-with-icon">
+
+        <i class="fas fa-calendar-alt"></i>
+
+        <input
+          id="deadline"
+          type="datetime-local"
+          formControlName="deadline"
+          [class.invalid]="
+            isFieldInvalid('deadline')
+          "
+        />
+
+      </div>
+
+      <div
+        class="error-message"
+        *ngIf="isFieldInvalid('deadline')"
+      >
+        Deadline is required.
+      </div>
+
+    </div>
+
+
+    <!-- Maximum Marks -->
+
+    <div class="form-group">
+
+      <label for="maximumMarks">
+        Maximum Marks
+        <span class="required">*</span>
+      </label>
+
+      <div class="input-with-icon">
+
+        <i class="fas fa-star"></i>
+
+        <input
+          id="maximumMarks"
+          type="number"
+          formControlName="maximumMarks"
+          min="1"
+          step="0.01"
+          placeholder="e.g. 100"
+          [class.invalid]="
+            isFieldInvalid('maximumMarks')
+          "
+        />
+
+      </div>
+
+      <div
+        class="error-message"
+        *ngIf="isFieldInvalid('maximumMarks')"
+      >
+        Maximum marks must be greater than zero.
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ===================================================
+     ATTACHMENT
+==================================================== -->
+
+<div class="form-card">
+
+  <div class="card-header">
+
+    <div class="card-icon">
+      <i class="fas fa-paperclip"></i>
+    </div>
+
+    <div>
+      <h3>Attachment</h3>
+
+      <p>
+        Upload assignment material such as PDF, Word or other files
+      </p>
+    </div>
+
+  </div>
+
+
+  <div class="attachment-area">
+
+    <input
+      #fileInput
+      type="file"
+      hidden
+      (change)="onFileSelected($event)"
+    />
+
+
+    <div
+      class="upload-box"
+      (click)="fileInput.click()"
+    >
+
+      <div class="upload-icon">
+        <i class="fas fa-cloud-upload-alt"></i>
+      </div>
+
+      <h4>
+        Click to upload file
+      </h4>
+
+      <p>
+        PDF, DOC, DOCX and other supported files
+      </p>
+
+    </div>
+
+
+    <!-- Selected File -->
+
+    <div
+      class="selected-file"
+      *ngIf="selectedFile"
+    >
+
+      <div class="file-icon">
+
+        <i
+          class="fas"
+          [ngClass]="getFileIcon(selectedFile.name)"
+        ></i>
+
+      </div>
+
+      <div class="file-info">
+
+        <strong>
+          {{ selectedFile.name }}
+        </strong>
+
+        <span>
+          {{ formatFileSize(selectedFile.size) }}
+        </span>
+
+      </div>
+
+      <button
+        type="button"
+        class="remove-file"
+        (click)="removeFile()"
+        title="Remove file"
+      >
+
+        <i class="fas fa-times"></i>
+
+      </button>
+
+    </div>
+
+
+    <!-- Existing File -->
+
+    <div
+      class="selected-file existing-file"
+      *ngIf="!selectedFile && existingFileName"
+    >
+
+      <div class="file-icon">
+
+        <i class="fas fa-file"></i>
+
+      </div>
+
+      <div class="file-info">
+
+        <strong>
+          {{ existingFileName }}
+        </strong>
+
+        <span>
+          Existing attachment
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ===================================================
+     PUBLICATION & STATUS
+==================================================== -->
+
+<div class="form-card">
+
+  <div class="card-header">
+
+    <div class="card-icon">
+      <i class="fas fa-cog"></i>
+    </div>
+
+    <div>
+      <h3>Publication & Status</h3>
+
+      <p>
+        Control assignment visibility and availability
+      </p>
+    </div>
+
+  </div>
+
+
+  <div class="settings-grid">
+
+    <!-- Publish -->
+
+    <div class="setting-item">
+
+      <div class="setting-content">
+
+        <div class="setting-icon publish-icon">
+          <i class="fas fa-globe"></i>
+        </div>
+
+        <div>
+
+          <h4>
+            Publish Assignment
+          </h4>
+
+          <p>
+            Students can see the assignment when published.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <label class="switch">
+
+        <input
+          type="checkbox"
+          formControlName="isPublished"
+        />
+
+        <span class="slider"></span>
+
+      </label>
+
+    </div>
+
+
+    <!-- Active -->
+
+    <div class="setting-item">
+
+      <div class="setting-content">
+
+        <div class="setting-icon active-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+
+        <div>
+
+          <h4>
+            Active
+          </h4>
+
+          <p>
+            Inactive assignments cannot be published.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <label class="switch">
+
+        <input
+          type="checkbox"
+          formControlName="isActive"
+        />
+
+        <span class="slider"></span>
+
+      </label>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ===================================================
+     FORM ERROR
+==================================================== -->
+
+<div
+  class="form-error"
+  *ngIf="errorMessage"
+>
+
+  <i class="fas fa-exclamation-circle"></i>
+
+  <span>
+    {{ errorMessage }}
+  </span>
+
+</div>
+
+
+<!-- ===================================================
+     FORM ACTIONS
+==================================================== -->
+
+<div class="form-actions">
+
+  <button
+    type="button"
+    class="btn btn-secondary"
+    (click)="goBack()"
+    [disabled]="saving"
+  >
+
+    <i class="fas fa-times"></i>
+
+    Cancel
+
+  </button>
+
+
+  <button
+    type="submit"
+    class="btn btn-primary"
+    [disabled]="saving"
+  >
+
+    <span
+      class="button-spinner"
+      *ngIf="saving"
+    ></span>
+
+    <i
+      class="fas fa-save"
+      *ngIf="!saving"
+    ></i>
+
+    {{
+      saving
+        ? 'Saving...'
+        : isEditMode
+          ? 'Update Assignment'
+          : 'Save Assignment'
+    }}
+
+  </button>
+
+</div>
+
+
+  </form>
+
+</div>

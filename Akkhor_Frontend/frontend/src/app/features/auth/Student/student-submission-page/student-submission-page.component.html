@@ -1,0 +1,137 @@
+<div class="submission-page">
+
+
+  <!-- =================================================
+       HEADER
+  ================================================== -->
+
+  <div class="page-header">
+
+
+    <!-- BACK -->
+
+    <button
+      type="button"
+      class="btn-back"
+      (click)="cancel()"
+      [disabled]="loading">
+
+      <i class="fas fa-arrow-left"></i>
+
+      Back
+
+    </button>
+
+
+    <!-- HEADER CONTENT -->
+
+    <div class="header-content">
+
+      <span class="page-label">
+
+        <i class="fas fa-paper-plane"></i>
+
+        Assignment Submission
+
+      </span>
+
+
+      <h2>
+
+        {{
+          assignment?.title ||
+          'Submit Assignment'
+        }}
+
+      </h2>
+
+
+      <p
+        *ngIf="
+          assignment &&
+          assignment.subjectName
+        ">
+
+        {{ assignment.subjectName }}
+
+      </p>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- =================================================
+       ERROR
+  ================================================== -->
+
+  <div
+    class="alert alert-danger"
+    *ngIf="errorMessage">
+
+    <i class="fas fa-exclamation-circle"></i>
+
+
+    <div>
+
+      <strong>
+        Unable to load assignment
+      </strong>
+
+
+      <p>
+        {{ errorMessage }}
+      </p>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- =================================================
+       LOADING
+  ================================================== -->
+
+  <div
+    class="loading-state"
+    *ngIf="loading">
+
+    <i class="fas fa-spinner fa-spin"></i>
+
+    <span>
+      Loading assignment...
+    </span>
+
+  </div>
+
+
+
+  <!-- =================================================
+       SUBMISSION FORM
+  ================================================== -->
+
+  <app-student-submission-form
+
+    *ngIf="
+      !loading &&
+      assignment
+    "
+
+    [assignment]="assignment"
+
+    [existingSubmission]="
+      existingSubmission
+    "
+
+    (close)="cancel()"
+
+    (submitted)="
+      onSubmitted($event)
+    ">
+
+  </app-student-submission-form>
+
+
+</div>

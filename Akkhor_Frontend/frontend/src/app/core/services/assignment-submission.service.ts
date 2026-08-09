@@ -4,24 +4,20 @@ import { Observable } from 'rxjs';
 
 import {
   AssignmentSubmission,
+  CreateAssignmentSubmission,
+  UpdateAssignmentSubmission,
   EvaluateAssignmentSubmission
 } from '../models/assignment-submission.model';
+
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AssignmentSubmissionService {
 
-  // =====================================================
-  // API URL
-  // =====================================================
-
   private apiUrl =
-    'https://localhost:50268/api/assignment-submissions';
-
-  // =====================================================
-  // CONSTRUCTOR
-  // =====================================================
+    `${environment.apiUrl}/api/assignment-submissions`;
 
   constructor(
     private http: HttpClient
@@ -36,10 +32,11 @@ export class AssignmentSubmissionService {
     return this.http.get<AssignmentSubmission[]>(
       this.apiUrl
     );
+
   }
 
   // =====================================================
-  // GET SUBMISSION BY ID
+  // GET BY ID
   // =====================================================
 
   getById(
@@ -49,10 +46,11 @@ export class AssignmentSubmissionService {
     return this.http.get<AssignmentSubmission>(
       `${this.apiUrl}/${id}`
     );
+
   }
 
   // =====================================================
-  // GET SUBMISSIONS BY ASSIGNMENT
+  // GET BY ASSIGNMENT
   // =====================================================
 
   getByAssignment(
@@ -62,100 +60,132 @@ export class AssignmentSubmissionService {
     return this.http.get<AssignmentSubmission[]>(
       `${this.apiUrl}/assignment/${assignmentId}`
     );
-  }
 
-  // =====================================================
-  // GET SUBMISSION BY ASSIGNMENT + STUDENT
-  // =====================================================
-
-  getByAssignmentAndStudent(
-    assignmentId: string,
-    studentId: string
-  ): Observable<AssignmentSubmission | null> {
-
-    return this.http.get<AssignmentSubmission | null>(
-      `${this.apiUrl}/assignment/${assignmentId}/student/${studentId}`
-    );
   }
 
   // =====================================================
   // GET MY SUBMISSIONS
   // =====================================================
 
-  getMySubmissions(): Observable<AssignmentSubmission[]> {
+  getMySubmissions():
+    Observable<AssignmentSubmission[]> {
 
     return this.http.get<AssignmentSubmission[]>(
       `${this.apiUrl}/my`
     );
+
   }
 
   // =====================================================
-  // CREATE / SUBMIT ASSIGNMENT
+  // GET MY SUBMISSION FOR ASSIGNMENT
   // =====================================================
-  //
-  // FormData is used because students can submit:
-  // - Submission text
-  // - Attachment
-  //
+
+  getMySubmissionByAssignment(
+    assignmentId: string
+  ): Observable<AssignmentSubmission> {
+
+    return this.http.get<AssignmentSubmission>(
+      `${this.apiUrl}/my/assignment/${assignmentId}`
+    );
+
+  }
+
+  // =====================================================
+  // CREATE / SUBMIT
   // =====================================================
 
   create(
-    formData: FormData
+    data: CreateAssignmentSubmission,
+    attachment?: File
   ): Observable<AssignmentSubmission> {
+
+    const formData = new FormData();
+
+    formData.append(
+      'AssignmentId',
+      data.assignmentId
+    );
+
+    if (data.submissionText) {
+
+      formData.append(
+        'SubmissionText',
+        data.submissionText
+      );
+
+    }
+
+    if (attachment) {
+
+      formData.append(
+        'Attachment',
+        attachment
+      );
+
+    }
 
     return this.http.post<AssignmentSubmission>(
       this.apiUrl,
       formData
     );
+
   }
 
   // =====================================================
-  // UPDATE SUBMISSION
-  // =====================================================
-  //
-  // FormData allows the student to update:
-  // - Submission text
-  // - Attachment
-  //
+  // UPDATE
   // =====================================================
 
   update(
     id: string,
-    formData: FormData
+    data: UpdateAssignmentSubmission,
+    attachment?: File
   ): Observable<AssignmentSubmission> {
+
+    const formData = new FormData();
+
+    if (
+      data.submissionText !== undefined
+    ) {
+
+      formData.append(
+        'SubmissionText',
+        data.submissionText ?? ''
+      );
+
+    }
+
+    if (attachment) {
+
+      formData.append(
+        'Attachment',
+        attachment
+      );
+
+    }
 
     return this.http.put<AssignmentSubmission>(
       `${this.apiUrl}/${id}`,
       formData
     );
+
   }
 
   // =====================================================
-  // DELETE SUBMISSION
+  // DELETE
   // =====================================================
 
   delete(
     id: string
-  ): Observable<boolean> {
+  ): Observable<void> {
 
-    return this.http.delete<boolean>(
+    return this.http.delete<void>(
       `${this.apiUrl}/${id}`
     );
+
   }
 
   // =====================================================
-  // EVALUATE / GRADE SUBMISSION
-  // =====================================================
-  //
-  // Teacher sends:
-  // - marksObtained
-  // - feedback
-  //
-  // Backend sets:
-  // - Status = Evaluated
-  // - EvaluatedAt
-  // - EvaluatedBy
-  //
+  // EVALUATE
   // =====================================================
 
   evaluate(
@@ -167,10 +197,11 @@ export class AssignmentSubmissionService {
       `${this.apiUrl}/${id}/evaluate`,
       data
     );
+
   }
 
   // =====================================================
-  // GET SUBMISSION COUNT
+  // SUBMISSION COUNT
   // =====================================================
 
   getSubmissionCount(
@@ -180,10 +211,11 @@ export class AssignmentSubmissionService {
     return this.http.get<number>(
       `${this.apiUrl}/assignment/${assignmentId}/count`
     );
+
   }
 
   // =====================================================
-  // GET PENDING SUBMISSION COUNT
+  // PENDING COUNT
   // =====================================================
 
   getPendingSubmissionCount(
@@ -193,6 +225,7 @@ export class AssignmentSubmissionService {
     return this.http.get<number>(
       `${this.apiUrl}/assignment/${assignmentId}/pending-count`
     );
+
   }
 
 }

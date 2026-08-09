@@ -672,51 +672,50 @@ export class MarksFeedbackComponent implements OnInit {
   // =====================================================
 
   formatFileSize(
-    size?: number
-  ): string {
+  size?: number | null
+): string {
 
-    if (
-      size === undefined ||
-      size === null ||
-      size <= 0
-    ) {
-
-      return '0 Bytes';
-    }
-
-    const units = [
-      'Bytes',
-      'KB',
-      'MB',
-      'GB'
-    ];
-
-    const index =
-      Math.floor(
-        Math.log(size) /
-        Math.log(1024)
-      );
-
-    const safeIndex =
-      Math.min(
-        index,
-        units.length - 1
-      );
-
-    return (
-      parseFloat(
-        (
-          size /
-          Math.pow(
-            1024,
-            safeIndex
-          )
-        ).toFixed(2)
-      ) +
-      ' ' +
-      units[safeIndex]
-    );
+  if (
+    size === undefined ||
+    size === null ||
+    size <= 0
+  ) {
+    return '0 Bytes';
   }
+
+  const units = [
+    'Bytes',
+    'KB',
+    'MB',
+    'GB'
+  ];
+
+  const index =
+    Math.floor(
+      Math.log(size) /
+      Math.log(1024)
+    );
+
+  const safeIndex =
+    Math.min(
+      index,
+      units.length - 1
+    );
+
+  return (
+    parseFloat(
+      (
+        size /
+        Math.pow(
+          1024,
+          safeIndex
+        )
+      ).toFixed(2)
+    ) +
+    ' ' +
+    units[safeIndex]
+  );
+}
 
   // =====================================================
   // FORMAT DATE

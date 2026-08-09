@@ -223,6 +223,8 @@ builder.Services.AddScoped<ITeacherClassRepository,TeacherClassRepository>();
 builder.Services.AddScoped<ITeacherClassService,TeacherClassService>();
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddScoped<IAssignmentService, AssignmentService>();
+builder.Services.AddScoped<IAssignmentSubmissionRepository,AssignmentSubmissionRepository>();
+builder.Services.AddScoped<IAssignmentSubmissionService, AssignmentSubmissionService>();
 
 
 

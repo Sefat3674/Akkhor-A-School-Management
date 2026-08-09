@@ -2,79 +2,76 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import {
-  Assignment
-} from '../models/student-assignment.model';
+import { StudentAssignment } from '../models/student-assignment.model';
+import { AssignmentSubmission } from '../models/assignment-submission.model';
 
-import {
-  AssignmentSubmission,
-  CreateAssignmentSubmission,
-  UpdateAssignmentSubmission
-} from '../models/student-assignment-submission.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudentAssignmentService {
 
+  // =====================================================
+  // API URLS
+  // =====================================================
+
   private readonly assignmentApiUrl =
-    'https://localhost:50268/api/student-assignments';
+    `${environment.apiUrl}/api/student-assignments`;
 
   private readonly submissionApiUrl =
-    'https://localhost:50268/api/assignment-submissions';
+    `${environment.apiUrl}/api/assignment-submissions`;
 
+  // =====================================================
+  // CONSTRUCTOR
+  // =====================================================
 
   constructor(
     private http: HttpClient
   ) {}
 
-
   // =====================================================
-  // STUDENT ASSIGNMENTS
+  // GET MY ASSIGNMENTS
   // =====================================================
 
-  /**
-   * Get all assignments available for logged-in student
-   */
-  getMyAssignments(): Observable<Assignment[]> {
+  getMyAssignments(): Observable<StudentAssignment[]> {
 
-    return this.http.get<Assignment[]>(
+    return this.http.get<StudentAssignment[]>(
       `${this.assignmentApiUrl}/student`
     );
+
   }
 
+  // =====================================================
+  // GET ASSIGNMENT BY ID
+  // =====================================================
 
-  /**
-   * Get single assignment for logged-in student
-   */
-  getAssignmentById(
+  getById(
     id: string
-  ): Observable<Assignment> {
+  ): Observable<StudentAssignment> {
 
-    return this.http.get<Assignment>(
+    return this.http.get<StudentAssignment>(
       `${this.assignmentApiUrl}/student/${id}`
     );
+
   }
 
-
   // =====================================================
-  // ASSIGNMENT SUBMISSIONS
+  // GET MY SUBMISSIONS
   // =====================================================
 
-  /**
-   * Get all submissions of logged-in student
-   */
   getMySubmissions(): Observable<AssignmentSubmission[]> {
 
     return this.http.get<AssignmentSubmission[]>(
       `${this.submissionApiUrl}/my`
     );
+
   }
 
+  // =====================================================
+  // GET SUBMISSION BY ID
+  // =====================================================
 
-  /**
-   * Get submission by ID
-   */
   getSubmissionById(
     id: string
   ): Observable<AssignmentSubmission> {
@@ -82,60 +79,36 @@ export class StudentAssignmentService {
     return this.http.get<AssignmentSubmission>(
       `${this.submissionApiUrl}/${id}`
     );
+
   }
 
+  // =====================================================
+  // GET MY SUBMISSION FOR ASSIGNMENT
+  // =====================================================
 
-  /**
-   * Get submission for a specific assignment
-   */
+  getMySubmissionByAssignment(
+    assignmentId: string
+  ): Observable<AssignmentSubmission> {
+
+    return this.http.get<AssignmentSubmission>(
+      `${this.submissionApiUrl}/my/assignment/${assignmentId}`
+    );
+
+  }
+
+  // =====================================================
+  // GET MY SUBMISSION FOR ASSIGNMENT
+  // ALIAS
+  // =====================================================
+
   getMySubmissionForAssignment(
     assignmentId: string
-  ): Observable<AssignmentSubmission | null> {
-
-    return this.http.get<AssignmentSubmission | null>(
-      `${this.submissionApiUrl}/assignment/${assignmentId}/my`
-    );
-  }
-
-
-  /**
-   * Submit assignment
-   */
-  submitAssignment(
-    data: CreateAssignmentSubmission
   ): Observable<AssignmentSubmission> {
 
-    return this.http.post<AssignmentSubmission>(
-      this.submissionApiUrl,
-      data
+    return this.getMySubmissionByAssignment(
+      assignmentId
     );
+
   }
 
-
-  /**
-   * Update assignment submission
-   */
-  updateSubmission(
-    id: string,
-    data: UpdateAssignmentSubmission
-  ): Observable<AssignmentSubmission> {
-
-    return this.http.put<AssignmentSubmission>(
-      `${this.submissionApiUrl}/${id}`,
-      data
-    );
-  }
-
-
-  /**
-   * Delete assignment submission
-   */
-  deleteSubmission(
-    id: string
-  ): Observable<boolean> {
-
-    return this.http.delete<boolean>(
-      `${this.submissionApiUrl}/${id}`
-    );
-  }
 }

@@ -357,15 +357,58 @@ export const routes: Routes = [
 
 
 
-    {
-        path: 'student/assignments',
+    // =====================================================
+// STUDENT
+// =====================================================
 
-        loadComponent: () =>
-          import(
-            './features/auth/Student/student-assignment/student-assignment.component'
-          )
-          .then(m => m.StudentAssignmentComponent)
-      },
+// Student Assignments
+{
+  path: 'student/assignments',
+
+  loadComponent: () =>
+    import(
+      './features/auth/Student/student-assignment/student-assignment.component'
+    ).then(
+      m => m.StudentAssignmentComponent
+    )
+},
+
+{
+  path: 'student/assignments/:id',
+
+  loadComponent: () =>
+    import(
+      './features/auth/Student/student-assignment-details/student-assignment-details.component'
+    ).then(
+      m => m.StudentAssignmentDetailsComponent
+    )
+},
+
+{
+  path: 'student/assignments/:id/submit',
+
+  loadComponent: () =>
+    import(
+      './features/auth/Student/student-submission-page/student-submission-page.component'
+    ).then(
+      m => m.StudentSubmissionPageComponent
+    )
+},
+
+{
+  path: 'student/submissions',
+
+  loadComponent: () =>
+    import(
+      './features/auth/Student/student-submissions/student-submissions.component'
+    ).then(
+      m => m.StudentSubmissionsComponent
+    )
+},
+
+
+
+       
 
       
       /*

@@ -1,18 +1,36 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
 
-import { StudentAssignment } from '../../../../core/models/student-assignment.model';
+import {
+  CommonModule
+} from '@angular/common';
 
-import { StudentAssignmentService } from '../../../../core/services/student-assignment.service';
+import {
+  FormsModule
+} from '@angular/forms';
 
-// IMPORTANT:
-// Make sure this model actually exports AssignmentSubmission.
-// If your model uses another name, replace AssignmentSubmission below.
-import { AssignmentSubmission } from '../../../../core/models/student-assignment-submission.model';
+import {
+  Router
+} from '@angular/router';
+
+import {
+  StudentAssignment
+} from '../../../../core/models/student-assignment.model';
+
+import {
+  AssignmentSubmission
+} from '../../../../core/models/assignment-submission.model';
+
+import {
+  StudentAssignmentService
+} from '../../../../core/services/student-assignment.service';
+
 
 @Component({
   selector: 'app-student-assignment',
+
   standalone: true,
 
   imports: [
@@ -20,21 +38,26 @@ import { AssignmentSubmission } from '../../../../core/models/student-assignment
     FormsModule
   ],
 
-  templateUrl: './student-assignment.component.html',
+  templateUrl:
+    './student-assignment.component.html',
 
   styleUrls: [
     './student-assignment.component.scss'
   ]
 })
-export class StudentAssignmentComponent implements OnInit {
+export class StudentAssignmentComponent
+  implements OnInit {
+
 
   // =====================================================
   // DATA
   // =====================================================
 
-  assignments: StudentAssignment[] = [];
+  assignments:
+    StudentAssignment[] = [];
 
-  submissions: AssignmentSubmission[] = [];
+  submissions:
+    AssignmentSubmission[] = [];
 
 
   // =====================================================
@@ -69,7 +92,11 @@ export class StudentAssignmentComponent implements OnInit {
   // =====================================================
 
   constructor(
-    private assignmentService: StudentAssignmentService
+    private assignmentService:
+      StudentAssignmentService,
+
+    private router:
+      Router
   ) {}
 
 
@@ -96,17 +123,22 @@ export class StudentAssignmentComponent implements OnInit {
 
     this.errorMessage = '';
 
+
     this.assignmentService
       .getMyAssignments()
       .subscribe({
 
-        next: (data: StudentAssignment[]) => {
+        next: (
+          data: StudentAssignment[]
+        ) => {
 
-          this.assignments = data ?? [];
+          this.assignments =
+            data ?? [];
 
           this.loading = false;
 
         },
+
 
         error: (error) => {
 
@@ -143,9 +175,11 @@ export class StudentAssignmentComponent implements OnInit {
           data: AssignmentSubmission[]
         ) => {
 
-          this.submissions = data ?? [];
+          this.submissions =
+            data ?? [];
 
         },
+
 
         error: (error) => {
 
@@ -202,16 +236,17 @@ export class StudentAssignmentComponent implements OnInit {
   // FILTERED ASSIGNMENTS
   // =====================================================
 
-  get filteredAssignments(): StudentAssignment[] {
+  get filteredAssignments():
+    StudentAssignment[] {
 
     let result = [
       ...this.assignments
     ];
 
 
-    // ===================================================
+    // ---------------------------------------------------
     // SEARCH
-    // ===================================================
+    // ---------------------------------------------------
 
     if (
       this.searchText &&
@@ -233,20 +268,24 @@ export class StudentAssignmentComponent implements OnInit {
                 ?.toLowerCase()
                 .includes(search);
 
+
             const course =
               assignment.courseName
                 ?.toLowerCase()
                 .includes(search);
+
 
             const subject =
               assignment.subjectName
                 ?.toLowerCase()
                 .includes(search);
 
+
             const teacher =
               assignment.teacherName
                 ?.toLowerCase()
                 .includes(search);
+
 
             return !!(
               title ||
@@ -261,9 +300,9 @@ export class StudentAssignmentComponent implements OnInit {
     }
 
 
-    // ===================================================
+    // ---------------------------------------------------
     // STATUS FILTER
-    // ===================================================
+    // ---------------------------------------------------
 
     if (
       this.selectedStatus !== 'all'
@@ -274,7 +313,8 @@ export class StudentAssignmentComponent implements OnInit {
           assignment =>
             this.getAssignmentStatus(
               assignment
-            ) === this.selectedStatus
+            ) ===
+            this.selectedStatus
         );
 
     }
@@ -298,28 +338,36 @@ export class StudentAssignmentComponent implements OnInit {
 
   get pendingCount(): number {
 
-    return this.countByStatus('pending');
+    return this.countByStatus(
+      'pending'
+    );
 
   }
 
 
   get submittedCount(): number {
 
-    return this.countByStatus('submitted');
+    return this.countByStatus(
+      'submitted'
+    );
 
   }
 
 
   get evaluatedCount(): number {
 
-    return this.countByStatus('evaluated');
+    return this.countByStatus(
+      'evaluated'
+    );
 
   }
 
 
   get overdueCount(): number {
 
-    return this.countByStatus('overdue');
+    return this.countByStatus(
+      'overdue'
+    );
 
   }
 
@@ -336,7 +384,8 @@ export class StudentAssignmentComponent implements OnInit {
 
 
     for (
-      const assignment of this.assignments
+      const assignment
+      of this.assignments
     ) {
 
       if (
@@ -371,16 +420,13 @@ export class StudentAssignmentComponent implements OnInit {
       );
 
 
-    // ---------------------------------------------------
-    // Submitted / Evaluated
-    // ---------------------------------------------------
-
     if (submission) {
 
       if (
         submission.status &&
         submission.status
-          .toLowerCase() === 'evaluated'
+          .toLowerCase() ===
+          'evaluated'
       ) {
 
         return 'evaluated';
@@ -393,10 +439,6 @@ export class StudentAssignmentComponent implements OnInit {
     }
 
 
-    // ---------------------------------------------------
-    // Overdue
-    // ---------------------------------------------------
-
     if (
       this.isOverdue(
         assignment
@@ -407,10 +449,6 @@ export class StudentAssignmentComponent implements OnInit {
 
     }
 
-
-    // ---------------------------------------------------
-    // Pending
-    // ---------------------------------------------------
 
     return 'pending';
 
@@ -423,7 +461,8 @@ export class StudentAssignmentComponent implements OnInit {
 
   getSubmission(
     assignmentId: string
-  ): AssignmentSubmission | undefined {
+  ):
+    AssignmentSubmission | undefined {
 
     return this.submissions.find(
       submission =>
@@ -457,7 +496,9 @@ export class StudentAssignmentComponent implements OnInit {
     assignment: StudentAssignment
   ): boolean {
 
-    if (!assignment.deadline) {
+    if (
+      !assignment.deadline
+    ) {
 
       return false;
 
@@ -607,10 +648,19 @@ export class StudentAssignmentComponent implements OnInit {
     assignment: StudentAssignment
   ): void {
 
-    console.log(
-      'View assignment:',
-      assignment
-    );
+    if (
+      !assignment?.id
+    ) {
+
+      return;
+
+    }
+
+
+    this.router.navigate([
+      '/student/assignments',
+      assignment.id
+    ]);
 
   }
 
@@ -623,10 +673,42 @@ export class StudentAssignmentComponent implements OnInit {
     assignment: StudentAssignment
   ): void {
 
-    console.log(
-      'Submit assignment:',
-      assignment
-    );
+    if (
+      !assignment?.id
+    ) {
+
+      return;
+
+    }
+
+
+    if (
+      this.isSubmitted(
+        assignment.id
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    if (
+      this.isOverdue(
+        assignment
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    this.router.navigate([
+      '/student/assignments',
+      assignment.id,
+      'submit'
+    ]);
 
   }
 

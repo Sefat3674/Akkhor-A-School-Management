@@ -1,3 +1,4 @@
+
 import {
   Component,
   EventEmitter,
@@ -98,14 +99,14 @@ export class StudentSubmissionFormComponent
 
 
   // =====================================================
-  // FILE
+  // FILE CONFIGURATION
   // =====================================================
 
   maxFileSize =
     10 * 1024 * 1024;
 
 
-  allowedFileTypes = [
+  allowedFileTypes: string[] = [
 
     'application/pdf',
 
@@ -126,6 +127,31 @@ export class StudentSubmissionFormComponent
     'image/png',
 
     'image/jpg'
+
+  ];
+
+
+  allowedFileExtensions: string[] = [
+
+    '.pdf',
+
+    '.doc',
+
+    '.docx',
+
+    '.ppt',
+
+    '.pptx',
+
+    '.xls',
+
+    '.xlsx',
+
+    '.jpg',
+
+    '.jpeg',
+
+    '.png'
 
   ];
 
@@ -152,7 +178,7 @@ export class StudentSubmissionFormComponent
 
 
   // =====================================================
-  // INITIALIZE
+  // INITIALIZE FORM
   // =====================================================
 
   initializeForm(): void {
@@ -164,20 +190,43 @@ export class StudentSubmissionFormComponent
     this.selectedFile = null;
 
 
-    if (
-      this.existingSubmission
-    ) {
+    // ---------------------------------------------------
+    // Existing submission
+    // ---------------------------------------------------
+
+    if (this.existingSubmission) {
 
       this.submissionText =
-        this.existingSubmission
-          .submissionText ?? '';
+        this.existingSubmission.submissionText ?? '';
 
     }
+
     else {
 
       this.submissionText = '';
 
     }
+
+  }
+
+
+  // =====================================================
+  // FILE PICKER
+  // =====================================================
+
+  openFilePicker(
+    fileInput: HTMLInputElement
+  ): void {
+
+    if (this.loading) {
+      return;
+    }
+
+    if (this.isOverdue()) {
+      return;
+    }
+
+    fileInput.click();
 
   }
 
@@ -189,6 +238,9 @@ export class StudentSubmissionFormComponent
   onFileSelected(
     event: Event
   ): void {
+
+    this.errorMessage = '';
+
 
     const input =
       event.target as HTMLInputElement;
@@ -211,7 +263,7 @@ export class StudentSubmissionFormComponent
 
 
     // ---------------------------------------------------
-    // SIZE
+    // FILE SIZE
     // ---------------------------------------------------
 
     if (
@@ -232,12 +284,35 @@ export class StudentSubmissionFormComponent
 
 
     // ---------------------------------------------------
-    // TYPE
+    // FILE TYPE
     // ---------------------------------------------------
 
+    const extension =
+      this.getFileExtension(file)
+        .toLowerCase();
+
+
+    const validMimeType =
+      this.allowedFileTypes
+        .includes(file.type);
+
+
+    const validExtension =
+      this.allowedFileExtensions
+        .includes(`.${extension}`);
+
+
+    /*
+     * Some browsers do not always provide
+     * the correct MIME type.
+     *
+     * Therefore we check both MIME type
+     * and file extension.
+     */
+
     if (
-      !this.allowedFileTypes
-        .includes(file.type)
+      !validMimeType &&
+      !validExtension
     ) {
 
       this.errorMessage =
@@ -252,9 +327,12 @@ export class StudentSubmissionFormComponent
     }
 
 
-    this.errorMessage = '';
+    // ---------------------------------------------------
+    // VALID FILE
+    // ---------------------------------------------------
 
-    this.selectedFile = file;
+    this.selectedFile =
+      file;
 
   }
 
@@ -265,13 +343,17 @@ export class StudentSubmissionFormComponent
 
   removeFile(): void {
 
+    if (this.loading) {
+      return;
+    }
+
     this.selectedFile = null;
 
   }
 
 
   // =====================================================
-  // SUBMIT
+  // SUBMIT ASSIGNMENT
   // =====================================================
 
   submitAssignment(): void {
@@ -281,9 +363,11 @@ export class StudentSubmissionFormComponent
     this.successMessage = '';
 
 
-    if (
-      !this.assignment
-    ) {
+    // ---------------------------------------------------
+    // ASSIGNMENT CHECK
+    // ---------------------------------------------------
+
+    if (!this.assignment) {
 
       this.errorMessage =
         'Assignment information is missing.';
@@ -294,27 +378,10 @@ export class StudentSubmissionFormComponent
 
 
     // ---------------------------------------------------
-    // EXISTING SUBMISSION
+    // DEADLINE CHECK
     // ---------------------------------------------------
 
-    if (
-      this.existingSubmission
-    ) {
-
-      this.updateSubmission();
-
-      return;
-
-    }
-
-
-    // ---------------------------------------------------
-    // DEADLINE
-    // ---------------------------------------------------
-
-    if (
-      this.isOverdue()
-    ) {
+    if (this.isOverdue()) {
 
       this.errorMessage =
         'The deadline for this assignment has passed.';
@@ -325,13 +392,30 @@ export class StudentSubmissionFormComponent
 
 
     // ---------------------------------------------------
-    // TEXT / FILE
+    // EXISTING SUBMISSION
+    // ---------------------------------------------------
+
+    if (this.existingSubmission) {
+
+      this.updateSubmission();
+
+      return;
+
+    }
+
+
+    // ---------------------------------------------------
+    // SUBMISSION TEXT
     // ---------------------------------------------------
 
     const text =
       this.submissionText
         ?.trim() ?? '';
 
+
+    // ---------------------------------------------------
+    // TEXT / FILE VALIDATION
+    // ---------------------------------------------------
 
     if (
       !text &&
@@ -346,8 +430,16 @@ export class StudentSubmissionFormComponent
     }
 
 
+    // ---------------------------------------------------
+    // LOADING
+    // ---------------------------------------------------
+
     this.loading = true;
 
+
+    // ---------------------------------------------------
+    // REQUEST DATA
+    // ---------------------------------------------------
 
     const data = {
 
@@ -360,6 +452,10 @@ export class StudentSubmissionFormComponent
     };
 
 
+    // ---------------------------------------------------
+    // CREATE SUBMISSION
+    // ---------------------------------------------------
+
     this.submissionService
       .create(
         data,
@@ -367,15 +463,19 @@ export class StudentSubmissionFormComponent
       )
       .subscribe({
 
+        // ===============================================
+        // SUCCESS
+        // ===============================================
+
         next: (
-          response:
-            AssignmentSubmission
+          response: AssignmentSubmission
         ) => {
 
           this.loading = false;
 
           this.successMessage =
             'Assignment submitted successfully.';
+
 
           this.submitted.emit(
             response
@@ -384,6 +484,10 @@ export class StudentSubmissionFormComponent
         },
 
 
+        // ===============================================
+        // ERROR
+        // ===============================================
+
         error: (error) => {
 
           console.error(
@@ -391,10 +495,13 @@ export class StudentSubmissionFormComponent
             error
           );
 
+
           this.loading = false;
+
 
           this.errorMessage =
             error?.error?.message ||
+            error?.error?.title ||
             'Failed to submit assignment. Please try again.';
 
         }
@@ -405,7 +512,7 @@ export class StudentSubmissionFormComponent
 
 
   // =====================================================
-  // UPDATE
+  // UPDATE EXISTING SUBMISSION
   // =====================================================
 
   private updateSubmission(): void {
@@ -419,10 +526,32 @@ export class StudentSubmissionFormComponent
     }
 
 
+    // ---------------------------------------------------
+    // DEADLINE
+    // ---------------------------------------------------
+
+    if (this.isOverdue()) {
+
+      this.errorMessage =
+        'The deadline for this assignment has passed.';
+
+      return;
+
+    }
+
+
+    // ---------------------------------------------------
+    // TEXT
+    // ---------------------------------------------------
+
     const text =
       this.submissionText
         ?.trim() ?? '';
 
+
+    // ---------------------------------------------------
+    // VALIDATION
+    // ---------------------------------------------------
 
     if (
       !text &&
@@ -437,8 +566,16 @@ export class StudentSubmissionFormComponent
     }
 
 
+    // ---------------------------------------------------
+    // LOADING
+    // ---------------------------------------------------
+
     this.loading = true;
 
+
+    // ---------------------------------------------------
+    // REQUEST DATA
+    // ---------------------------------------------------
 
     const data = {
 
@@ -448,23 +585,34 @@ export class StudentSubmissionFormComponent
     };
 
 
+    // ---------------------------------------------------
+    // UPDATE
+    // ---------------------------------------------------
+
     this.submissionService
       .update(
         this.existingSubmission.id,
+
         data,
+
         this.selectedFile ?? undefined
+
       )
       .subscribe({
 
+        // ===============================================
+        // SUCCESS
+        // ===============================================
+
         next: (
-          response:
-            AssignmentSubmission
+          response: AssignmentSubmission
         ) => {
 
           this.loading = false;
 
           this.successMessage =
             'Submission updated successfully.';
+
 
           this.submitted.emit(
             response
@@ -473,6 +621,10 @@ export class StudentSubmissionFormComponent
         },
 
 
+        // ===============================================
+        // ERROR
+        // ===============================================
+
         error: (error) => {
 
           console.error(
@@ -480,10 +632,13 @@ export class StudentSubmissionFormComponent
             error
           );
 
+
           this.loading = false;
+
 
           this.errorMessage =
             error?.error?.message ||
+            error?.error?.title ||
             'Failed to update submission. Please try again.';
 
         }
@@ -499,13 +654,12 @@ export class StudentSubmissionFormComponent
 
   cancel(): void {
 
-    if (
-      this.loading
-    ) {
+    if (this.loading) {
 
       return;
 
     }
+
 
     this.close.emit();
 
@@ -513,7 +667,7 @@ export class StudentSubmissionFormComponent
 
 
   // =====================================================
-  // DEADLINE
+  // DEADLINE CHECK
   // =====================================================
 
   isOverdue(): boolean {
@@ -527,13 +681,17 @@ export class StudentSubmissionFormComponent
     }
 
 
-    return (
+    const deadline =
       new Date(
         this.assignment.deadline
-      ).getTime()
-      <
-      new Date().getTime()
-    );
+      ).getTime();
+
+
+    const now =
+      new Date().getTime();
+
+
+    return deadline < now;
 
   }
 
@@ -553,16 +711,26 @@ export class StudentSubmissionFormComponent
     }
 
 
-    return new Date(
-      this.assignment.deadline
-    ).toLocaleString(
+    const date =
+      new Date(
+        this.assignment.deadline
+      );
+
+
+    return date.toLocaleString(
       'en-BD',
       {
+
         day: '2-digit',
+
         month: 'short',
+
         year: 'numeric',
+
         hour: '2-digit',
+
         minute: '2-digit'
+
       }
     );
 
@@ -588,10 +756,15 @@ export class StudentSubmissionFormComponent
 
 
     const units = [
+
       'Bytes',
+
       'KB',
+
       'MB',
+
       'GB'
+
     ];
 
 
@@ -603,7 +776,9 @@ export class StudentSubmissionFormComponent
 
 
     return (
+
       parseFloat(
+
         (
           bytes /
           Math.pow(
@@ -611,10 +786,15 @@ export class StudentSubmissionFormComponent
             index
           )
         ).toFixed(2)
+
       )
+
       +
+
       ' ' +
+
       units[index]
+
     );
 
   }
@@ -627,6 +807,13 @@ export class StudentSubmissionFormComponent
   getFileExtension(
     file: File
   ): string {
+
+    if (!file?.name) {
+
+      return '';
+
+    }
+
 
     const parts =
       file.name.split('.');
@@ -647,4 +834,71 @@ export class StudentSubmissionFormComponent
 
   }
 
+
+  // =====================================================
+  // FILE ICON
+  // =====================================================
+
+  getFileIcon(
+    file: File
+  ): string {
+
+    if (!file) {
+
+      return 'fa-file';
+
+    }
+
+
+    const extension =
+      this.getFileExtension(file)
+        .toLowerCase();
+
+
+    switch (extension) {
+
+      case 'pdf':
+
+        return 'fa-file-pdf';
+
+
+      case 'doc':
+
+      case 'docx':
+
+        return 'fa-file-word';
+
+
+      case 'ppt':
+
+      case 'pptx':
+
+        return 'fa-file-powerpoint';
+
+
+      case 'xls':
+
+      case 'xlsx':
+
+        return 'fa-file-excel';
+
+
+      case 'jpg':
+
+      case 'jpeg':
+
+      case 'png':
+
+        return 'fa-file-image';
+
+
+      default:
+
+        return 'fa-file';
+
+    }
+
+  }
+
 }
+

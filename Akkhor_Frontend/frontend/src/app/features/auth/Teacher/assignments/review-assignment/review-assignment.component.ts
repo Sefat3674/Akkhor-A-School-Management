@@ -3,13 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import {
-  Assignment
-} from '../../../../../core/models/assignment.model';
-
-import {
-  AssignmentService
-} from '../../../../../core/services/assignment.service';
+import { Assignment } from '../../../../../core/models/assignment.model';
+import { AssignmentService } from '../../../../../core/services/assignment.service';
 
 import {
   AssignmentSubmission
@@ -81,10 +76,21 @@ export class ReviewAssignmentComponent implements OnInit {
   // UI STATE
   // =====================================================
 
-  loading = false;
+  /**
+   * Loading state for assignment details.
+   * Used by review-assignment.component.html
+   */
+  loadingAssignment = false;
 
-  assignmentLoading = false;
+  /**
+   * Loading state for submissions.
+   * Used by review-assignment.component.html
+   */
+  loadingSubmissions = false;
 
+  /**
+   * Loading state while evaluating a submission.
+   */
   evaluationLoading = false;
 
   deleting = false;
@@ -136,7 +142,7 @@ export class ReviewAssignmentComponent implements OnInit {
       return;
     }
 
-    this.assignmentLoading = true;
+    this.loadingAssignment = true;
 
     this.assignmentService
       .getById(this.assignmentId)
@@ -146,7 +152,7 @@ export class ReviewAssignmentComponent implements OnInit {
 
           this.assignment = data;
 
-          this.assignmentLoading = false;
+          this.loadingAssignment = false;
         },
 
         error: (error) => {
@@ -156,9 +162,10 @@ export class ReviewAssignmentComponent implements OnInit {
             error
           );
 
-          this.assignmentLoading = false;
+          this.loadingAssignment = false;
 
           this.errorMessage =
+            error?.error?.message ??
             'Failed to load assignment.';
         }
 
@@ -175,7 +182,7 @@ export class ReviewAssignmentComponent implements OnInit {
       return;
     }
 
-    this.loading = true;
+    this.loadingSubmissions = true;
 
     this.errorMessage = '';
 
@@ -186,11 +193,13 @@ export class ReviewAssignmentComponent implements OnInit {
         next: (data: AssignmentSubmission[]) => {
 
           this.submissions =
-            data ?? [];
+            Array.isArray(data)
+              ? data
+              : [];
 
           this.applyFilters();
 
-          this.loading = false;
+          this.loadingSubmissions = false;
         },
 
         error: (error) => {
@@ -200,9 +209,14 @@ export class ReviewAssignmentComponent implements OnInit {
             error
           );
 
-          this.loading = false;
+          this.loadingSubmissions = false;
+
+          this.submissions = [];
+
+          this.filteredSubmissions = [];
 
           this.errorMessage =
+            error?.error?.message ??
             'Failed to load assignment submissions.';
         }
 
@@ -270,54 +284,66 @@ export class ReviewAssignmentComponent implements OnInit {
           // SEARCH
           // ---------------------------------------------
 
+          const studentName =
+            submission.studentName
+              ?.toLowerCase() ?? '';
+
+          const studentId =
+            submission.studentId
+              ?.toLowerCase() ?? '';
+
+          const submissionText =
+            submission.submissionText
+              ?.toLowerCase() ?? '';
+
           const matchesSearch =
             !search ||
-
-            submission.studentName
-              ?.toLowerCase()
-              .includes(search) ||
-
-            submission.studentId
-              ?.toLowerCase()
-              .includes(search) ||
-
-            submission.submissionText
-              ?.toLowerCase()
-              .includes(search);
-
+            studentName.includes(search) ||
+            studentId.includes(search) ||
+            submissionText.includes(search);
 
           // ---------------------------------------------
           // STATUS
           // ---------------------------------------------
 
+          const status =
+            submission.status
+              ?.trim()
+              .toLowerCase() ?? '';
+
           let matchesStatus = true;
 
-          if (
-            this.statusFilter === 'submitted'
-          ) {
+          switch (this.statusFilter) {
 
-            matchesStatus =
-              submission.status
-                ?.toLowerCase() === 'submitted';
-          }
+            case 'submitted':
 
-          if (
-            this.statusFilter === 'evaluated'
-          ) {
+              matchesStatus =
+                status === 'submitted';
 
-            matchesStatus =
-              submission.status
-                ?.toLowerCase() === 'evaluated';
-          }
+              break;
 
-          if (
-            this.statusFilter === 'pending'
-          ) {
+            case 'evaluated':
 
-            matchesStatus =
-              !submission.status ||
-              submission.status
-                ?.toLowerCase() === 'pending';
+              matchesStatus =
+                status === 'evaluated';
+
+              break;
+
+            case 'pending':
+
+              matchesStatus =
+                status === 'pending' ||
+                status === '';
+
+              break;
+
+            case 'all':
+
+            default:
+
+              matchesStatus = true;
+
+              break;
           }
 
           return (
@@ -335,41 +361,71 @@ export class ReviewAssignmentComponent implements OnInit {
       [...result].sort(
         (a, b) => {
 
-          const dateA =
-            new Date(
-              a.submittedAt
-            ).getTime();
+          // ---------------------------------------------
+          // SORT BY STUDENT
+          // ---------------------------------------------
 
-          const dateB =
-            new Date(
-              b.submittedAt
-            ).getTime();
-
-          if (
-            this.sortBy === 'oldest'
-          ) {
-
-            return dateA - dateB;
-          }
-
-          if (
-            this.sortBy === 'student'
-          ) {
+          if (this.sortBy === 'student') {
 
             return (
               (a.studentName ?? '')
                 .localeCompare(
-                  b.studentName ?? ''
+                  b.studentName ?? '',
+                  undefined,
+                  {
+                    sensitivity: 'base'
+                  }
                 )
             );
           }
 
+          // ---------------------------------------------
+          // SORT BY DATE
+          // ---------------------------------------------
+
+          const dateA =
+            this.getSubmissionTime(
+              a.submittedAt
+            );
+
+          const dateB =
+            this.getSubmissionTime(
+              b.submittedAt
+            );
+
+          // Oldest first
+          if (this.sortBy === 'oldest') {
+
+            return dateA - dateB;
+          }
+
+          // Latest first
           return dateB - dateA;
         }
       );
 
     this.filteredSubmissions =
       result;
+  }
+
+  // =====================================================
+  // SUBMISSION DATE HELPER
+  // =====================================================
+
+  private getSubmissionTime(
+    submittedAt: string | Date | null | undefined
+  ): number {
+
+    if (!submittedAt) {
+      return 0;
+    }
+
+    const time =
+      new Date(submittedAt).getTime();
+
+    return Number.isNaN(time)
+      ? 0
+      : time;
   }
 
   // =====================================================
@@ -400,6 +456,10 @@ export class ReviewAssignmentComponent implements OnInit {
 
   closeReview(): void {
 
+    if (this.evaluationLoading) {
+      return;
+    }
+
     this.selectedSubmission =
       null;
 
@@ -417,10 +477,18 @@ export class ReviewAssignmentComponent implements OnInit {
   evaluateSubmission(): void {
 
     if (!this.selectedSubmission) {
+
+      this.errorMessage =
+        'Please select a submission first.';
+
       return;
     }
 
     if (!this.selectedSubmission.id) {
+
+      this.errorMessage =
+        'Submission ID is missing.';
+
       return;
     }
 
@@ -433,7 +501,7 @@ export class ReviewAssignmentComponent implements OnInit {
     }
 
     // ---------------------------------------------
-    // Validate Marks
+    // VALIDATE MARKS
     // ---------------------------------------------
 
     if (
@@ -443,6 +511,16 @@ export class ReviewAssignmentComponent implements OnInit {
 
       this.errorMessage =
         'Please enter marks.';
+
+      return;
+    }
+
+    if (
+      Number.isNaN(this.evaluationMarks)
+    ) {
+
+      this.errorMessage =
+        'Please enter a valid mark.';
 
       return;
     }
@@ -468,8 +546,11 @@ export class ReviewAssignmentComponent implements OnInit {
       return;
     }
 
-    this.evaluationLoading =
-      true;
+    // ---------------------------------------------
+    // SAVE
+    // ---------------------------------------------
+
+    this.evaluationLoading = true;
 
     this.errorMessage = '';
 
@@ -483,7 +564,6 @@ export class ReviewAssignmentComponent implements OnInit {
       feedback:
         this.evaluationFeedback
           ?.trim() || null
-
     };
 
     this.submissionService
@@ -497,6 +577,10 @@ export class ReviewAssignmentComponent implements OnInit {
           updated: AssignmentSubmission
         ) => {
 
+          // -----------------------------------------
+          // UPDATE LOCAL SUBMISSION
+          // -----------------------------------------
+
           const index =
             this.submissions.findIndex(
               x =>
@@ -509,6 +593,10 @@ export class ReviewAssignmentComponent implements OnInit {
               updated;
           }
 
+          // -----------------------------------------
+          // UPDATE SELECTED SUBMISSION
+          // -----------------------------------------
+
           this.selectedSubmission =
             updated;
 
@@ -518,10 +606,13 @@ export class ReviewAssignmentComponent implements OnInit {
           this.evaluationFeedback =
             updated.feedback ?? '';
 
+          // -----------------------------------------
+          // REFRESH FILTERED LIST
+          // -----------------------------------------
+
           this.applyFilters();
 
-          this.evaluationLoading =
-            false;
+          this.evaluationLoading = false;
 
           this.successMessage =
             'Submission evaluated successfully.';
@@ -534,8 +625,7 @@ export class ReviewAssignmentComponent implements OnInit {
             error
           );
 
-          this.evaluationLoading =
-            false;
+          this.evaluationLoading = false;
 
           this.errorMessage =
             error?.error?.message ??
@@ -563,7 +653,8 @@ export class ReviewAssignmentComponent implements OnInit {
 
     window.open(
       submission.attachmentUrl,
-      '_blank'
+      '_blank',
+      'noopener,noreferrer'
     );
   }
 
@@ -576,12 +667,17 @@ export class ReviewAssignmentComponent implements OnInit {
   ): void {
 
     if (!submission.attachmentUrl) {
+
+      this.errorMessage =
+        'No attachment available.';
+
       return;
     }
 
     window.open(
       submission.attachmentUrl,
-      '_blank'
+      '_blank',
+      'noopener,noreferrer'
     );
   }
 
@@ -624,8 +720,15 @@ export class ReviewAssignmentComponent implements OnInit {
       return false;
     }
 
+    const deadlineTime =
+      new Date(deadline).getTime();
+
+    if (Number.isNaN(deadlineTime)) {
+      return false;
+    }
+
     return (
-      new Date(deadline).getTime() <
+      deadlineTime <
       new Date().getTime()
     );
   }
@@ -662,20 +765,21 @@ export class ReviewAssignmentComponent implements OnInit {
     submission: AssignmentSubmission
   ): string {
 
-    if (
+    const status =
       submission.status
-        ?.toLowerCase() === 'evaluated'
-    ) {
+        ?.trim()
+        .toLowerCase() ?? '';
 
+    if (status === 'evaluated') {
       return 'Evaluated';
     }
 
-    if (
-      submission.status
-        ?.toLowerCase() === 'submitted'
-    ) {
-
+    if (status === 'submitted') {
       return 'Submitted';
+    }
+
+    if (status === 'pending') {
+      return 'Pending';
     }
 
     return submission.status ||
@@ -690,19 +794,16 @@ export class ReviewAssignmentComponent implements OnInit {
     submission: AssignmentSubmission
   ): string {
 
-    if (
+    const status =
       submission.status
-        ?.toLowerCase() === 'evaluated'
-    ) {
+        ?.trim()
+        .toLowerCase() ?? '';
 
+    if (status === 'evaluated') {
       return 'evaluated';
     }
 
-    if (
-      submission.status
-        ?.toLowerCase() === 'submitted'
-    ) {
-
+    if (status === 'submitted') {
       return 'submitted';
     }
 
@@ -719,7 +820,9 @@ export class ReviewAssignmentComponent implements OnInit {
 
     return (
       submission.status
-        ?.toLowerCase() === 'evaluated'
+        ?.trim()
+        .toLowerCase() ===
+      'evaluated'
     );
   }
 
@@ -739,9 +842,8 @@ export class ReviewAssignmentComponent implements OnInit {
   get evaluatedCount(): number {
 
     return this.submissions.filter(
-      x =>
-        x.status
-          ?.toLowerCase() === 'evaluated'
+      submission =>
+        this.isEvaluated(submission)
     ).length;
   }
 
@@ -752,9 +854,19 @@ export class ReviewAssignmentComponent implements OnInit {
   get pendingCount(): number {
 
     return this.submissions.filter(
-      x =>
-        x.status
-          ?.toLowerCase() !== 'evaluated'
+      submission => {
+
+        const status =
+          submission.status
+            ?.trim()
+            .toLowerCase() ?? '';
+
+        return (
+          status === 'pending' ||
+          status === '' ||
+          status === 'submitted'
+        );
+      }
     ).length;
   }
 
@@ -766,9 +878,9 @@ export class ReviewAssignmentComponent implements OnInit {
 
     const evaluated =
       this.submissions.filter(
-        x =>
-          x.marksObtained !== null &&
-          x.marksObtained !== undefined
+        submission =>
+          submission.marksObtained !== null &&
+          submission.marksObtained !== undefined
       );
 
     if (!evaluated.length) {
@@ -780,14 +892,22 @@ export class ReviewAssignmentComponent implements OnInit {
         (
           sum,
           submission
-        ) =>
-          sum +
-          (submission.marksObtained ?? 0),
+        ) => {
+
+          return (
+            sum +
+            Number(
+              submission.marksObtained ?? 0
+            )
+          );
+        },
         0
       );
 
-    return total /
-      evaluated.length;
+    return (
+      total /
+      evaluated.length
+    );
   }
 
   // =====================================================
@@ -809,8 +929,8 @@ export class ReviewAssignmentComponent implements OnInit {
     }
 
     return (
-      submission.marksObtained /
-      this.assignment.maximumMarks
+      Number(submission.marksObtained) /
+      Number(this.assignment.maximumMarks)
     ) * 100;
   }
 
@@ -821,8 +941,8 @@ export class ReviewAssignmentComponent implements OnInit {
   trackById(
     index: number,
     submission: AssignmentSubmission
-  ): string {
+  ): string | number {
 
-    return submission.id;
+    return submission.id || index;
   }
 }

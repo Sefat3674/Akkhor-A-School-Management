@@ -1,67 +1,68 @@
+
 <div class="assignment-page">
 
   <!-- =====================================================
        PAGE HEADER
        ===================================================== -->
 
-  <div class="page-header">
+  <div class="top-section">
 
-  <div class="header-content">
+    <div class="header-content">
 
-    <h2>
-      <i class="bi bi-journal-text"></i>
-      My Assignments
-    </h2>
+      <h2>
+        <i class="bi bi-journal-text"></i>
+        My Assignments
+      </h2>
 
-    <p>
-      Create, manage, publish and review your assignments.
-    </p>
+      <p>
+        Create, manage, publish and review your assignments.
+      </p>
+
+    </div>
+
+    <div class="header-actions">
+
+      <button
+        type="button"
+        class="btn-add"
+        (click)="openCreate()">
+
+        <i class="bi bi-plus-circle-fill"></i>
+
+        Add Assignment
+
+      </button>
+
+    </div>
 
   </div>
-
-  <div class="header-actions">
-
-    <button
-      type="button"
-      class="btn-add"
-      (click)="openCreate()">
-
-      <i class="bi bi-plus-circle-fill"></i>
-
-      Add Assignment
-
-    </button>
-
-  </div>
-
-</div>
 
 
   <!-- =====================================================
        SUMMARY CARDS
        ===================================================== -->
 
-  <div class="summary-grid">
+  <div class="summary-wrapper">
 
     <!-- TOTAL -->
 
     <div class="summary-card">
 
-      <div class="summary-icon">
+      <div class="summary-icon blue">
 
-        <i class="fas fa-tasks"></i>
+        <i class="bi bi-journal-text"></i>
 
       </div>
 
-      <div class="summary-info">
+      <div>
 
-        <span class="summary-value">
-          {{ totalAssignments }}
-        </span>
-
-        <span class="summary-label">
+        <span>
           Total Assignments
         </span>
+
+        <strong>
+          {{ totalAssignments }}
+        </strong>
 
       </div>
 
@@ -72,21 +73,21 @@
 
     <div class="summary-card">
 
-      <div class="summary-icon published">
+      <div class="summary-icon green">
 
-        <i class="fas fa-paper-plane"></i>
+        <i class="bi bi-send-fill"></i>
 
       </div>
 
-      <div class="summary-info">
+      <div>
 
-        <span class="summary-value">
-          {{ publishedCount }}
-        </span>
-
-        <span class="summary-label">
+        <span>
           Published
         </span>
+
+        <strong>
+          {{ publishedCount }}
+        </strong>
 
       </div>
 
@@ -97,21 +98,21 @@
 
     <div class="summary-card">
 
-      <div class="summary-icon draft">
+      <div class="summary-icon orange">
 
-        <i class="fas fa-file-alt"></i>
+        <i class="bi bi-file-earmark-text-fill"></i>
 
       </div>
 
-      <div class="summary-info">
+      <div>
 
-        <span class="summary-value">
-          {{ draftCount }}
-        </span>
-
-        <span class="summary-label">
+        <span>
           Draft
         </span>
+
+        <strong>
+          {{ draftCount }}
+        </strong>
 
       </div>
 
@@ -122,21 +123,21 @@
 
     <div class="summary-card">
 
-      <div class="summary-icon active">
+      <div class="summary-icon purple">
 
-        <i class="fas fa-check-circle"></i>
+        <i class="bi bi-check-circle-fill"></i>
 
       </div>
 
-      <div class="summary-info">
+      <div>
 
-        <span class="summary-value">
-          {{ activeCount }}
-        </span>
-
-        <span class="summary-label">
+        <span>
           Active
         </span>
+
+        <strong>
+          {{ activeCount }}
+        </strong>
 
       </div>
 
@@ -151,13 +152,22 @@
 
   <div
     *ngIf="errorMessage"
-    class="error-message">
+    class="alert alert-danger">
 
-    <i class="fas fa-exclamation-circle"></i>
+    <i class="bi bi-exclamation-circle-fill"></i>
 
     <span>
       {{ errorMessage }}
     </span>
+
+    <button
+      type="button"
+      class="alert-close"
+      (click)="errorMessage = ''">
+
+      ×
+
+    </button>
 
   </div>
 
@@ -172,7 +182,7 @@
 
     <div class="search-box">
 
-      <i class="fas fa-search"></i>
+      <i class="bi bi-search"></i>
 
       <input
         type="text"
@@ -181,10 +191,20 @@
         placeholder="Search assignment, class, course or subject..."
       />
 
+      <button
+        *ngIf="searchTerm"
+        type="button"
+        class="clear-search"
+        (click)="searchTerm = ''; onSearch()">
+
+        ×
+
+      </button>
+
     </div>
 
 
-    <!-- FILTER -->
+    <!-- FILTER CONTROLS -->
 
     <div class="filter-controls">
 
@@ -222,7 +242,7 @@
         class="btn-refresh"
         (click)="loadAssignments()">
 
-        <i class="fas fa-sync-alt"></i>
+        <i class="bi bi-arrow-clockwise"></i>
 
         Refresh
 
@@ -239,7 +259,7 @@
 
   <div
     *ngIf="loading"
-    class="loading-state">
+    class="loading-container">
 
     <div class="spinner"></div>
 
@@ -269,8 +289,12 @@
           My Assignment List
         </h5>
 
-        <span>
-          {{ filteredAssignments.length }} assignment(s)
+        <span class="record-count">
+
+          {{ filteredAssignments.length }}
+
+          assignment(s)
+
         </span>
 
       </div>
@@ -282,7 +306,7 @@
         (click)="loadAssignments()"
         title="Refresh">
 
-        <i class="fas fa-sync-alt"></i>
+        <i class="bi bi-arrow-clockwise"></i>
 
       </button>
 
@@ -290,10 +314,10 @@
 
 
     <!-- ===================================================
-         TABLE WRAPPER
+         TABLE
          =================================================== -->
 
-    <div class="table-wrapper">
+    <div class="table-responsive">
 
       <table class="assignment-table">
 
@@ -353,9 +377,9 @@
         <tbody>
 
 
-          <!-- =============================================
+          <!-- =================================================
                ASSIGNMENT ROW
-               ============================================= -->
+               ================================================= -->
 
           <tr
             *ngFor="
@@ -384,10 +408,9 @@
 
                 <div class="assignment-icon">
 
-                  <i class="fas fa-file-alt"></i>
+                  <i class="bi bi-file-earmark-text-fill"></i>
 
                 </div>
-
 
                 <div class="assignment-details">
 
@@ -436,11 +459,17 @@
 
             <td>
 
-              <span class="course-name">
+              <div class="course-box">
 
-                {{ assignment.courseName || '-' }}
+                <i class="bi bi-journal-bookmark-fill"></i>
 
-              </span>
+                <span class="course-name">
+
+                  {{ assignment.courseName || '-' }}
+
+                </span>
+
+              </div>
 
             </td>
 
@@ -449,11 +478,17 @@
 
             <td>
 
-              <span class="subject-name">
+              <div class="subject-box">
 
-                {{ assignment.subjectName || '-' }}
+                <i class="bi bi-book-half"></i>
 
-              </span>
+                <span class="subject-name">
+
+                  {{ assignment.subjectName || '-' }}
+
+                </span>
+
+              </div>
 
             </td>
 
@@ -468,7 +503,7 @@
                   isExpired(assignment.deadline)
                 ">
 
-                <i class="far fa-calendar-alt"></i>
+                <i class="bi bi-calendar-event"></i>
 
                 <span>
 
@@ -512,7 +547,7 @@
                 class="submission-count"
                 (click)="reviewAssignment(assignment)">
 
-                <i class="fas fa-users"></i>
+                <i class="bi bi-people-fill"></i>
 
                 <span>
                   {{ assignment.submissionCount || 0 }}
@@ -529,27 +564,24 @@
 
               <span
                 class="status-badge"
-                [ngClass]="
-                  getStatusClass(assignment)
-                ">
+                [ngClass]="getStatusClass(assignment)">
 
                 <i
-                  class="fas"
+                  class="bi"
                   [ngClass]="{
 
-                    'fa-check-circle':
+                    'bi-check-circle-fill':
                       assignment.isPublished &&
                       assignment.isActive,
 
-                    'fa-file-alt':
+                    'bi-file-earmark-text-fill':
                       !assignment.isPublished &&
                       assignment.isActive,
 
-                    'fa-ban':
+                    'bi-ban-fill':
                       !assignment.isActive
 
                   }">
-
                 </i>
 
                 {{ getStatusText(assignment) }}
@@ -561,209 +593,206 @@
 
             <!-- ATTACHMENT -->
 
-            <!-- ATTACHMENT -->
+            <td>
 
-             <!-- ATTACHMENT -->
+              <button
+                *ngIf="assignment.attachmentFileName"
+                type="button"
+                class="attachment-download"
+                (click)="downloadAttachment(assignment)"
+                [title]="'Download ' + assignment.attachmentFileName">
 
-<td>
+                <i class="bi bi-download"></i>
 
-  <button
-    *ngIf="assignment.attachmentFileName"
-    type="button"
-    class="attachment-download"
-    (click)="downloadAttachment(assignment)"
-    [title]="'Download ' + assignment.attachmentFileName">
+              </button>
 
-    <i class="bi bi-download"></i>
 
-  </button>
+              <span
+                *ngIf="!assignment.attachmentFileName"
+                class="no-attachment">
 
-  <span
-    *ngIf="!assignment.attachmentFileName"
-    class="no-attachment">
+                <i class="bi bi-dash"></i>
 
-    <i class="bi bi-dash"></i>
-    None
+                None
 
-  </span>
+              </span>
 
-</td>
+            </td>
 
+
+            <!-- ACTIONS -->
 
             <td class="actions">
 
-  <!-- VIEW -->
 
-  <button
-    type="button"
-    class="action-btn view-btn"
-    title="View Assignment"
-    (click)="openView(assignment)">
+              <!-- VIEW -->
 
-    <i class="bi bi-eye-fill"></i>
+              <button
+                type="button"
+                class="action-btn view-btn"
+                title="View Assignment"
+                (click)="openView(assignment)">
 
-  </button>
+                <i class="bi bi-eye-fill"></i>
 
-
-  <!-- EDIT -->
-
-  <button
-    type="button"
-    class="action-btn edit-btn"
-    title="Edit Assignment"
-    (click)="openEdit(assignment)">
-
-    <i class="bi bi-pencil-square"></i>
-
-  </button>
+              </button>
 
 
-  <!-- REVIEW -->
+              <!-- EDIT -->
 
-  <button
-    type="button"
-    class="action-btn review-btn"
-    title="Review Submissions"
-    (click)="reviewAssignment(assignment)">
+              <button
+                type="button"
+                class="action-btn edit-btn"
+                title="Edit Assignment"
+                (click)="openEdit(assignment)">
 
-    <i class="bi bi-person-check-fill"></i>
+                <i class="bi bi-pencil-square"></i>
 
-  </button>
-
-
-  <!-- PUBLISH -->
-
-  <button
-    *ngIf="
-      !assignment.isPublished &&
-      assignment.isActive
-    "
-    type="button"
-    class="action-btn publish-btn"
-    title="Publish Assignment"
-    (click)="publish(assignment)">
-
-    <i class="bi bi-send-fill"></i>
-
-  </button>
+              </button>
 
 
-  <!-- MOVE TO DRAFT -->
+              <!-- REVIEW -->
 
-  <button
-    *ngIf="
-      assignment.isPublished &&
-      assignment.isActive
-    "
-    type="button"
-    class="action-btn draft-btn"
-    title="Move To Draft"
-    (click)="unpublish(assignment)">
+              <button
+                type="button"
+                class="action-btn review-btn"
+                title="Review Submissions"
+                (click)="reviewAssignment(assignment)">
 
-    <i class="bi bi-file-earmark-text-fill"></i>
+                <i class="bi bi-person-check-fill"></i>
 
-  </button>
+              </button>
 
 
-  <!-- TOGGLE ACTIVE -->
+              <!-- PUBLISH -->
 
-  <button
-    type="button"
-    class="action-btn toggle-btn"
-    [title]="
-      assignment.isActive
-        ? 'Deactivate Assignment'
-        : 'Activate Assignment'
-    "
-    (click)="toggleActive(assignment)">
+              <button
+                *ngIf="
+                  !assignment.isPublished &&
+                  assignment.isActive
+                "
+                type="button"
+                class="action-btn publish-btn"
+                title="Publish Assignment"
+                (click)="publish(assignment)">
 
-    <i
-      class="bi"
-      [ngClass]="
-        assignment.isActive
-          ? 'bi-toggle-on'
-          : 'bi-toggle-off'
-      ">
-    </i>
+                <i class="bi bi-send-fill"></i>
 
-  </button>
+              </button>
 
 
-  <!-- DELETE -->
+              <!-- MOVE TO DRAFT -->
 
-  <button
-    type="button"
-    class="action-btn delete-btn"
-    title="Delete Assignment"
-    (click)="deleteAssignment(assignment)">
+              <button
+                *ngIf="
+                  assignment.isPublished &&
+                  assignment.isActive
+                "
+                type="button"
+                class="action-btn draft-btn"
+                title="Move To Draft"
+                (click)="unpublish(assignment)">
 
-    <i class="bi bi-trash3-fill"></i>
+                <i class="bi bi-file-earmark-text-fill"></i>
 
-  </button>
+              </button>
 
-</td>
+
+              <!-- TOGGLE ACTIVE -->
+
+              <button
+                type="button"
+                class="action-btn toggle-btn"
+                [title]="
+                  assignment.isActive
+                    ? 'Deactivate Assignment'
+                    : 'Activate Assignment'
+                "
+                (click)="toggleActive(assignment)">
+
+                <i
+                  class="bi"
+                  [ngClass]="
+                    assignment.isActive
+                      ? 'bi-toggle-on'
+                      : 'bi-toggle-off'
+                  ">
+                </i>
+
+              </button>
+
+
+              <!-- DELETE -->
+
+              <button
+                type="button"
+                class="action-btn delete-btn"
+                title="Delete Assignment"
+                (click)="deleteAssignment(assignment)">
+
+                <i class="bi bi-trash3-fill"></i>
+
+              </button>
+
+
+            </td>
 
           </tr>
 
 
-          <!-- =============================================
+          <!-- =================================================
                EMPTY STATE
-               ============================================= -->
+               ================================================= -->
 
           <tr
             *ngIf="filteredAssignments.length === 0">
 
             <td
               colspan="11"
-              class="empty-state">
+              class="empty">
 
-              <div class="empty-content">
+              <div class="empty-icon">
 
-                <div class="empty-icon">
-
-                  <i class="fas fa-tasks"></i>
-
-                </div>
-
-
-                <h4>
-                  No assignments found
-                </h4>
-
-
-                <p
-                  *ngIf="searchTerm">
-
-                  Try changing your search or filter.
-
-                </p>
-
-
-                <p
-                  *ngIf="!searchTerm">
-
-                  You haven't created any assignments yet.
-
-                </p>
-
-
-                <button
-                  *ngIf="!searchTerm"
-                  type="button"
-                  class="btn-add empty-add"
-                  (click)="openCreate()">
-
-                  <i class="fas fa-plus"></i>
-
-                  Create Assignment
-
-                </button>
+                <i class="bi bi-journal-x"></i>
 
               </div>
+
+
+              <h4>
+                No Assignments Found
+              </h4>
+
+
+              <p *ngIf="searchTerm">
+
+                Try changing your search or filter.
+
+              </p>
+
+
+              <p *ngIf="!searchTerm">
+
+                You haven't created any assignments yet.
+
+              </p>
+
+
+              <button
+                *ngIf="!searchTerm"
+                type="button"
+                class="btn-add empty-add"
+                (click)="openCreate()">
+
+                <i class="bi bi-plus-circle-fill"></i>
+
+                Create Assignment
+
+              </button>
 
             </td>
 
           </tr>
+
 
         </tbody>
 
@@ -774,3 +803,4 @@
   </div>
 
 </div>
+

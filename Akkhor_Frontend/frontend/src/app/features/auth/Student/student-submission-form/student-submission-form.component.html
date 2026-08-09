@@ -1,412 +1,551 @@
-<!-- =====================================================
-     BACK BUTTON
-===================================================== -->
 
-<button
-  type="button"
-  class="btn-back"
-  (click)="cancel()"
-  [disabled]="loading">
+<div class="submission-page">
 
-  <i class="fas fa-arrow-left"></i>
+  <div class="submission-container">
 
-  Back
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
 
-</button>
+    <div class="page-header">
 
+      <button
+        type="button"
+        class="btn-back"
+        (click)="cancel()"
+        [disabled]="loading">
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
+        <i class="fas fa-arrow-left"></i>
 
-<div class="header-content">
+        Back
 
-  <div class="header-icon">
+      </button>
 
-    <i class="fas fa-paper-plane"></i>
 
-  </div>
+      <div class="header-content">
 
-  <div>
+        <div class="header-icon">
 
-    <span class="page-label">
-      Assignment Submission
-    </span>
+          <i class="fas fa-paper-plane"></i>
 
-    <h2>
-      {{ assignment?.title || 'Submit Assignment' }}
-    </h2>
+        </div>
 
-        <p *ngIf="assignment && assignment.subjectName">
-        {{ assignment.subjectName }}
-        </p>
 
-  </div>
+        <div>
 
-</div>
+          <span class="page-label">
+            Assignment Submission
+          </span>
 
 
-<!-- =====================================================
-     LOADING
-===================================================== -->
+          <h2>
+            {{ assignment?.title || 'Submit Assignment' }}
+          </h2>
 
-<div
-  class="loading-state"
-  *ngIf="loading && !assignment">
 
-  <div class="spinner"></div>
+          <p *ngIf="assignment?.subjectName">
 
-  <p>
-    Loading assignment...
-  </p>
+            {{ assignment ?.subjectName }}
 
-</div>
+          </p>
 
-
-<!-- =====================================================
-     ERROR MESSAGE
-===================================================== -->
-
-<div
-  class="error-message"
-  *ngIf="errorMessage">
-
-  <div class="error-icon">
-
-    <i class="fas fa-exclamation-circle"></i>
-
-  </div>
-
-  <div class="error-content">
-
-    <strong>
-      Unable to submit assignment
-    </strong>
-
-    <p>
-      {{ errorMessage }}
-    </p>
-
-  </div>
-
-</div>
-
-
-<!-- =====================================================
-     SUCCESS MESSAGE
-===================================================== -->
-
-<div
-  class="success-message"
-  *ngIf="successMessage">
-
-  <div class="success-icon">
-
-    <i class="fas fa-check-circle"></i>
-
-  </div>
-
-  <div class="success-content">
-
-    <strong>
-      Submission Successful
-    </strong>
-
-    <p>
-      {{ successMessage }}
-    </p>
-
-  </div>
-
-</div>
-
-
-<!-- =====================================================
-     MAIN FORM
-===================================================== -->
-
-<div
-  class="submission-container"
-  *ngIf="assignment">
-
-
-  <!-- ===================================================
-       ASSIGNMENT SUMMARY
-  ==================================================== -->
-
-  <div class="assignment-summary">
-
-    <div class="summary-icon">
-
-      <i class="fas fa-file-alt"></i>
-
-    </div>
-
-
-    <div class="summary-content">
-
-      <h3>
-        {{ assignment.title }}
-      </h3>
-
-
-      <div class="summary-meta">
-
-        <!-- Course -->
-
-        <span *ngIf="assignment.courseName">
-
-          <i class="fas fa-book"></i>
-
-          {{ assignment.courseName }}
-
-        </span>
-
-
-        <!-- Subject -->
-
-        <span *ngIf="assignment.subjectName">
-
-          <i class="fas fa-book-open"></i>
-
-          {{ assignment.subjectName }}
-
-        </span>
-
-
-        <!-- Marks -->
-
-        <span>
-
-          <i class="fas fa-star"></i>
-
-          {{ assignment.maximumMarks }} Marks
-
-        </span>
+        </div>
 
       </div>
 
     </div>
 
-  </div>
 
-
-  <!-- ===================================================
-       DEADLINE WARNING
-  ==================================================== -->
-
-  <div
-    class="deadline-warning"
-    *ngIf="!isOverdue()">
-
-    <i class="fas fa-clock"></i>
-
-    <div>
-
-      <strong>
-        Submission Deadline
-      </strong>
-
-      <span>
-        {{ formatDeadline() }}
-      </span>
-
-    </div>
-
-  </div>
-
-
-  <!-- ===================================================
-       OVERDUE
-  ==================================================== -->
-
-  <div
-    class="deadline-overdue"
-    *ngIf="isOverdue()">
-
-    <i class="fas fa-exclamation-triangle"></i>
-
-    <div>
-
-      <strong>
-        Submission Deadline Passed
-      </strong>
-
-      <span>
-        This assignment can no longer be submitted.
-      </span>
-
-    </div>
-
-  </div>
-
-
-  <!-- ===================================================
-       SUBMISSION TEXT
-  ==================================================== -->
-
-  <div class="form-section">
-
-    <label
-      for="submissionText">
-
-      Submission Text
-
-      <span class="optional">
-        Optional
-      </span>
-
-    </label>
-
-
-    <textarea
-      id="submissionText"
-      name="submissionText"
-      [(ngModel)]="submissionText"
-      rows="8"
-      maxlength="5000"
-      [disabled]="loading || isOverdue()"
-      placeholder="Write your answer, explanation or submission details here...">
-    </textarea>
-
-
-    <div class="character-count">
-
-      {{ submissionText.length }}
-
-      / 5000
-
-    </div>
-
-  </div>
-
-
-  <!-- ===================================================
-       FILE UPLOAD
-  ==================================================== -->
-
-  <div class="form-section">
-
-    <label>
-
-      Attachment
-
-      <span class="optional">
-        Optional
-      </span>
-
-    </label>
-
+    <!-- =====================================================
+         LOADING
+    ====================================================== -->
 
     <div
-      class="file-upload"
-      [class.has-file]="!!selectedFile"
-      [class.disabled]="loading || isOverdue()">
+      class="loading-state"
+      *ngIf="loading && !assignment">
+
+      <div class="spinner"></div>
+
+      <p>
+        Loading assignment...
+      </p>
+
+    </div>
 
 
-      <!-- Hidden File Input -->
+    <!-- =====================================================
+         ERROR MESSAGE
+    ====================================================== -->
 
-      <input
-        #fileInput
-        type="file"
-        id="attachment"
-        name="attachment"
-        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png"
-        (change)="onFileSelected($event)"
-        [disabled]="loading || isOverdue()"
-        hidden />
+    <div
+      class="error-message"
+      *ngIf="errorMessage">
+
+      <div class="error-icon">
+
+        <i class="fas fa-exclamation-circle"></i>
+
+      </div>
 
 
-      <!-- =================================================
-           NO FILE SELECTED
-      ================================================== -->
-
-      <div
-        class="upload-placeholder"
-        *ngIf="!selectedFile"
-        (click)="
-          !loading &&
-          !isOverdue() &&
-          fileInput.click()
-        ">
-
-        <div class="upload-icon">
-
-          <i class="fas fa-cloud-upload-alt"></i>
-
-        </div>
-
+      <div class="error-content">
 
         <strong>
-          Click to upload your file
+          Unable to submit assignment
         </strong>
 
 
-        <span>
-          PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, JPG or PNG
-        </span>
+        <p>
+          {{ errorMessage }}
+        </p>
+
+      </div>
+
+    </div>
 
 
-        <small>
-          Maximum file size: 10 MB
-        </small>
+    <!-- =====================================================
+         SUCCESS MESSAGE
+    ====================================================== -->
+
+    <div
+      class="success-message"
+      *ngIf="successMessage">
+
+      <div class="success-icon">
+
+        <i class="fas fa-check-circle"></i>
 
       </div>
 
 
-      <!-- =================================================
-           SELECTED FILE
-      ================================================== -->
+      <div class="success-content">
 
-      <div
-        class="selected-file"
-        *ngIf="selectedFile">
+        <strong>
+          Submission Successful
+        </strong>
 
-        <!-- File Icon -->
 
-        <div class="file-icon">
+        <p>
+          {{ successMessage }}
+        </p>
 
-          <i class="fas fa-file"></i>
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN SUBMISSION CARD
+    ====================================================== -->
+
+    <div
+      class="submission-card"
+      *ngIf="assignment">
+
+
+      <!-- ===================================================
+           ASSIGNMENT SUMMARY
+      ==================================================== -->
+
+      <div class="assignment-summary">
+
+        <div class="summary-icon">
+
+          <i class="fas fa-file-alt"></i>
 
         </div>
 
 
-        <!-- File Information -->
+        <div class="summary-content">
 
-        <div class="file-details">
+          <h3>
+            {{ assignment.title }}
+          </h3>
+
+
+          <div class="summary-meta">
+
+            <!-- Course -->
+
+            <span
+              *ngIf="assignment.courseName">
+
+              <i class="fas fa-book"></i>
+
+              {{ assignment.courseName }}
+
+            </span>
+
+
+            <!-- Subject -->
+
+            <span
+              *ngIf="assignment.subjectName">
+
+              <i class="fas fa-book-open"></i>
+
+              {{ assignment.subjectName }}
+
+            </span>
+
+
+            <!-- Marks -->
+
+            <span>
+
+              <i class="fas fa-star"></i>
+
+              {{ assignment.maximumMarks }}
+
+              Marks
+
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ===================================================
+           DEADLINE WARNING
+      ==================================================== -->
+
+      <div
+        class="deadline-warning"
+        *ngIf="!isOverdue()">
+
+        <i class="fas fa-clock"></i>
+
+
+        <div>
 
           <strong>
-            {{ selectedFile.name }}
+            Submission Deadline
           </strong>
 
 
           <span>
-
-            {{ formatFileSize(selectedFile.size) }}
-
-            <span
-              *ngIf="getFileExtension(selectedFile)">
-
-              &nbsp;•&nbsp;
-
-              {{ getFileExtension(selectedFile) }}
-
-            </span>
-
+            {{ formatDeadline() }}
           </span>
 
         </div>
 
+      </div>
 
-        <!-- Remove -->
+
+      <!-- ===================================================
+           DEADLINE PASSED
+      ==================================================== -->
+
+      <div
+        class="deadline-overdue"
+        *ngIf="isOverdue()">
+
+        <i class="fas fa-exclamation-triangle"></i>
+
+
+        <div>
+
+          <strong>
+            Submission Deadline Passed
+          </strong>
+
+
+          <span>
+            This assignment can no longer be submitted.
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- ===================================================
+           SUBMISSION TEXT
+      ==================================================== -->
+
+      <div class="form-section">
+
+        <label
+          for="submissionText">
+
+          Submission Text
+
+
+          <span class="optional">
+            Optional
+          </span>
+
+        </label>
+
+
+        <textarea
+          id="submissionText"
+          name="submissionText"
+          [(ngModel)]="submissionText"
+          rows="8"
+          maxlength="5000"
+          [disabled]="loading || isOverdue()"
+          placeholder="Write your answer, explanation or submission details here...">
+        </textarea>
+
+
+        <div class="character-count">
+
+          {{ submissionText.length }}
+
+          / 5000
+
+        </div>
+
+      </div>
+
+
+      <!-- ===================================================
+           ATTACHMENT
+      ==================================================== -->
+
+      <div class="form-section">
+
+        <label>
+
+          Attachment
+
+
+          <span class="optional">
+            Optional
+          </span>
+
+        </label>
+
+
+        <div
+          class="file-upload"
+          [class.has-file]="!!selectedFile"
+          [class.disabled]="loading || isOverdue()">
+
+
+          <!-- Hidden File Input -->
+
+          <input
+            #fileInput
+            type="file"
+            id="attachment"
+            name="attachment"
+            accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png"
+            (change)="onFileSelected($event)"
+            [disabled]="loading || isOverdue()"
+            hidden />
+
+
+          <!-- =================================================
+               NO FILE SELECTED
+          ================================================== -->
+
+          <div
+            class="upload-placeholder"
+            *ngIf="!selectedFile"
+            (click)="openFilePicker(fileInput)">
+
+            <div class="upload-icon">
+
+              <i class="fas fa-cloud-upload-alt"></i>
+
+            </div>
+
+
+            <strong>
+              Click to upload your file
+            </strong>
+
+
+            <span>
+              PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, JPG or PNG
+            </span>
+
+
+            <small>
+              Maximum file size: 10 MB
+            </small>
+
+          </div>
+
+
+          <!-- =================================================
+               SELECTED FILE
+          ================================================== -->
+
+          <div
+            class="selected-file"
+            *ngIf="selectedFile">
+
+
+            <!-- File Icon -->
+
+            <div class="file-icon">
+
+              <i
+                class="fas"
+                [ngClass]="getFileIcon(selectedFile)">
+              </i>
+
+            </div>
+
+
+            <!-- File Information -->
+
+            <div class="file-details">
+
+              <strong
+                [title]="selectedFile.name">
+
+                {{ selectedFile.name }}
+
+              </strong>
+
+
+              <span>
+
+                {{ formatFileSize(selectedFile.size) }}
+
+                <span
+                  *ngIf="getFileExtension(selectedFile)">
+
+                  &nbsp;•&nbsp;
+
+                  {{ getFileExtension(selectedFile) }}
+
+                </span>
+
+              </span>
+
+            </div>
+
+
+            <!-- Remove -->
+
+            <button
+              type="button"
+              class="remove-file"
+              (click)="removeFile()"
+              [disabled]="loading">
+
+              <i class="fas fa-times"></i>
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ===================================================
+           INSTRUCTIONS
+      ==================================================== -->
+
+      <div class="submission-instructions">
+
+        <div class="instructions-icon">
+
+          <i class="fas fa-info-circle"></i>
+
+        </div>
+
+
+        <div>
+
+          <strong>
+            Before submitting
+          </strong>
+
+
+          <ul>
+
+            <li>
+              Make sure your submission is complete.
+            </li>
+
+
+            <li>
+              Check that the uploaded file is correct.
+            </li>
+
+
+            <li>
+              Maximum file size is 10 MB.
+            </li>
+
+
+            <li>
+              Once evaluated, the submission cannot be edited.
+            </li>
+
+          </ul>
+
+        </div>
+
+      </div>
+
+
+      <!-- ===================================================
+           FORM ACTIONS
+      ==================================================== -->
+
+      <div class="form-actions">
+
+
+        <!-- Cancel -->
 
         <button
           type="button"
-          class="remove-file"
-          (click)="removeFile()"
+          class="btn-cancel"
+          (click)="cancel()"
           [disabled]="loading">
 
           <i class="fas fa-times"></i>
+
+          Cancel
+
+        </button>
+
+
+        <!-- Submit -->
+
+        <button
+          type="button"
+          class="btn-submit"
+          (click)="submitAssignment()"
+          [disabled]="
+            loading ||
+            isOverdue() ||
+            (!submissionText.trim() && !selectedFile)
+          ">
+
+          <i
+            class="fas"
+            [ngClass]="{
+              'fa-paper-plane': !loading,
+              'fa-spinner fa-spin': loading
+            }">
+          </i>
+
+
+          <span>
+
+            {{
+              loading
+                ? 'Submitting...'
+                : existingSubmission
+                  ? 'Update Submission'
+                  : 'Submit Assignment'
+            }}
+
+          </span>
 
         </button>
 
@@ -416,103 +555,5 @@
 
   </div>
 
-
-  <!-- ===================================================
-       SUBMISSION INSTRUCTIONS
-  ==================================================== -->
-
-  <div class="submission-instructions">
-
-    <div class="instructions-icon">
-
-      <i class="fas fa-info-circle"></i>
-
-    </div>
-
-
-    <div>
-
-      <strong>
-        Before submitting
-      </strong>
-
-
-      <ul>
-
-        <li>
-          Make sure your submission is complete.
-        </li>
-
-        <li>
-          Check that the uploaded file is correct.
-        </li>
-
-        <li>
-          Maximum file size is 10 MB.
-        </li>
-
-        <li>
-          Once evaluated, the submission cannot be edited.
-        </li>
-
-      </ul>
-
-    </div>
-
-  </div>
-
-
-  <!-- ===================================================
-       FORM ACTIONS
-  ==================================================== -->
-
-  <div class="form-actions">
-
-
-    <!-- Cancel -->
-
-    <button
-      type="button"
-      class="btn-cancel"
-      (click)="cancel()"
-      [disabled]="loading">
-
-      <i class="fas fa-times"></i>
-
-      Cancel
-
-    </button>
-
-
-    <!-- Submit -->
-
-    <button
-      type="button"
-      class="btn-submit"
-      (click)="submitAssignment()"
-      [disabled]="
-        loading ||
-        isOverdue() ||
-        (!submissionText.trim() && !selectedFile)
-      ">
-
-      <i
-        class="fas"
-        [ngClass]="{
-          'fa-paper-plane': !loading,
-          'fa-spinner fa-spin': loading
-        }">
-      </i>
-
-
-      {{
-        loading
-          ? 'Submitting...'
-          : 'Submit Assignment'
-      }}
-
-    </button>
-
-  </div>
-
 </div>
+

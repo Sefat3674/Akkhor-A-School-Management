@@ -268,7 +268,15 @@ export const routes: Routes = [
         
 
         
-
+{
+  path: 'teacher/dashboard',
+  loadComponent: () =>
+    import(
+      './features/auth/Teacher/teacher-dashboard/teacher-dashboard.component'
+    ).then(
+      m => m.TeacherDashboardComponent
+    )
+},
 
 
   {
@@ -336,7 +344,13 @@ export const routes: Routes = [
       './features/auth/Teacher/assignments/review-assignment/review-assignment.component'
     ).then(m => m.ReviewAssignmentComponent)
 },
-
+{
+  path: 'teacher/teacher-assignment-preview',
+  loadComponent: () =>
+    import(
+      './features/auth/Teacher/teacher-assignment-preview/teacher-assignment-preview.component'
+    ).then(m => m.TeacherAssignmentPreviewComponent)
+},
 
 // --------------------------------------------------
 // MARKS & FEEDBACK

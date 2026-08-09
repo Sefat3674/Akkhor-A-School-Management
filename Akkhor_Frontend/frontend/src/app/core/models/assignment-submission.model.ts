@@ -18,6 +18,15 @@ export interface AssignmentSubmission {
 
   assignmentTitle?: string | null;
 
+  // Original assignment file
+  assignmentAttachmentUrl?: string | null;
+
+  assignmentAttachmentFileName?: string | null;
+
+  assignmentAttachmentContentType?: string | null;
+
+  assignmentAttachmentFileSize?: number | null;
+
   // ===================================================
   // STUDENT
   // ===================================================
@@ -34,6 +43,7 @@ export interface AssignmentSubmission {
 
   submissionText?: string | null;
 
+  // Student answer script/file
   attachmentUrl?: string | null;
 
   attachmentFileName?: string | null;

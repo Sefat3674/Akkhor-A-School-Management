@@ -1,6 +1,10 @@
-
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+
+import {
+  Component,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 
 import {
   FormBuilder,
@@ -14,12 +18,29 @@ import {
   Router
 } from '@angular/router';
 
-import { AcademicYearService } from '../../../../../core/services/academic-year.service';
-import { ClassService } from '../../../../../core/services/class.service';
-import { SectionService } from '../../../../../core/services/section.service';
-import { CourseService } from '../../../../../core/services/course.service';
-import { CourseSubjectService } from '../../../../../core/services/course-subject.service';
-import { AssignmentService } from '../../../../../core/services/assignment.service';
+import {
+  Subject,
+  forkJoin,
+  takeUntil
+} from 'rxjs';
+
+import { AcademicYearService }
+  from '../../../../../core/services/academic-year.service';
+
+import { ClassService }
+  from '../../../../../core/services/class.service';
+
+import { SectionService }
+  from '../../../../../core/services/section.service';
+
+import { CourseService }
+  from '../../../../../core/services/course.service';
+
+import { CourseSubjectService }
+  from '../../../../../core/services/course-subject.service';
+
+import { AssignmentService }
+  from '../../../../../core/services/assignment.service';
 
 import {
   AcademicYear
@@ -45,8 +66,10 @@ import {
   CourseSubjectModel
 } from '../../../../../core/models/course-subject.model';
 
+
 @Component({
   selector: 'app-assignment-form',
+
   standalone: true,
 
   imports: [
@@ -54,10 +77,24 @@ import {
     ReactiveFormsModule
   ],
 
-  templateUrl: './assignment-form.component.html',
-  styleUrls: ['./assignment-form.component.scss']
+  templateUrl:
+    './assignment-form.component.html',
+
+  styleUrls: [
+    './assignment-form.component.scss'
+  ]
 })
-export class AssignmentFormComponent implements OnInit {
+export class AssignmentFormComponent
+  implements OnInit, OnDestroy {
+
+
+  // =====================================================
+  // DESTROY
+  // =====================================================
+
+  private destroy$ =
+    new Subject<void>();
+
 
   // =====================================================
   // FORM
@@ -65,13 +102,16 @@ export class AssignmentFormComponent implements OnInit {
 
   assignmentForm!: FormGroup;
 
+
   // =====================================================
   // MODE
   // =====================================================
 
   isEditMode = false;
 
-  assignmentId: string | null = null;
+  assignmentId:
+    string | null = null;
+
 
   // =====================================================
   // STATE
@@ -83,66 +123,87 @@ export class AssignmentFormComponent implements OnInit {
 
   errorMessage = '';
 
+
   // =====================================================
   // FILE
   // =====================================================
 
-  selectedFile: File | null = null;
+  selectedFile:
+    File | null = null;
 
-  existingFileName: string | null = null;
+  existingFileName:
+    string | null = null;
+
 
   // =====================================================
   // DROPDOWN DATA
   // =====================================================
 
-  academicYears: AcademicYear[] = [];
+  academicYears:
+    AcademicYear[] = [];
 
-  classes: ClassModel[] = [];
+  classes:
+    ClassModel[] = [];
 
-  sections: SectionModel[] = [];
+  sections:
+    SectionModel[] = [];
 
-  courses: CourseModel[] = [];
+  courses:
+    CourseModel[] = [];
 
-  subjects: SubjectModel[] = [];
-  
+  subjects:
+    SubjectModel[] = [];
+
 
   // =====================================================
   // ALL DATA
   // =====================================================
 
-  allClasses: ClassModel[] = [];
+  allClasses:
+    ClassModel[] = [];
 
-  allSections: SectionModel[] = [];
+  allSections:
+    SectionModel[] = [];
 
-  allCourses: CourseModel[] = [];
+  allCourses:
+    CourseModel[] = [];
 
-  allCourseSubjects: CourseSubjectModel[] = [];
+  allCourseSubjects:
+    CourseSubjectModel[] = [];
 
-  allSubjects: SubjectModel[] = [];
 
   // =====================================================
   // CONSTRUCTOR
   // =====================================================
 
   constructor(
+
     private fb: FormBuilder,
 
-    private assignmentService: AssignmentService,
+    private assignmentService:
+      AssignmentService,
 
-    private academicYearService: AcademicYearService,
+    private academicYearService:
+      AcademicYearService,
 
-    private classService: ClassService,
+    private classService:
+      ClassService,
 
-    private sectionService: SectionService,
+    private sectionService:
+      SectionService,
 
-    private courseService: CourseService,
+    private courseService:
+      CourseService,
 
-    private courseSubjectService: CourseSubjectService,
+    private courseSubjectService:
+      CourseSubjectService,
 
     private router: Router,
 
     private route: ActivatedRoute
+
   ) {}
+
 
   // =====================================================
   // INIT
@@ -152,31 +213,35 @@ export class AssignmentFormComponent implements OnInit {
 
     this.createForm();
 
-    // ===================================================
-    // GET ASSIGNMENT ID
-    // ===================================================
 
     this.assignmentId =
       this.route.snapshot.paramMap.get('id');
 
-    if (this.assignmentId) {
 
-      this.isEditMode = true;
+    this.isEditMode =
+      !!this.assignmentId;
 
-    }
-
-    // ===================================================
-    // DROPDOWN LISTENERS
-    // ===================================================
 
     this.setupDropdownListeners();
 
-    // ===================================================
-    // LOAD DATA
-    // ===================================================
 
-    this.loadDropdownData();
+    this.loadAllDropdownData();
+
   }
+
+
+  // =====================================================
+  // DESTROY
+  // =====================================================
+
+  ngOnDestroy(): void {
+
+    this.destroy$.next();
+
+    this.destroy$.complete();
+
+  }
+
 
   // =====================================================
   // CREATE FORM
@@ -261,471 +326,261 @@ export class AssignmentFormComponent implements OnInit {
         ]
 
       });
+
   }
 
+
   // =====================================================
-  // DROPDOWN CHANGE LISTENERS
+  // DROPDOWN LISTENERS
   // =====================================================
 
   private setupDropdownListeners(): void {
 
+
     // ===================================================
-    // ACADEMIC YEAR CHANGE
+    // ACADEMIC YEAR
     // ===================================================
 
     this.assignmentForm
       .get('academicYearId')
       ?.valueChanges
-      .subscribe((academicYearId) => {
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe(
+        (academicYearId: string) => {
 
-        if (!academicYearId) {
+          if (!academicYearId) {
 
-          this.classes = [];
-          this.sections = [];
-          this.courses = [];
-          this.subjects = [];
+            this.classes = [];
 
-          this.assignmentForm.patchValue(
-            {
-              classId: '',
-              sectionId: '',
-              courseId: '',
-              subjectId: ''
-            },
-            {
-              emitEvent: false
-            }
+            this.sections = [];
+
+            this.courses = [];
+
+            this.subjects = [];
+
+            this.clearFields([
+              'classId',
+              'sectionId',
+              'courseId',
+              'subjectId'
+            ]);
+
+            return;
+          }
+
+
+          this.filterClassesByAcademicYear(
+            academicYearId
           );
 
-          return;
         }
+      );
 
-        // -----------------------------------------------
-        // Academic Year → Class
-        // -----------------------------------------------
-
-        this.filterClassesByAcademicYear(
-          academicYearId
-        );
-
-        // -----------------------------------------------
-        // Clear dependent fields
-        // -----------------------------------------------
-
-        this.sections = [];
-        this.courses = [];
-        this.subjects = [];
-
-        this.assignmentForm.patchValue(
-          {
-            classId: '',
-            sectionId: '',
-            courseId: '',
-            subjectId: ''
-          },
-          {
-            emitEvent: false
-          }
-        );
-
-      });
 
     // ===================================================
-    // CLASS CHANGE
+    // CLASS
     // ===================================================
 
     this.assignmentForm
       .get('classId')
       ?.valueChanges
-      .subscribe((classId) => {
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe(
+        (classId: string) => {
 
-        if (!classId) {
+          if (!classId) {
 
-          this.sections = [];
-          this.courses = [];
-          this.subjects = [];
+            this.sections = [];
 
-          this.assignmentForm.patchValue(
-            {
-              sectionId: '',
-              courseId: '',
-              subjectId: ''
-            },
-            {
-              emitEvent: false
-            }
+            this.courses = [];
+
+            this.subjects = [];
+
+            this.clearFields([
+              'sectionId',
+              'courseId',
+              'subjectId'
+            ]);
+
+            return;
+          }
+
+
+          this.filterSectionsByClass(
+            classId
           );
 
-          return;
+
+          this.filterCoursesByClass(
+            classId
+          );
+
         }
+      );
 
-        // -----------------------------------------------
-        // Class → Section
-        // -----------------------------------------------
-
-        this.filterSectionsByClass(
-          classId
-        );
-
-        // -----------------------------------------------
-        // Class → Course
-        // -----------------------------------------------
-
-        this.filterCoursesByClass(
-          classId
-        );
-
-        // -----------------------------------------------
-        // Clear dependent fields
-        // -----------------------------------------------
-
-        this.subjects = [];
-
-        this.assignmentForm.patchValue(
-          {
-            sectionId: '',
-            courseId: '',
-            subjectId: ''
-          },
-          {
-            emitEvent: false
-          }
-        );
-
-      });
 
     // ===================================================
-    // COURSE CHANGE
+    // COURSE
     // ===================================================
 
     this.assignmentForm
       .get('courseId')
       ?.valueChanges
-      .subscribe((courseId) => {
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe(
+        (courseId: string) => {
 
-        if (!courseId) {
+          if (!courseId) {
 
-          this.subjects = [];
+            this.subjects = [];
 
-          this.assignmentForm.patchValue(
-            {
-              subjectId: ''
-            },
-            {
-              emitEvent: false
-            }
+            this.clearFields([
+              'subjectId'
+            ]);
+
+            return;
+          }
+
+
+          this.filterSubjectsByCourse(
+            courseId
           );
 
-          return;
         }
-
-        // -----------------------------------------------
-        // Course → Subject
-        //
-        // IMPORTANT:
-        // Subjects come from CourseSubjects
-        // -----------------------------------------------
-
-        this.filterSubjectsByCourse(
-          courseId
-        );
-
-        this.assignmentForm.patchValue(
-          {
-            subjectId: ''
-          },
-          {
-            emitEvent: false
-          }
-        );
-
-      });
+      );
 
   }
 
+
   // =====================================================
-  // LOAD DROPDOWN DATA
+  // CLEAR FIELDS
   // =====================================================
 
-  private loadDropdownData(): void {
+  private clearFields(
+    fields: string[]
+  ): void {
+
+    const patch: Record<string, any> = {};
+
+
+    fields.forEach(
+      field => {
+
+        patch[field] = '';
+
+      }
+    );
+
+
+    this.assignmentForm.patchValue(
+      patch,
+      {
+        emitEvent: false
+      }
+    );
+
+  }
+
+
+  // =====================================================
+  // LOAD ALL DROPDOWN DATA
+  // =====================================================
+
+  private loadAllDropdownData(): void {
 
     this.loading = true;
 
     this.errorMessage = '';
 
-    this.loadAcademicYears();
-  }
 
-  // =====================================================
-  // LOAD ACADEMIC YEARS
-  // =====================================================
+    forkJoin({
 
-  private loadAcademicYears(): void {
+      academicYears:
+        this.academicYearService.getAll(),
 
-    this.academicYearService
-      .getAll()
+      classes:
+        this.classService.getAll(),
+
+      sections:
+        this.sectionService.getAll(),
+
+      courses:
+        this.courseService.getAll(),
+
+      courseSubjects:
+        this.courseSubjectService.getAll()
+
+    })
+      .pipe(
+        takeUntil(this.destroy$)
+      )
       .subscribe({
 
-        next: (data: AcademicYear[]) => {
-
-          console.log(
-            'Academic Years:',
-            data
-          );
+        next: (result) => {
 
           this.academicYears =
-            data ?? [];
+            result.academicYears ?? [];
 
-          this.loadClasses();
-        },
-
-        error: (error) => {
-
-          console.error(
-            'Error loading academic years:',
-            error
-          );
-
-          this.errorMessage =
-            'Unable to load academic years.';
-
-          this.loading = false;
-        }
-
-      });
-  }
-
-  // =====================================================
-  // LOAD CLASSES
-  // =====================================================
-
-  private loadClasses(): void {
-
-    this.classService
-      .getAll()
-      .subscribe({
-
-        next: (data: ClassModel[]) => {
-
-          console.log(
-            'Classes:',
-            data
-          );
 
           this.allClasses =
-            data ?? [];
+            result.classes ?? [];
 
-          // Don't show anything until
-          // Academic Year is selected.
-
-          this.classes = [];
-
-          this.loadSections();
-        },
-
-        error: (error) => {
-
-          console.error(
-            'Error loading classes:',
-            error
-          );
-
-          this.errorMessage =
-            'Unable to load classes.';
-
-          this.loading = false;
-        }
-
-      });
-  }
-
-  // =====================================================
-  // LOAD SECTIONS
-  // =====================================================
-
-  private loadSections(): void {
-
-    this.sectionService
-      .getAll()
-      .subscribe({
-
-        next: (data: SectionModel[]) => {
-
-          console.log(
-            'Sections:',
-            data
-          );
 
           this.allSections =
-            data ?? [];
+            result.sections ?? [];
 
-          // Sections will be loaded
-          // after Class is selected.
-
-          this.sections = [];
-
-          this.loadCourses();
-        },
-
-        error: (error) => {
-
-          console.error(
-            'Error loading sections:',
-            error
-          );
-
-          this.errorMessage =
-            'Unable to load sections.';
-
-          this.loading = false;
-        }
-
-      });
-  }
-
-  // =====================================================
-  // LOAD COURSES
-  // =====================================================
-
-  private loadCourses(): void {
-
-    this.courseService
-      .getAll()
-      .subscribe({
-
-        next: (data: CourseModel[]) => {
-
-          console.log(
-            'Courses:',
-            data
-          );
 
           this.allCourses =
-            data ?? [];
+            result.courses ?? [];
 
-          // IMPORTANT:
-          // Courses depend on CLASS,
-          // not directly on Academic Year.
-
-          this.courses = [];
-
-          this.loadCourseSubjects();
-        },
-
-        error: (error) => {
-
-          console.error(
-            'Error loading courses:',
-            error
-          );
-
-          this.errorMessage =
-            'Unable to load courses.';
-
-          this.loading = false;
-        }
-
-      });
-  }
-
-  // =====================================================
-  // LOAD COURSE SUBJECT RELATIONSHIPS
-  // =====================================================
-
-  private loadCourseSubjects(): void {
-
-    this.courseSubjectService
-      .getAll()
-      .subscribe({
-
-        next: (data: CourseSubjectModel[]) => {
-
-          console.log(
-            'Course Subjects:',
-            data
-          );
 
           this.allCourseSubjects =
-            data ?? [];
+            result.courseSubjects ?? [];
 
-          this.subjects = [];
 
-          // =============================================
-          // LOAD SUBJECTS
-          //
-          // We still load the subject master data so that
-          // we can resolve SubjectId → Subject details.
-          // =============================================
+          this.loading = false;
 
-          this.loadSubjects();
+
+          if (
+            this.isEditMode &&
+            this.assignmentId
+          ) {
+
+            this.loadAssignment(
+              this.assignmentId
+            );
+
+          }
+
         },
 
         error: (error) => {
 
           console.error(
-            'Error loading course subjects:',
+            'Error loading dropdown data:',
             error
           );
 
           this.errorMessage =
-            'Unable to load course subjects.';
+            'Unable to load assignment dropdown data.';
 
           this.loading = false;
+
         }
 
       });
+
   }
 
-  // =====================================================
-  // LOAD SUBJECTS
-  // =====================================================
-
-  private loadSubjects(): void {
-
-    /*
-     * We need the Subject master data because
-     * CourseSubjects normally contains:
-     *
-     * CourseId
-     * SubjectId
-     *
-     * Therefore:
-     *
-     * Course
-     *   ↓
-     * CourseSubject
-     *   ↓
-     * Subject
-     */
-
-    // Lazy import is NOT required.
-    // The SubjectService is intentionally not injected
-    // because the subject list is resolved through
-    // CourseSubjects.
-    //
-    // If your CourseSubject API already returns
-    // SubjectName / Subject object, this method can
-    // be simplified.
-
-    this.loading = false;
-
-    // =================================================
-    // EDIT MODE
-    // =================================================
-
-    if (
-      this.isEditMode &&
-      this.assignmentId
-    ) {
-
-      this.loadAssignment(
-        this.assignmentId
-      );
-    }
-  }
 
   // =====================================================
-  // FILTER CLASSES BY ACADEMIC YEAR
+  // FILTER CLASSES
   // =====================================================
 
   private filterClassesByAcademicYear(
@@ -735,31 +590,31 @@ export class AssignmentFormComponent implements OnInit {
     const selectedId =
       String(academicYearId);
 
+
     this.classes =
       this.allClasses
-        .filter((item: any) =>
-          String(item.academicYearId) ===
-          selectedId
+        .filter(
+          (item: any) =>
+            String(item.academicYearId) ===
+            selectedId
         )
-        .sort((a: any, b: any) =>
-          String(a.name ?? '')
-            .localeCompare(
-              String(b.name ?? ''),
-              undefined,
-              {
-                numeric: true
-              }
-            )
+        .sort(
+          (a: any, b: any) =>
+            String(a.name ?? '')
+              .localeCompare(
+                String(b.name ?? ''),
+                undefined,
+                {
+                  numeric: true
+                }
+              )
         );
 
-    console.log(
-      'Classes filtered by Academic Year:',
-      this.classes
-    );
   }
 
+
   // =====================================================
-  // FILTER SECTIONS BY CLASS
+  // FILTER SECTIONS
   // =====================================================
 
   private filterSectionsByClass(
@@ -769,27 +624,34 @@ export class AssignmentFormComponent implements OnInit {
     const selectedId =
       String(classId);
 
+
     this.sections =
       this.allSections
-        .filter((item: any) =>
-          String(item.classId) ===
-          selectedId
+        .filter(
+          (item: any) =>
+            String(item.classId) ===
+            selectedId
         )
-        .sort((a: any, b: any) =>
-          String(a.sectionName ?? '')
-            .localeCompare(
-              String(b.sectionName ?? '')
+        .sort(
+          (a: any, b: any) =>
+            String(
+              a.sectionName ?? ''
+            ).localeCompare(
+              String(
+                b.sectionName ?? ''
+              ),
+              undefined,
+              {
+                numeric: true
+              }
             )
         );
 
-    console.log(
-      'Sections filtered by Class:',
-      this.sections
-    );
   }
 
+
   // =====================================================
-  // FILTER COURSES BY CLASS
+  // FILTER COURSES
   // =====================================================
 
   private filterCoursesByClass(
@@ -799,88 +661,107 @@ export class AssignmentFormComponent implements OnInit {
     const selectedId =
       String(classId);
 
+
     this.courses =
       this.allCourses
-        .filter((item: any) =>
-          String(item.classId) ===
-          selectedId
+        .filter(
+          (item: any) =>
+            String(item.classId) ===
+            selectedId
         )
-        .sort((a: any, b: any) =>
-          String(
-            a.courseName ??
-            a.name ??
-            ''
-          ).localeCompare(
-            String(
-              b.courseName ??
-              b.name ??
-              ''
-            )
-          )
+        .sort(
+          (a: any, b: any) => {
+
+            const nameA =
+              String(
+                a.courseName ??
+                a.name ??
+                ''
+              );
+
+
+            const nameB =
+              String(
+                b.courseName ??
+                b.name ??
+                ''
+              );
+
+
+            return nameA.localeCompare(
+              nameB,
+              undefined,
+              {
+                numeric: true
+              }
+            );
+
+          }
         );
 
-    console.log(
-      'Courses filtered by Class:',
-      this.courses
-    );
   }
 
-  // =====================================================
-  // FILTER SUBJECTS BY COURSE
-  // =====================================================
 
   // =====================================================
-// FILTER SUBJECTS BY COURSE
-// =====================================================
+  // FILTER SUBJECTS
+  // =====================================================
 
-private filterSubjectsByCourse(
-  courseId: string
-): void {
+  private filterSubjectsByCourse(
+    courseId: string
+  ): void {
 
-  const selectedCourseId =
-    String(courseId);
+    const selectedCourseId =
+      String(courseId);
 
-  // ===================================================
-  // CourseSubject belongs to selected Course
-  // ===================================================
 
-  const courseSubjectRows =
-    this.allCourseSubjects
-      .filter((item: CourseSubjectModel) =>
-        String(item.courseId) === selectedCourseId
-      )
-      .sort((a, b) =>
-        (a.displayOrder ?? 0) -
-        (b.displayOrder ?? 0)
-      );
+    const rows =
+      this.allCourseSubjects
+        .filter(
+          (item: any) =>
+            String(item.courseId) ===
+            selectedCourseId
+        )
+        .sort(
+          (a: any, b: any) =>
+            Number(
+              a.displayOrder ?? 0
+            ) -
+            Number(
+              b.displayOrder ?? 0
+            )
+        );
 
-  console.log(
-    'Selected Course ID:',
-    selectedCourseId
-  );
 
-  console.log(
-    'CourseSubject rows for selected course:',
-    courseSubjectRows
-  );
+    this.subjects =
+      rows
+        .map(
+          (item: any) => {
 
-  // ===================================================
-  // Convert CourseSubject → Subject dropdown data
-  // ===================================================
+            const subjectId =
+              item.subjectId ??
+              item.subject?.id;
 
-  this.subjects =
-    courseSubjectRows.map(
-      (item: CourseSubjectModel) => ({
-        id: item.subjectId,
-        name: item.subjectName
-      } as SubjectModel)
-    );
 
-  console.log(
-    'Filtered Subjects:',
-    this.subjects
-  );
-}
+            const subjectName =
+              item.subjectName ??
+              item.subject?.name ??
+              item.name ??
+              `Subject ${subjectId}`;
+
+
+            return {
+              id: subjectId,
+              name: subjectName
+            } as SubjectModel;
+
+          }
+        )
+        .filter(
+          item => !!item.id
+        );
+
+  }
+
 
   // =====================================================
   // LOAD ASSIGNMENT
@@ -894,22 +775,23 @@ private filterSubjectsByCourse(
 
     this.errorMessage = '';
 
+
     this.assignmentService
       .getById(id)
+      .pipe(
+        takeUntil(this.destroy$)
+      )
       .subscribe({
 
         next: (assignment: any) => {
-
-          console.log(
-            'Assignment:',
-            assignment
-          );
 
           this.patchAssignment(
             assignment
           );
 
+
           this.loading = false;
+
         },
 
         error: (error) => {
@@ -923,10 +805,13 @@ private filterSubjectsByCourse(
             'Unable to load assignment.';
 
           this.loading = false;
+
         }
 
       });
+
   }
+
 
   // =====================================================
   // PATCH ASSIGNMENT
@@ -937,46 +822,58 @@ private filterSubjectsByCourse(
   ): void {
 
     if (!assignment) {
+
       return;
+
     }
 
-    // =================================================
-    // EXISTING FILE
-    // =================================================
+
+    // Existing attachment
 
     this.existingFileName =
       assignment.attachmentFileName ??
       null;
 
-    // =================================================
-    // IDS
-    // =================================================
+
+    this.selectedFile =
+      null;
+
 
     const academicYearId =
-      assignment.academicYearId ?? '';
+      assignment.academicYearId ??
+      '';
+
 
     const classId =
-      assignment.classId ?? '';
+      assignment.classId ??
+      '';
+
 
     const sectionId =
-      assignment.sectionId ?? '';
+      assignment.sectionId ??
+      '';
+
 
     const courseId =
-      assignment.courseId ?? '';
+      assignment.courseId ??
+      '';
+
 
     const subjectId =
-      assignment.subjectId ?? '';
+      assignment.subjectId ??
+      '';
 
-    // =================================================
-    // FILTER DEPENDENT DROPDOWNS
-    // =================================================
+
+    // Filter dropdowns
 
     if (academicYearId) {
 
       this.filterClassesByAcademicYear(
         academicYearId
       );
+
     }
+
 
     if (classId) {
 
@@ -987,42 +884,42 @@ private filterSubjectsByCourse(
       this.filterCoursesByClass(
         classId
       );
+
     }
+
 
     if (courseId) {
 
       this.filterSubjectsByCourse(
         courseId
       );
+
     }
 
-    // =================================================
-    // PATCH FORM
-    // =================================================
+
+    // Patch form
 
     this.assignmentForm.patchValue(
+
       {
 
-        academicYearId:
-          academicYearId,
+        academicYearId,
 
-        classId:
-          classId,
+        classId,
 
-        sectionId:
-          sectionId,
+        sectionId,
 
-        courseId:
-          courseId,
+        courseId,
 
-        subjectId:
-          subjectId,
+        subjectId,
 
         title:
-          assignment.title ?? '',
+          assignment.title ??
+          '',
 
         description:
-          assignment.description ?? '',
+          assignment.description ??
+          '',
 
         deadline:
           this.formatDateTimeLocal(
@@ -1030,349 +927,59 @@ private filterSubjectsByCourse(
           ),
 
         maximumMarks:
-          assignment.maximumMarks ?? 100,
+          assignment.maximumMarks ??
+          100,
 
         attachmentUrl:
-          assignment.attachmentUrl ?? '',
+          assignment.attachmentUrl ??
+          '',
 
         attachmentFileName:
-          assignment.attachmentFileName ?? '',
+          assignment.attachmentFileName ??
+          '',
 
         attachmentContentType:
-          assignment.attachmentContentType ?? '',
+          assignment.attachmentContentType ??
+          '',
 
         attachmentFileSize:
-          assignment.attachmentFileSize ?? null,
+          assignment.attachmentFileSize ??
+          null,
 
         isPublished:
-          assignment.isPublished ?? false,
+          assignment.isPublished ??
+          false,
 
         isActive:
-          assignment.isActive ?? true
+          assignment.isActive ??
+          true
 
       },
 
       {
         emitEvent: false
       }
+
     );
+
   }
 
-  // =====================================================
-  // SUBMIT
-  // =====================================================
-
-  onSubmit(): void {
-
-    this.errorMessage = '';
-
-    // =================================================
-    // VALIDATION
-    // =================================================
-
-    if (
-      this.assignmentForm.invalid
-    ) {
-
-      this.assignmentForm.markAllAsTouched();
-
-      return;
-    }
-
-    // =================================================
-    // PREVENT DOUBLE SUBMIT
-    // =================================================
-
-    if (this.saving) {
-      return;
-    }
-
-    this.saving = true;
-
-    const formValue =
-      this.assignmentForm.getRawValue();
-
-    // =================================================
-    // FORM DATA
-    // =================================================
-
-    const formData =
-      new FormData();
-
-    // =================================================
-    // BASIC INFORMATION
-    // =================================================
-
-    if (formValue.academicYearId) {
-
-      formData.append(
-        'AcademicYearId',
-        String(
-          formValue.academicYearId
-        )
-      );
-    }
-
-    if (formValue.classId) {
-
-      formData.append(
-        'ClassId',
-        String(
-          formValue.classId
-        )
-      );
-    }
-
-    if (formValue.sectionId) {
-
-      formData.append(
-        'SectionId',
-        String(
-          formValue.sectionId
-        )
-      );
-    }
-
-    if (formValue.courseId) {
-
-      formData.append(
-        'CourseId',
-        String(
-          formValue.courseId
-        )
-      );
-    }
-
-    if (formValue.subjectId) {
-
-      formData.append(
-        'SubjectId',
-        String(
-          formValue.subjectId
-        )
-      );
-    }
-
-    // =================================================
-    // ASSIGNMENT INFORMATION
-    // =================================================
-
-    formData.append(
-      'Title',
-      (
-        formValue.title ?? ''
-      ).trim()
-    );
-
-    if (
-      formValue.description &&
-      formValue.description.trim()
-    ) {
-
-      formData.append(
-        'Description',
-        formValue.description.trim()
-      );
-    }
-
-    // =================================================
-    // DEADLINE
-    // =================================================
-
-    if (formValue.deadline) {
-
-      const deadline =
-        new Date(
-          formValue.deadline
-        );
-
-      if (
-        !isNaN(
-          deadline.getTime()
-        )
-      ) {
-
-        formData.append(
-          'Deadline',
-          deadline.toISOString()
-        );
-      }
-    }
-
-    // =================================================
-    // MAXIMUM MARKS
-    // =================================================
-
-    formData.append(
-      'MaximumMarks',
-      String(
-        formValue.maximumMarks
-      )
-    );
-
-    // =================================================
-    // PUBLICATION
-    // =================================================
-
-    formData.append(
-      'IsPublished',
-      formValue.isPublished
-        ? 'true'
-        : 'false'
-    );
-
-    formData.append(
-      'IsActive',
-      formValue.isActive
-        ? 'true'
-        : 'false'
-    );
-
-    // =================================================
-    // FILE
-    // =================================================
-
-    if (this.selectedFile) {
-
-      formData.append(
-        'Attachment',
-        this.selectedFile,
-        this.selectedFile.name
-      );
-    }
-
-    // =================================================
-    // DEBUG
-    // =================================================
-
-    console.log(
-      'Assignment Form Data:'
-    );
-
-    formData.forEach(
-      (value, key) => {
-
-        console.log(
-          key,
-          value
-        );
-
-      }
-    );
-
-    // =================================================
-    // CREATE / UPDATE
-    // =================================================
-
-    if (
-      this.isEditMode &&
-      this.assignmentId
-    ) {
-
-      this.updateAssignment(
-        this.assignmentId,
-        formData
-      );
-
-    }
-    else {
-
-      this.createAssignment(
-        formData
-      );
-    }
-  }
 
   // =====================================================
-  // CREATE ASSIGNMENT
+  // OPEN FILE PICKER
   // =====================================================
 
-  private createAssignment(
-    formData: FormData
+  openFilePicker(
+    input: HTMLInputElement
   ): void {
 
-    this.assignmentService
-      .create(formData)
-      .subscribe({
+    input.click();
 
-        next: (response) => {
-
-          console.log(
-            'Assignment created:',
-            response
-          );
-
-          this.saving = false;
-
-          this.router.navigate([
-            '/admin/assignments'
-          ]);
-        },
-
-        error: (error) => {
-
-          console.error(
-            'Error creating assignment:',
-            error
-          );
-
-          this.handleError(
-            error,
-            'Unable to create assignment.'
-          );
-        }
-
-      });
   }
 
-  // =====================================================
-  // UPDATE ASSIGNMENT
-  // =====================================================
-
-  private updateAssignment(
-    id: string,
-    formData: FormData
-  ): void {
-
-    this.assignmentService
-      .update(
-        id,
-        formData
-      )
-      .subscribe({
-
-        next: (response) => {
-
-          console.log(
-            'Assignment updated:',
-            response
-          );
-
-          this.saving = false;
-
-          this.router.navigate([
-            '/admin/assignments'
-          ]);
-        },
-
-        error: (error) => {
-
-          console.error(
-            'Error updating assignment:',
-            error
-          );
-
-          this.handleError(
-            error,
-            'Unable to update assignment.'
-          );
-        }
-
-      });
-  }
 
   // =====================================================
-  // FILE SELECT
+  // FILE SELECTED
   // =====================================================
 
   onFileSelected(
@@ -1382,41 +989,106 @@ private filterSubjectsByCourse(
     const input =
       event.target as HTMLInputElement;
 
+
     if (
       !input.files ||
       input.files.length === 0
     ) {
 
       return;
+
     }
+
 
     const file =
       input.files[0];
 
+
+    console.log(
+      'Selected file:',
+      file
+    );
+
+
+    // Optional file size limit: 20 MB
+
+    const maxSize =
+      20 * 1024 * 1024;
+
+
+    if (file.size > maxSize) {
+
+      this.errorMessage =
+        'File size cannot exceed 20 MB.';
+
+      input.value = '';
+
+      this.selectedFile = null;
+
+      return;
+
+    }
+
+
+    // Clear previous error
+
+    this.errorMessage = '';
+
+
+    // Store actual File object
+
     this.selectedFile =
       file;
+
+
+    // New file replaces old file
 
     this.existingFileName =
       null;
 
+
+    // Update form metadata
+
     this.assignmentForm.patchValue({
+
+      attachmentUrl:
+        '',
 
       attachmentFileName:
         file.name,
 
       attachmentContentType:
-        file.type,
+        file.type ||
+        'application/octet-stream',
 
       attachmentFileSize:
         file.size
 
     });
 
+
+    this.assignmentForm
+      .get('attachmentFileName')
+      ?.markAsDirty();
+
+
     console.log(
-      'Selected file:',
-      file
+      'Selected file name:',
+      this.selectedFile.name
     );
+
+    console.log(
+      'Selected file size:',
+      this.selectedFile.size
+    );
+
+    console.log(
+      'Selected file type:',
+      this.selectedFile.type
+    );
+
   }
+
 
   // =====================================================
   // REMOVE FILE
@@ -1429,6 +1101,7 @@ private filterSubjectsByCourse(
 
     this.existingFileName =
       null;
+
 
     this.assignmentForm.patchValue({
 
@@ -1445,7 +1118,22 @@ private filterSubjectsByCourse(
         null
 
     });
+
+
+    const input =
+      document.getElementById(
+        'assignmentAttachment'
+      ) as HTMLInputElement | null;
+
+
+    if (input) {
+
+      input.value = '';
+
+    }
+
   }
+
 
   // =====================================================
   // FILE ICON
@@ -1458,13 +1146,16 @@ private filterSubjectsByCourse(
     if (!fileName) {
 
       return 'fa-file';
+
     }
+
 
     const extension =
       fileName
         .split('.')
         .pop()
         ?.toLowerCase();
+
 
     switch (extension) {
 
@@ -1500,8 +1191,11 @@ private filterSubjectsByCourse(
 
       default:
         return 'fa-file';
+
     }
+
   }
+
 
   // =====================================================
   // FILE SIZE
@@ -1517,7 +1211,9 @@ private filterSubjectsByCourse(
     ) {
 
       return '0 Bytes';
+
     }
+
 
     const units = [
       'Bytes',
@@ -1526,11 +1222,13 @@ private filterSubjectsByCourse(
       'GB'
     ];
 
+
     const index =
       Math.floor(
         Math.log(bytes) /
         Math.log(1024)
       );
+
 
     const safeIndex =
       Math.min(
@@ -1538,8 +1236,11 @@ private filterSubjectsByCourse(
         units.length - 1
       );
 
+
     return (
+
       parseFloat(
+
         (
           bytes /
           Math.pow(
@@ -1547,11 +1248,420 @@ private filterSubjectsByCourse(
             safeIndex
           )
         ).toFixed(2)
-      ) +
+
+      )
+
+      +
+
       ' ' +
+
       units[safeIndex]
+
     );
+
   }
+
+
+  // =====================================================
+  // SUBMIT
+  // =====================================================
+
+  onSubmit(): void {
+
+    this.errorMessage = '';
+
+
+    if (
+      this.assignmentForm.invalid
+    ) {
+
+      this.assignmentForm.markAllAsTouched();
+
+      return;
+
+    }
+
+
+    if (this.saving) {
+
+      return;
+
+    }
+
+
+    this.saving = true;
+
+
+    const value =
+      this.assignmentForm.getRawValue();
+
+
+    const formData =
+      new FormData();
+
+
+    // ===================================================
+    // IDS
+    // ===================================================
+
+    this.appendIfValue(
+      formData,
+      'AcademicYearId',
+      value.academicYearId
+    );
+
+
+    this.appendIfValue(
+      formData,
+      'ClassId',
+      value.classId
+    );
+
+
+    this.appendIfValue(
+      formData,
+      'SectionId',
+      value.sectionId
+    );
+
+
+    this.appendIfValue(
+      formData,
+      'CourseId',
+      value.courseId
+    );
+
+
+    this.appendIfValue(
+      formData,
+      'SubjectId',
+      value.subjectId
+    );
+
+
+    // ===================================================
+    // TITLE
+    // ===================================================
+
+    formData.append(
+      'Title',
+      String(
+        value.title ?? ''
+      ).trim()
+    );
+
+
+    // ===================================================
+    // DESCRIPTION
+    // ===================================================
+
+    if (
+      value.description &&
+      String(value.description).trim()
+    ) {
+
+      formData.append(
+        'Description',
+        String(
+          value.description
+        ).trim()
+      );
+
+    }
+
+
+    // ===================================================
+    // DEADLINE
+    // ===================================================
+
+    if (value.deadline) {
+
+      const deadline =
+        new Date(
+          value.deadline
+        );
+
+
+      if (
+        !isNaN(
+          deadline.getTime()
+        )
+      ) {
+
+        formData.append(
+          'Deadline',
+          deadline.toISOString()
+        );
+
+      }
+
+    }
+
+
+    // ===================================================
+    // MAXIMUM MARKS
+    // ===================================================
+
+    formData.append(
+      'MaximumMarks',
+      String(
+        value.maximumMarks
+      )
+    );
+
+
+    // ===================================================
+    // PUBLISHED
+    // ===================================================
+
+    formData.append(
+      'IsPublished',
+      value.isPublished
+        ? 'true'
+        : 'false'
+    );
+
+
+    // ===================================================
+    // ACTIVE
+    // ===================================================
+
+    formData.append(
+      'IsActive',
+      value.isActive
+        ? 'true'
+        : 'false'
+    );
+
+
+    // ===================================================
+    // ACTUAL FILE
+    // ===================================================
+
+    if (this.selectedFile) {
+
+      console.log(
+        'Uploading actual file:',
+        this.selectedFile.name
+      );
+
+
+      console.log(
+        'File size:',
+        this.selectedFile.size
+      );
+
+
+      console.log(
+        'File type:',
+        this.selectedFile.type
+      );
+
+
+      formData.append(
+        'Attachment',
+        this.selectedFile,
+        this.selectedFile.name
+      );
+
+    }
+
+
+    // ===================================================
+    // DEBUG
+    // ===================================================
+
+    console.log(
+      '========== FORM DATA =========='
+    );
+
+
+    formData.forEach(
+      (item, key) => {
+
+        if (item instanceof File) {
+
+          console.log(
+            key,
+            'FILE:',
+            item.name,
+            item.size,
+            item.type
+          );
+
+        }
+        else {
+
+          console.log(
+            key,
+            item
+          );
+
+        }
+
+      }
+    );
+
+
+    // ===================================================
+    // CREATE / UPDATE
+    // ===================================================
+
+    if (
+      this.isEditMode &&
+      this.assignmentId
+    ) {
+
+      this.updateAssignment(
+        this.assignmentId,
+        formData
+      );
+
+    }
+    else {
+
+      this.createAssignment(
+        formData
+      );
+
+    }
+
+  }
+
+
+  // =====================================================
+  // APPEND VALUE
+  // =====================================================
+
+  private appendIfValue(
+    formData: FormData,
+    key: string,
+    value: any
+  ): void {
+
+    if (
+      value !== null &&
+      value !== undefined &&
+      String(value).trim() !== ''
+    ) {
+
+      formData.append(
+        key,
+        String(value)
+      );
+
+    }
+
+  }
+
+
+  // =====================================================
+  // CREATE
+  // =====================================================
+
+  private createAssignment(
+    formData: FormData
+  ): void {
+
+    this.assignmentService
+      .create(formData)
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+
+        next: (response) => {
+
+          console.log(
+            'Assignment created:',
+            response
+          );
+
+
+          this.saving = false;
+
+
+          this.router.navigate([
+            '/admin/assignments'
+          ]);
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Create assignment error:',
+            error
+          );
+
+
+          this.handleError(
+            error,
+            'Unable to create assignment.'
+          );
+
+        }
+
+      });
+
+  }
+
+
+  // =====================================================
+  // UPDATE
+  // =====================================================
+
+  private updateAssignment(
+    id: string,
+    formData: FormData
+  ): void {
+
+    this.assignmentService
+      .update(
+        id,
+        formData
+      )
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+
+        next: (response) => {
+
+          console.log(
+            'Assignment updated:',
+            response
+          );
+
+
+          this.saving = false;
+
+
+          this.router.navigate([
+            '/admin/assignments'
+          ]);
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Update assignment error:',
+            error
+          );
+
+
+          this.handleError(
+            error,
+            'Unable to update assignment.'
+          );
+
+        }
+
+      });
+
+  }
+
 
   // =====================================================
   // FIELD VALIDATION
@@ -1566,6 +1676,7 @@ private filterSubjectsByCourse(
         fieldName
       );
 
+
     return !!(
       control &&
       control.invalid &&
@@ -1574,10 +1685,12 @@ private filterSubjectsByCourse(
         control.dirty
       )
     );
+
   }
 
+
   // =====================================================
-  // FORMAT DATETIME LOCAL
+  // DATETIME LOCAL
   // =====================================================
 
   private formatDateTimeLocal(
@@ -1591,10 +1704,13 @@ private filterSubjectsByCourse(
     if (!value) {
 
       return '';
+
     }
+
 
     const date =
       new Date(value);
+
 
     if (
       isNaN(
@@ -1603,10 +1719,13 @@ private filterSubjectsByCourse(
     ) {
 
       return '';
+
     }
+
 
     const year =
       date.getFullYear();
+
 
     const month =
       String(
@@ -1616,6 +1735,7 @@ private filterSubjectsByCourse(
         '0'
       );
 
+
     const day =
       String(
         date.getDate()
@@ -1623,6 +1743,7 @@ private filterSubjectsByCourse(
         2,
         '0'
       );
+
 
     const hours =
       String(
@@ -1632,6 +1753,7 @@ private filterSubjectsByCourse(
         '0'
       );
 
+
     const minutes =
       String(
         date.getMinutes()
@@ -1640,11 +1762,14 @@ private filterSubjectsByCourse(
         '0'
       );
 
+
     return (
       `${year}-${month}-${day}` +
       `T${hours}:${minutes}`
     );
+
   }
+
 
   // =====================================================
   // ERROR HANDLING
@@ -1657,14 +1782,12 @@ private filterSubjectsByCourse(
 
     this.saving = false;
 
+
     console.error(
       'Assignment error:',
       error
     );
 
-    // =================================================
-    // API MESSAGE
-    // =================================================
 
     if (
       error?.error?.message
@@ -1674,11 +1797,9 @@ private filterSubjectsByCourse(
         error.error.message;
 
       return;
+
     }
 
-    // =================================================
-    // STRING ERROR
-    // =================================================
 
     if (
       typeof error?.error === 'string'
@@ -1688,11 +1809,9 @@ private filterSubjectsByCourse(
         error.error;
 
       return;
+
     }
 
-    // =================================================
-    // VALIDATION ERRORS
-    // =================================================
 
     if (
       error?.error?.errors
@@ -1701,7 +1820,9 @@ private filterSubjectsByCourse(
       const errors =
         error.error.errors;
 
+
       const messages: string[] = [];
+
 
       Object.keys(errors)
         .forEach(
@@ -1709,6 +1830,7 @@ private filterSubjectsByCourse(
 
             const fieldErrors =
               errors[key];
+
 
             if (
               Array.isArray(
@@ -1719,10 +1841,12 @@ private filterSubjectsByCourse(
               messages.push(
                 ...fieldErrors
               );
+
             }
 
           }
         );
+
 
       if (
         messages.length > 0
@@ -1732,12 +1856,11 @@ private filterSubjectsByCourse(
           messages.join(' ');
 
         return;
+
       }
+
     }
 
-    // =================================================
-    // STATUS 400
-    // =================================================
 
     if (
       error?.status === 400
@@ -1747,11 +1870,9 @@ private filterSubjectsByCourse(
         'Invalid assignment data. Please check all required fields.';
 
       return;
+
     }
 
-    // =================================================
-    // STATUS 404
-    // =================================================
 
     if (
       error?.status === 404
@@ -1761,11 +1882,9 @@ private filterSubjectsByCourse(
         'Assignment was not found.';
 
       return;
+
     }
 
-    // =================================================
-    // STATUS 500
-    // =================================================
 
     if (
       error?.status >= 500
@@ -1775,15 +1894,15 @@ private filterSubjectsByCourse(
         'Server error. Please try again later.';
 
       return;
+
     }
 
-    // =================================================
-    // DEFAULT
-    // =================================================
 
     this.errorMessage =
       defaultMessage;
+
   }
+
 
   // =====================================================
   // BACK
@@ -1791,10 +1910,17 @@ private filterSubjectsByCourse(
 
   goBack(): void {
 
+    if (this.saving) {
+
+      return;
+
+    }
+
+
     this.router.navigate([
       '/admin/assignments'
     ]);
+
   }
 
 }
-

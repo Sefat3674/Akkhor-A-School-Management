@@ -506,25 +506,31 @@ export class StudentSubmissionsComponent
   // DOWNLOAD
   // =====================================================
 
-  downloadAttachment(
-    submission: AssignmentSubmission
-  ): void {
+  // =====================================================
+// DOWNLOAD / VIEW ATTACHMENT
+// =====================================================
 
-    if (
-      !submission.attachmentUrl
-    ) {
+downloadAttachment(
+  submission: AssignmentSubmission
+): void {
 
-      return;
+  if (!submission.attachmentUrl) {
 
-    }
+    alert('Attachment file is not available.');
 
-
-    window.open(
-      submission.attachmentUrl,
-      '_blank'
-    );
-
+    return;
   }
+
+  const attachmentUrl =
+    submission.attachmentUrl.startsWith('http')
+      ? submission.attachmentUrl
+      : `https://localhost:50268${submission.attachmentUrl}`;
+
+  window.open(
+    attachmentUrl,
+    '_blank'
+  );
+}
 
 
   // =====================================================

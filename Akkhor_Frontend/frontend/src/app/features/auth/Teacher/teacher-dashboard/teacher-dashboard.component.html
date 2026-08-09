@@ -1,0 +1,525 @@
+<div class="teacher-dashboard">
+
+  <!-- =====================================================
+       PAGE HEADER
+       ===================================================== -->
+
+  <div class="page-header">
+
+    <div class="header-content">
+
+      <div class="title-icon">
+        <i class="bi bi-speedometer2"></i>
+      </div>
+
+      <div>
+        <h2>Teacher Dashboard</h2>
+
+        <p>
+          Manage your classes and assignments
+        </p>
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="refresh-btn"
+      (click)="refreshDashboard()"
+      [disabled]="isLoading">
+
+      <i
+        class="bi"
+        [ngClass]="{
+          'bi-arrow-clockwise': !isLoading,
+          'bi-arrow-repeat': isLoading
+        }">
+      </i>
+
+      Refresh
+
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       LOADING
+       ===================================================== -->
+
+  <div
+    class="loading-state"
+    *ngIf="isLoading">
+
+    <div class="spinner"></div>
+
+    <p>
+      Loading dashboard...
+    </p>
+
+  </div>
+
+
+  <!-- =====================================================
+       ERROR
+       ===================================================== -->
+
+  <div
+    class="error-alert"
+    *ngIf="!isLoading && errorMessage">
+
+    <i class="bi bi-exclamation-triangle-fill"></i>
+
+    <span>
+      {{ errorMessage }}
+    </span>
+
+    <button
+      type="button"
+      (click)="refreshDashboard()">
+
+      Try Again
+
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       DASHBOARD CONTENT
+       ===================================================== -->
+
+  <div
+    class="dashboard-content"
+    *ngIf="!isLoading && !errorMessage">
+
+
+    <!-- =================================================
+         STATISTICS
+         ================================================= -->
+
+    <div class="stats-grid">
+
+
+      <!-- TOTAL CLASSES -->
+
+      <div
+        class="stat-card classes-card"
+        (click)="goToClasses()">
+
+        <div class="stat-icon">
+          <i class="bi bi-people-fill"></i>
+        </div>
+
+        <div class="stat-info">
+
+          <span class="stat-label">
+            Total Classes
+          </span>
+
+          <h3>
+            {{ totalClasses }}
+          </h3>
+
+          <span class="stat-link">
+            View Classes
+            <i class="bi bi-arrow-right"></i>
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- TOTAL ASSIGNMENTS -->
+
+      <div
+        class="stat-card assignments-card"
+        (click)="goToAssignments()">
+
+        <div class="stat-icon">
+          <i class="bi bi-journal-text"></i>
+        </div>
+
+        <div class="stat-info">
+
+          <span class="stat-label">
+            Total Assignments
+          </span>
+
+          <h3>
+            {{ totalAssignments }}
+          </h3>
+
+          <span class="stat-link">
+            View Assignments
+            <i class="bi bi-arrow-right"></i>
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- PUBLISHED -->
+
+      <div
+        class="stat-card published-card"
+        (click)="goToPublishedAssignments()">
+
+        <div class="stat-icon">
+          <i class="bi bi-check-circle-fill"></i>
+        </div>
+
+        <div class="stat-info">
+
+          <span class="stat-label">
+            Published
+          </span>
+
+          <h3>
+            {{ publishedAssignments }}
+          </h3>
+
+          <span class="stat-link">
+            View Published
+            <i class="bi bi-arrow-right"></i>
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- DRAFT -->
+
+      <div
+        class="stat-card draft-card"
+        (click)="goToDraftAssignments()">
+
+        <div class="stat-icon">
+          <i class="bi bi-file-earmark-text-fill"></i>
+        </div>
+
+        <div class="stat-info">
+
+          <span class="stat-label">
+            Draft
+          </span>
+
+          <h3>
+            {{ draftAssignments }}
+          </h3>
+
+          <span class="stat-link">
+            View Drafts
+            <i class="bi bi-arrow-right"></i>
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         LOWER SECTION
+         ================================================= -->
+
+    <div class="dashboard-grid">
+
+
+      <!-- =================================================
+           RECENT ASSIGNMENTS
+           ================================================= -->
+
+      <div class="dashboard-card recent-card">
+
+        <div class="card-header">
+
+          <div>
+
+            <h3>
+              <i class="bi bi-clock-history"></i>
+              Recent Assignments
+            </h3>
+
+            <p>
+              Your latest assignments
+            </p>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="view-all-btn"
+            (click)="goToAssignments()">
+
+            View All
+
+            <i class="bi bi-arrow-right"></i>
+
+          </button>
+
+        </div>
+
+
+        <!-- No assignments -->
+
+        <div
+          class="empty-state"
+          *ngIf="recentAssignments.length === 0">
+
+          <div class="empty-icon">
+            <i class="bi bi-journal-x"></i>
+          </div>
+
+          <h4>
+            No assignments yet
+          </h4>
+
+          <p>
+            You haven't created any assignments.
+          </p>
+
+          <button
+            type="button"
+            class="primary-btn"
+            (click)="goToAssignments()">
+
+            <i class="bi bi-plus-lg"></i>
+
+            Create Assignment
+
+          </button>
+
+        </div>
+
+
+        <!-- Assignment list -->
+
+        <div
+          class="assignment-list"
+          *ngIf="recentAssignments.length > 0">
+
+          <div
+            class="assignment-item"
+            *ngFor="
+              let assignment of recentAssignments
+            "
+            (click)="viewAssignment(assignment.id)">
+
+
+            <div class="assignment-icon">
+
+              <i class="bi bi-file-earmark-text"></i>
+
+            </div>
+
+
+            <div class="assignment-info">
+
+              <h4>
+                {{
+                  assignment.title ||
+                  assignment.name ||
+                  'Untitled Assignment'
+                }}
+              </h4>
+
+              <span class="assignment-date">
+
+                <i class="bi bi-calendar3"></i>
+
+                {{
+                  assignment.createdAt
+                    | date:'dd MMM yyyy'
+                }}
+
+              </span>
+
+            </div>
+
+
+            <div class="assignment-status">
+
+              <span
+                class="status-badge"
+                [ngClass]="
+                  assignment.isPublished
+                    ? 'published'
+                    : 'draft'
+                ">
+
+                {{
+                  assignment.isPublished
+                    ? 'Published'
+                    : 'Draft'
+                }}
+
+              </span>
+
+            </div>
+
+
+            <i
+              class="bi bi-chevron-right assignment-arrow">
+            </i>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           QUICK ACTIONS
+           ================================================= -->
+
+      <div class="dashboard-card quick-card">
+
+        <div class="card-header">
+
+          <div>
+
+            <h3>
+              <i class="bi bi-lightning-charge-fill"></i>
+              Quick Actions
+            </h3>
+
+            <p>
+              Frequently used actions
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="quick-actions">
+
+
+          <!-- CLASSES -->
+
+          <button
+            type="button"
+            class="quick-action"
+            (click)="goToClasses()">
+
+            <div class="quick-icon">
+              <i class="bi bi-people-fill"></i>
+            </div>
+
+            <div>
+
+              <strong>
+                My Classes
+              </strong>
+
+              <span>
+                View your assigned classes
+              </span>
+
+            </div>
+
+            <i class="bi bi-chevron-right"></i>
+
+          </button>
+
+
+          <!-- ASSIGNMENTS -->
+
+          <button
+            type="button"
+            class="quick-action"
+            (click)="goToAssignments()">
+
+            <div class="quick-icon">
+              <i class="bi bi-journal-text"></i>
+            </div>
+
+            <div>
+
+              <strong>
+                Assignments
+              </strong>
+
+              <span>
+                Manage your assignments
+              </span>
+
+            </div>
+
+            <i class="bi bi-chevron-right"></i>
+
+          </button>
+
+
+          <!-- PUBLISHED -->
+
+          <button
+            type="button"
+            class="quick-action"
+            (click)="goToPublishedAssignments()">
+
+            <div class="quick-icon">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+
+            <div>
+
+              <strong>
+                Published
+              </strong>
+
+              <span>
+                View published assignments
+              </span>
+
+            </div>
+
+            <i class="bi bi-chevron-right"></i>
+
+          </button>
+
+
+          <!-- DRAFT -->
+
+          <button
+            type="button"
+            class="quick-action"
+            (click)="goToDraftAssignments()">
+
+            <div class="quick-icon">
+              <i class="bi bi-file-earmark-text-fill"></i>
+            </div>
+
+            <div>
+
+              <strong>
+                Drafts
+              </strong>
+
+              <span>
+                Continue your draft assignments
+              </span>
+
+            </div>
+
+            <i class="bi bi-chevron-right"></i>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

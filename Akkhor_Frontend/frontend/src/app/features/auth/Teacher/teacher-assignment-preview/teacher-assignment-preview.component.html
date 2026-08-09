@@ -1,0 +1,282 @@
+<!-- =====================================================
+     TEACHER ASSIGNMENT PREVIEW
+===================================================== -->
+
+<div class="assignment-preview-page">
+
+
+  <!-- ===================================================
+       HEADER
+  ==================================================== -->
+
+  <div class="page-header">
+
+    <div class="header-left">
+
+      <button
+        type="button"
+        class="back-btn"
+        (click)="goBack()">
+
+        <i class="fas fa-arrow-left"></i>
+
+        <span>
+          Back
+        </span>
+
+      </button>
+
+
+      <div class="header-title">
+
+        <h2>
+          Assignment Review
+        </h2>
+
+        <p>
+          Select a published assignment to review submissions.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="refresh-btn"
+      (click)="refresh()"
+      [disabled]="loading">
+
+      <i
+        class="fas"
+        [ngClass]="
+          loading
+            ? 'fa-spinner fa-spin'
+            : 'fa-sync-alt'
+        ">
+      </i>
+
+      <span>
+        Refresh
+      </span>
+
+    </button>
+
+  </div>
+
+
+  <!-- ===================================================
+       ERROR
+  ==================================================== -->
+
+  <div
+    class="alert alert-danger"
+    *ngIf="errorMessage">
+
+    <i class="fas fa-exclamation-circle"></i>
+
+    <span>
+      {{ errorMessage }}
+    </span>
+
+    <button
+      type="button"
+      class="alert-close"
+      (click)="errorMessage = ''"
+      aria-label="Close">
+
+      ×
+
+    </button>
+
+  </div>
+
+
+  <!-- ===================================================
+       MAIN CARD
+  ==================================================== -->
+
+  <section class="preview-card">
+
+
+    <!-- =================================================
+         CARD HEADER
+    ================================================== -->
+
+    <div class="card-heading">
+
+      <div class="heading-icon">
+
+        <i class="fas fa-clipboard-check"></i>
+
+      </div>
+
+
+      <div>
+
+        <h3>
+          Review Submission
+        </h3>
+
+        <p>
+          Choose an assignment to view and evaluate
+          student submissions.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         LOADING
+    ================================================== -->
+
+    <div
+      class="loading-container"
+      *ngIf="loading">
+
+      <i class="fas fa-spinner fa-spin"></i>
+
+      <span>
+        Loading published assignments...
+      </span>
+
+    </div>
+
+
+    <!-- =================================================
+         DROPDOWN
+    ================================================== -->
+
+    <div
+      class="assignment-selector"
+      *ngIf="!loading">
+
+      <label for="assignmentSelect">
+
+        Select Assignment
+
+        <span class="required">
+          *
+        </span>
+
+      </label>
+
+
+      <div class="select-wrapper">
+
+        <i class="fas fa-file-alt select-icon"></i>
+
+
+        <select
+          id="assignmentSelect"
+          class="assignment-select"
+          [(ngModel)]="selectedAssignmentId"
+          (ngModelChange)="onAssignmentChange()">
+
+          <option
+            value=""
+            disabled>
+
+            Select a published assignment
+
+          </option>
+
+
+          <option
+            *ngFor="
+              let assignment of publishedAssignments;
+              trackBy: trackByAssignmentId
+            "
+            [value]="assignment.id">
+
+            {{ assignment.title }}
+
+          </option>
+
+        </select>
+
+
+        <i class="fas fa-chevron-down arrow-icon"></i>
+
+      </div>
+
+
+      <small class="help-text">
+
+        Select an assignment to open its
+        submission review page.
+
+      </small>
+
+    </div>
+
+
+    <!-- =================================================
+         NO ASSIGNMENTS
+    ================================================== -->
+
+    <div
+      class="empty-state"
+      *ngIf="
+        !loading &&
+        publishedAssignments.length === 0
+      ">
+
+      <div class="empty-icon">
+
+        <i class="fas fa-inbox"></i>
+
+      </div>
+
+
+      <h3>
+        No Published Assignments
+      </h3>
+
+
+      <p>
+        You don't have any published assignments
+        available for review.
+      </p>
+
+
+      <button
+        type="button"
+        class="btn btn-light"
+        (click)="goBack()">
+
+        <i class="fas fa-list"></i>
+
+        View Assignments
+
+      </button>
+
+    </div>
+
+
+    <!-- =================================================
+         ASSIGNMENT COUNT
+    ================================================== -->
+
+    <div
+      class="assignment-count"
+      *ngIf="
+        !loading &&
+        publishedAssignments.length > 0
+      ">
+
+      <i class="fas fa-check-circle"></i>
+
+      <span>
+        {{ publishedAssignments.length }}
+        published assignment(s) available
+      </span>
+
+    </div>
+
+  </section>
+
+</div>

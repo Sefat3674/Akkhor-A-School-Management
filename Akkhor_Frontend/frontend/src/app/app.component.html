@@ -33,15 +33,7 @@
 
 
       <!-- COMMON DASHBOARD -->
-      <a
-        routerLink="/dashboard"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact:true }">
-
-        <i class="bi bi-speedometer2"></i>
-        Dashboard
-
-      </a>
+      
 
 
 
@@ -200,6 +192,16 @@
       <ng-container *ngIf="auth.isTeacher()">
 
 
+        <a
+        routerLink="/teacher/dashboard"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact:true }">
+
+        <i class="bi bi-speedometer2"></i>
+        Dashboard
+
+      </a>
+
 
         <a
           routerLink="/teacher/classes"
@@ -226,7 +228,7 @@
 
 
         <a
-          routerLink="/teacher/submissions"
+          routerLink="/teacher/teacher-assignment-preview"
           routerLinkActive="active">
 
           <i class="bi bi-file-earmark-check"></i>
@@ -237,14 +239,7 @@
 
 
 
-        <a
-          routerLink="/teacher/marks"
-          routerLinkActive="active">
-
-          <i class="bi bi-pencil-square"></i>
-          Marks & Feedback
-
-        </a>
+        
 
 
 

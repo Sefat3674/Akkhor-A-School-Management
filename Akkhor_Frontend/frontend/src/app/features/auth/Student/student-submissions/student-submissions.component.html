@@ -1,8 +1,7 @@
 <div class="student-submissions-page">
 
-
   <!-- =====================================================
-       HEADER
+       PAGE HEADER
   ====================================================== -->
 
   <div class="page-header">
@@ -10,12 +9,10 @@
     <div class="header-content">
 
       <div class="header-icon">
-
         <i class="fas fa-file-signature"></i>
-
       </div>
 
-      <div>
+      <div class="header-text">
 
         <h2>My Submissions</h2>
 
@@ -39,12 +36,11 @@
         [class.fa-spin]="loading">
       </i>
 
-      Refresh
+      <span>Refresh</span>
 
     </button>
 
   </div>
-
 
 
   <!-- =====================================================
@@ -53,7 +49,7 @@
 
   <div
     class="error-box"
-    *ngIf="errorMessage && !loading">
+    *ngIf="errorMessage">
 
     <div class="error-icon">
 
@@ -80,12 +76,11 @@
 
       <i class="fas fa-redo"></i>
 
-      Try Again
+      <span>Try Again</span>
 
     </button>
 
   </div>
-
 
 
   <!-- =====================================================
@@ -105,9 +100,11 @@
   </div>
 
 
+  <!-- =====================================================
+       MAIN CONTENT
+  ====================================================== -->
 
   <ng-container *ngIf="!loading">
-
 
     <!-- ===================================================
          SUMMARY
@@ -117,6 +114,8 @@
       class="summary-card"
       *ngIf="!errorMessage">
 
+      <!-- Total -->
+
       <div class="summary-item">
 
         <div class="summary-icon total-icon">
@@ -125,7 +124,7 @@
 
         </div>
 
-        <div>
+        <div class="summary-content">
 
           <span class="summary-label">
             Total
@@ -140,6 +139,8 @@
       </div>
 
 
+      <!-- Submitted -->
+
       <div class="summary-item">
 
         <div class="summary-icon submitted-icon">
@@ -148,7 +149,7 @@
 
         </div>
 
-        <div>
+        <div class="summary-content">
 
           <span class="summary-label">
             Submitted
@@ -163,6 +164,8 @@
       </div>
 
 
+      <!-- Evaluated -->
+
       <div class="summary-item">
 
         <div class="summary-icon evaluated-icon">
@@ -171,7 +174,7 @@
 
         </div>
 
-        <div>
+        <div class="summary-content">
 
           <span class="summary-label">
             Evaluated
@@ -186,6 +189,8 @@
       </div>
 
 
+      <!-- Pending -->
+
       <div class="summary-item">
 
         <div class="summary-icon pending-icon">
@@ -194,7 +199,7 @@
 
         </div>
 
-        <div>
+        <div class="summary-content">
 
           <span class="summary-label">
             Pending
@@ -211,14 +216,16 @@
     </div>
 
 
-
     <!-- ===================================================
          FILTERS
     ==================================================== -->
 
     <div
       class="filter-card"
-      *ngIf="submissions.length > 0">
+      *ngIf="
+        !errorMessage &&
+        submissions.length > 0
+      ">
 
       <!-- Search -->
 
@@ -230,14 +237,15 @@
           type="text"
           [(ngModel)]="searchText"
           (input)="onSearch()"
-          placeholder="Search assignment, text or status..."
+          placeholder="Search assignment, submission or status..."
         />
 
         <button
           type="button"
           class="clear-search"
           *ngIf="searchText"
-          (click)="clearSearch()">
+          (click)="clearSearch()"
+          aria-label="Clear search">
 
           <i class="fas fa-times"></i>
 
@@ -251,6 +259,7 @@
       <div class="status-filter">
 
         <label>
+          <i class="fas fa-filter"></i>
           Status
         </label>
 
@@ -279,7 +288,6 @@
       </div>
 
     </div>
-
 
 
     <!-- ===================================================
@@ -319,7 +327,6 @@
       </button>
 
     </div>
-
 
 
     <!-- ===================================================
@@ -362,7 +369,6 @@
     </div>
 
 
-
     <!-- ===================================================
          SUBMISSION LIST
     ==================================================== -->
@@ -374,14 +380,12 @@
         filteredSubmissions.length > 0
       ">
 
-
       <div
         class="submission-card"
         *ngFor="
           let submission of filteredSubmissions;
           trackBy: trackBySubmissionId
         ">
-
 
         <!-- ===============================================
              CARD HEADER
@@ -397,7 +401,7 @@
 
             </div>
 
-            <div>
+            <div class="submission-title-content">
 
               <h3>
                 {{ submission.assignmentTitle || 'Assignment' }}
@@ -417,6 +421,8 @@
 
           </div>
 
+
+          <!-- Status -->
 
           <span
             class="status-badge"
@@ -443,7 +449,6 @@
         </div>
 
 
-
         <!-- ===============================================
              SUBMISSION TEXT
         ================================================ -->
@@ -467,13 +472,11 @@
         </div>
 
 
-
         <!-- ===============================================
              INFORMATION
         ================================================ -->
 
         <div class="submission-info">
-
 
           <!-- Assignment -->
 
@@ -558,7 +561,7 @@
 
           <!-- Attachment -->
 
-          <div class="info-item">
+          <div class="info-item attachment-info-item">
 
             <span class="info-label">
 
@@ -568,28 +571,39 @@
 
             </span>
 
-            <span class="info-value">
+            <ng-container
+              *ngIf="submission.attachmentFileName">
 
-              <ng-container
-                *ngIf="submission.attachmentFileName">
+              <!-- CLICKABLE FILE NAME -->
 
-                {{ submission.attachmentFileName }}
+              <button
+                type="button"
+                class="file-name-link"
+                (click)="downloadAttachment(submission)"
+                title="Open file">
 
-              </ng-container>
+                <i class="fas fa-file-pdf"></i>
 
-              <ng-container
-                *ngIf="!submission.attachmentFileName">
+                <span>
+                  {{ submission.attachmentFileName }}
+                </span>
 
+              </button>
+
+            </ng-container>
+
+            <ng-container
+              *ngIf="!submission.attachmentFileName">
+
+              <span class="no-file">
                 No file
+              </span>
 
-              </ng-container>
-
-            </span>
+            </ng-container>
 
           </div>
 
         </div>
-
 
 
         <!-- ===============================================
@@ -618,7 +632,6 @@
         </div>
 
 
-
         <!-- ===============================================
              ATTACHMENT
         ================================================ -->
@@ -635,11 +648,21 @@
 
             </div>
 
-            <div>
+            <div class="attachment-file-details">
 
-              <strong>
+              <!-- CLICKABLE FILE NAME -->
+
+              <button
+                type="button"
+                class="file-name-btn"
+                (click)="downloadAttachment(submission)"
+                [title]="'Open ' + submission.attachmentFileName">
+
+                <i class="fas fa-file-pdf"></i>
+
                 {{ submission.attachmentFileName }}
-              </strong>
+
+                </button>
 
               <span>
                 {{ formatFileSize(submission.attachmentFileSize) }}
@@ -649,19 +672,21 @@
 
           </div>
 
+
+          <!-- VIEW FILE -->
+
           <button
             type="button"
             class="btn-download"
             (click)="downloadAttachment(submission)">
 
-            <i class="fas fa-download"></i>
+            <i class="fas fa-external-link-alt"></i>
 
             View File
 
           </button>
 
         </div>
-
 
 
         <!-- ===============================================
@@ -703,6 +728,8 @@
 
           <div class="card-actions">
 
+            <!-- VIEW -->
+
             <button
               type="button"
               class="btn-view"
@@ -714,6 +741,8 @@
 
             </button>
 
+
+            <!-- EDIT -->
 
             <button
               type="button"
@@ -730,6 +759,8 @@
             </button>
 
 
+            <!-- DELETE -->
+
             <button
               type="button"
               class="btn-delete"
@@ -741,7 +772,7 @@
 
               <i class="fas fa-trash"></i>
 
-              Delete
+              {{ deleting ? 'Deleting...' : 'Delete' }}
 
             </button>
 
@@ -755,257 +786,260 @@
 
   </ng-container>
 
+</div>
 
 
-  <!-- =====================================================
-       DETAILS MODAL
-  ====================================================== -->
+<!-- =====================================================
+     DETAILS MODAL OVERLAY
+====================================================== -->
+
+<div
+  class="modal-overlay"
+  *ngIf="selectedSubmission"
+  (click)="closeDetails()">
 
   <div
-    class="modal-overlay"
-    *ngIf="showDetailsModal"
-    (click)="closeDetails()">
+    class="details-modal"
+    (click)="$event.stopPropagation()">
 
 
-    <div
-      class="details-modal"
-      *ngIf="selectedSubmission"
-      (click)="$event.stopPropagation()">
+    <!-- =================================================
+         MODAL HEADER
+    ================================================== -->
 
+    <div class="modal-header">
 
-      <!-- Modal Header -->
+      <div class="modal-header-content">
 
-      <div class="modal-header">
+        <span class="modal-label">
+          <i class="fas fa-file-signature"></i>
+          Submission Details
+        </span>
 
-        <div>
-
-          <span class="modal-label">
-            Submission Details
-          </span>
-
-          <h3>
-            {{ selectedSubmission.assignmentTitle || 'Assignment' }}
-          </h3>
-
-        </div>
-
-
-        <button
-          type="button"
-          class="modal-close"
-          (click)="closeDetails()">
-
-          <i class="fas fa-times"></i>
-
-        </button>
+        <h3>
+          {{ selectedSubmission.assignmentTitle || 'Assignment' }}
+        </h3>
 
       </div>
 
 
+      <button
+        type="button"
+        class="modal-close"
+        (click)="closeDetails()"
+        aria-label="Close">
 
-      <!-- Modal Body -->
+        <i class="fas fa-times"></i>
 
-      <div class="modal-body">
+      </button>
+
+    </div>
 
 
-        <div class="modal-status-row">
+    <!-- =================================================
+         MODAL BODY
+    ================================================== -->
 
-          <span
-            class="status-badge"
-            [ngClass]="getStatusClass(selectedSubmission)">
+    <div class="modal-body">
 
-            {{ getStatusLabel(selectedSubmission) }}
+      <!-- Status -->
 
-          </span>
+      <div class="modal-status-row">
 
-          <span class="modal-date">
+        <span
+          class="status-badge"
+          [ngClass]="getStatusClass(selectedSubmission)">
 
-            Submitted:
+          <i
+            class="fas"
+            [ngClass]="{
+              'fa-paper-plane':
+                getStatus(selectedSubmission) === 'submitted',
 
-            {{ formatDate(selectedSubmission.submittedAt) }}
+              'fa-check-circle':
+                getStatus(selectedSubmission) === 'evaluated',
 
-          </span>
+              'fa-clock':
+                getStatus(selectedSubmission) === 'pending'
+            }">
+          </i>
+
+          {{ getStatusLabel(selectedSubmission) }}
+
+        </span>
+
+
+        <span class="modal-date">
+
+          <i class="fas fa-calendar-alt"></i>
+
+          Submitted:
+
+          {{ formatDate(selectedSubmission.submittedAt) }}
+
+        </span>
+
+      </div>
+
+
+      <!-- =================================================
+           SUBMISSION
+      ================================================== -->
+
+      <div class="detail-section">
+
+        <h4>
+
+          <i class="fas fa-align-left"></i>
+
+          Submission
+
+        </h4>
+
+        <div class="detail-content">
+
+          <p
+            *ngIf="selectedSubmission.submissionText">
+
+            {{ selectedSubmission.submissionText }}
+
+          </p>
+
+          <p
+            class="muted"
+            *ngIf="!selectedSubmission.submissionText">
+
+            No submission text.
+
+          </p>
 
         </div>
 
+      </div>
 
 
-        <!-- Submission Text -->
+      <!-- =================================================
+           ATTACHMENT
+      ================================================== -->
 
-        <div class="detail-section">
+      <div
+        class="detail-section"
+        *ngIf="selectedSubmission.attachmentFileName">
 
-          <h4>
+        <h4>
 
-            <i class="fas fa-align-left"></i>
+          <i class="fas fa-paperclip"></i>
 
-            Submission
+          Attachment
 
-          </h4>
+        </h4>
 
-          <div class="detail-content">
+        <div class="modal-attachment">
 
-            <p
-              *ngIf="selectedSubmission.submissionText">
+          <button
+            type="button"
+            class="modal-file-link"
+            (click)="downloadAttachment(selectedSubmission)">
 
-              {{ selectedSubmission.submissionText }}
+            <span class="modal-file-icon">
 
-            </p>
-
-            <p
-              class="muted"
-              *ngIf="!selectedSubmission.submissionText">
-
-              No submission text.
-
-            </p>
-
-          </div>
-
-        </div>
-
-
-
-        <!-- Attachment -->
-
-        <div
-          class="detail-section"
-          *ngIf="
-            selectedSubmission.attachmentFileName
-          ">
-
-          <h4>
-
-            <i class="fas fa-paperclip"></i>
-
-            Attachment
-
-          </h4>
-
-          <div class="modal-attachment">
-
-            <span>
-
-              <i class="fas fa-file"></i>
-
-              {{ selectedSubmission.attachmentFileName }}
+              <i class="fas fa-file-pdf"></i>
 
             </span>
 
-            <button
-              type="button"
-              class="btn-download"
-              (click)="downloadAttachment(selectedSubmission)">
-
-              <i class="fas fa-download"></i>
-
-              View
-
-            </button>
-
-          </div>
-
-        </div>
-
-
-
-        <!-- Marks -->
-
-        <div class="detail-section">
-
-          <h4>
-
-            <i class="fas fa-star"></i>
-
-            Evaluation
-
-          </h4>
-
-
-          <div class="evaluation-grid">
-
-
-            <div class="evaluation-item">
-
-              <span>
-                Marks Obtained
-              </span>
-
-              <strong
-                *ngIf="
-                  selectedSubmission.marksObtained !== null &&
-                  selectedSubmission.marksObtained !== undefined
-                ">
-
-                {{ selectedSubmission.marksObtained }}
-
-              </strong>
-
-              <strong
-                class="not-evaluated"
-                *ngIf="
-                  selectedSubmission.marksObtained === null ||
-                  selectedSubmission.marksObtained === undefined
-                ">
-
-                Not evaluated
-
-              </strong>
-
-            </div>
-
-
-            <div class="evaluation-item">
-
-              <span>
-                Evaluated At
-              </span>
+            <span class="modal-file-text">
 
               <strong>
-
-                {{
-                  formatDate(
-                    selectedSubmission.gradedAt
-                  )
-                }}
-
+                {{ selectedSubmission.attachmentFileName }}
               </strong>
 
-            </div>
+              <small>
+                {{ formatFileSize(selectedSubmission.attachmentFileSize) }}
+              </small>
 
-          </div>
+            </span>
+
+          </button>
+
+
+          <button
+            type="button"
+            class="btn-download"
+            (click)="downloadAttachment(selectedSubmission)">
+
+            <i class="fas fa-external-link-alt"></i>
+
+            View
+
+          </button>
 
         </div>
 
+      </div>
 
 
-        <!-- Feedback -->
+      <!-- =================================================
+           EVALUATION
+      ================================================== -->
 
-        <div class="detail-section">
+      <div class="detail-section">
 
-          <h4>
+        <h4>
 
-            <i class="fas fa-comment-dots"></i>
+          <i class="fas fa-star"></i>
 
-            Teacher Feedback
+          Evaluation
 
-          </h4>
+        </h4>
 
-          <div class="feedback-content">
 
-            <p
-              *ngIf="selectedSubmission.feedback">
+        <div class="evaluation-grid">
 
-              {{ selectedSubmission.feedback }}
+          <div class="evaluation-item">
 
-            </p>
+            <span>
+              Marks Obtained
+            </span>
 
-            <p
-              class="muted"
-              *ngIf="!selectedSubmission.feedback">
+            <strong
+              *ngIf="
+                selectedSubmission.marksObtained !== null &&
+                selectedSubmission.marksObtained !== undefined
+              ">
 
-              No feedback provided yet.
+              {{ selectedSubmission.marksObtained }}
 
-            </p>
+            </strong>
+
+            <strong
+              class="not-evaluated"
+              *ngIf="
+                selectedSubmission.marksObtained === null ||
+                selectedSubmission.marksObtained === undefined
+              ">
+
+              Not evaluated
+
+            </strong>
+
+          </div>
+
+
+          <div class="evaluation-item">
+
+            <span>
+              Evaluated At
+            </span>
+
+            <strong>
+
+              {{
+                selectedSubmission.gradedAt
+                  ? formatDate(selectedSubmission.gradedAt)
+                  : 'Not evaluated'
+              }}
+
+            </strong>
 
           </div>
 
@@ -1014,36 +1048,75 @@
       </div>
 
 
+      <!-- =================================================
+           FEEDBACK
+      ================================================== -->
 
-      <!-- Modal Footer -->
+      <div class="detail-section">
 
-      <div class="modal-footer">
+        <h4>
 
-        <button
-          type="button"
-          class="btn-secondary"
-          (click)="closeDetails()">
+          <i class="fas fa-comment-dots"></i>
 
-          Close
+          Teacher Feedback
 
-        </button>
+        </h4>
 
+        <div class="feedback-content">
 
-        <button
-          type="button"
-          class="btn-edit"
-          *ngIf="
-            getStatus(selectedSubmission) !== 'evaluated'
-          "
-          (click)="editSubmission(selectedSubmission)">
+          <p
+            *ngIf="selectedSubmission.feedback">
 
-          <i class="fas fa-edit"></i>
+            {{ selectedSubmission.feedback }}
 
-          Edit Submission
+          </p>
 
-        </button>
+          <p
+            class="muted"
+            *ngIf="!selectedSubmission.feedback">
+
+            No feedback provided yet.
+
+          </p>
+
+        </div>
 
       </div>
+
+    </div>
+
+
+    <!-- =================================================
+         MODAL FOOTER
+    ================================================== -->
+
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="closeDetails()">
+
+        <i class="fas fa-times"></i>
+
+        Close
+
+      </button>
+
+
+      <button
+        type="button"
+        class="btn-edit"
+        *ngIf="
+          getStatus(selectedSubmission) !== 'evaluated'
+        "
+        (click)="editSubmission(selectedSubmission)">
+
+        <i class="fas fa-edit"></i>
+
+        Edit Submission
+
+      </button>
 
     </div>
 

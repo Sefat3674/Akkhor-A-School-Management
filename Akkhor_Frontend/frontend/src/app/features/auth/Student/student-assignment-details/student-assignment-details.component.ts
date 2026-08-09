@@ -558,45 +558,101 @@ export class StudentAssignmentDetailsComponent
 
 
   // =====================================================
-  // VIEW ASSIGNMENT FILE
+  // DOWNLOAD ASSIGNMENT FILE
   // =====================================================
 
-  viewAttachment(): void {
+  downloadAssignmentFile(): void {
 
     if (
       !this.assignment?.attachmentUrl
     ) {
 
+      alert(
+        'Assignment file is not available.'
+      );
+
       return;
 
     }
 
-    window.open(
+    this.downloadFile(
       this.assignment.attachmentUrl,
-      '_blank'
+      this.assignment.attachmentFileName ||
+      'assignment-file'
     );
 
   }
 
 
   // =====================================================
-  // VIEW SUBMISSION FILE
+  // DOWNLOAD SUBMISSION FILE
   // =====================================================
 
-  viewSubmissionFile(): void {
+  downloadSubmissionFile(): void {
 
     if (
       !this.submission?.attachmentUrl
     ) {
 
+      alert(
+        'Your submission file is not available.'
+      );
+
       return;
 
     }
 
-    window.open(
+    this.downloadFile(
       this.submission.attachmentUrl,
-      '_blank'
+      this.submission.attachmentFileName ||
+      'submission-file'
     );
+
+  }
+
+
+  // =====================================================
+  // COMMON DOWNLOAD
+  // =====================================================
+
+  private downloadFile(
+    url: string,
+    fileName: string
+  ): void {
+
+    try {
+
+      const link =
+        document.createElement('a');
+
+      link.href = url;
+
+      link.download = fileName;
+
+      link.target = '_blank';
+
+      link.rel = 'noopener noreferrer';
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      document.body.removeChild(link);
+
+    }
+    catch (error) {
+
+      console.error(
+        'File download error:',
+        error
+      );
+
+      window.open(
+        url,
+        '_blank'
+      );
+
+    }
 
   }
 

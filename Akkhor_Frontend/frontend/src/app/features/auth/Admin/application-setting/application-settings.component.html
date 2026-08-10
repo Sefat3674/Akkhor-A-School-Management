@@ -1,0 +1,692 @@
+
+<div class="application-settings-page">
+
+  <!-- =====================================================
+       PAGE HEADER
+  ====================================================== -->
+
+  <div class="page-header">
+
+    <div class="header-content">
+
+      <div class="header-icon">
+        <i class="fas fa-sliders-h"></i>
+      </div>
+
+      <div class="header-text">
+
+        <h1>Application Settings</h1>
+
+        <p>
+          Configure system-wide settings and application behavior.
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="header-actions">
+
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="resetChanges()"
+        [disabled]="loading || saving">
+
+        <i class="fas fa-sync-alt"></i>
+
+        Reset
+
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="saveAll()"
+        [disabled]="loading || saving || settings.length === 0">
+
+        <span
+          *ngIf="saving"
+          class="spinner-border spinner-border-sm">
+        </span>
+
+        <i
+          *ngIf="!saving"
+          class="fas fa-save">
+        </i>
+
+        {{ saving ? 'Saving...' : 'Save Changes' }}
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       SUCCESS MESSAGE
+  ====================================================== -->
+
+  <div
+    *ngIf="successMessage"
+    class="alert alert-success">
+
+    <div class="alert-icon">
+      <i class="fas fa-check-circle"></i>
+    </div>
+
+    <div class="alert-content">
+      {{ successMessage }}
+    </div>
+
+    <button
+      type="button"
+      class="alert-close"
+      (click)="successMessage = ''">
+
+      <i class="fas fa-times"></i>
+
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       ERROR MESSAGE
+  ====================================================== -->
+
+  <div
+    *ngIf="errorMessage"
+    class="alert alert-danger">
+
+    <div class="alert-icon">
+      <i class="fas fa-exclamation-circle"></i>
+    </div>
+
+    <div class="alert-content">
+      {{ errorMessage }}
+    </div>
+
+    <button
+      type="button"
+      class="alert-close"
+      (click)="errorMessage = ''">
+
+      <i class="fas fa-times"></i>
+
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       LOADING
+  ====================================================== -->
+
+  <div
+    *ngIf="loading"
+    class="loading-container">
+
+    <div class="loading-spinner">
+
+      <span class="spinner-border"></span>
+
+    </div>
+
+    <h3>
+      Loading settings...
+    </h3>
+
+    <p>
+      Please wait while application settings are loaded.
+    </p>
+
+  </div>
+
+
+  <!-- =====================================================
+       SETTINGS CONTENT
+  ====================================================== -->
+
+  <div
+    *ngIf="!loading && settings.length > 0"
+    class="settings-content">
+
+
+    <!-- ===================================================
+         STANDARD CATEGORIES
+    ==================================================== -->
+
+    <div
+      *ngFor="let category of categoryOrder"
+      class="settings-section">
+
+      <ng-container
+        *ngIf="
+          getSettingsByCategory(category).length > 0
+        ">
+
+
+        <!-- CATEGORY HEADER -->
+
+        <div class="section-header">
+
+          <div class="section-icon">
+
+            <i
+              [class]="getCategoryIcon(category)">
+            </i>
+
+          </div>
+
+          <div class="section-title">
+
+            <h2>
+              {{ category }}
+            </h2>
+
+            <p>
+              {{ getCategoryDescription(category) }}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- SETTINGS CARD -->
+
+        <div class="settings-card">
+
+          <div
+            *ngFor="
+              let setting of getSettingsByCategory(category);
+              trackBy: trackBySetting
+            "
+            class="setting-row">
+
+
+            <!-- =========================================
+                 SETTING INFORMATION
+            ========================================== -->
+
+            <div class="setting-info">
+
+              <label
+                class="setting-label"
+                [attr.for]="'setting-' + setting.id">
+
+                {{ getSettingLabel(setting.key) }}
+
+              </label>
+
+              <p
+                *ngIf="setting.description"
+                class="setting-description">
+
+                {{ setting.description }}
+
+              </p>
+
+              <span class="setting-key">
+
+                <i class="fas fa-code"></i>
+
+                {{ setting.key }}
+
+              </span>
+
+            </div>
+
+
+            <!-- =========================================
+                 SETTING CONTROL
+            ========================================== -->
+
+            <div class="setting-control">
+
+
+              <!-- BOOLEAN -->
+
+              <div
+                *ngIf="isBoolean(setting)"
+                class="toggle-wrapper">
+
+                <label class="switch">
+
+                  <input
+                    type="checkbox"
+                    [id]="'setting-' + setting.id"
+                    [checked]="getBooleanValue(setting)"
+                    (change)="
+                      setBooleanValue(
+                        setting,
+                        $any($event.target).checked
+                      )
+                    ">
+
+                  <span class="slider"></span>
+
+                </label>
+
+                <span class="toggle-status">
+
+                  {{
+                    getBooleanValue(setting)
+                      ? 'Enabled'
+                      : 'Disabled'
+                  }}
+
+                </span>
+
+              </div>
+
+
+              <!-- INTEGER -->
+
+              <div
+                *ngIf="isInteger(setting)"
+                class="number-wrapper">
+
+                <input
+                  type="number"
+                  class="form-control number-input"
+                  [id]="'setting-' + setting.id"
+                  [ngModel]="getNumberValue(setting)"
+                  (ngModelChange)="
+                    setNumberValue(setting, $event)
+                  "
+                  min="0">
+
+                <span
+                  *ngIf="
+                    setting.key === 'MaximumFileSizeMB'
+                  "
+                  class="input-suffix">
+
+                  MB
+
+                </span>
+
+                <span
+                  *ngIf="
+                    setting.key === 'SessionTimeoutMinutes'
+                  "
+                  class="input-suffix">
+
+                  minutes
+
+                </span>
+
+              </div>
+
+
+              <!-- STRING -->
+
+              <div
+                *ngIf="isString(setting)"
+                class="text-wrapper">
+
+                <!-- NORMAL STRING -->
+
+                <input
+                  *ngIf="
+                    setting.key !== 'SchoolAddress' &&
+                    setting.key !== 'AllowedFileTypes'
+                  "
+                  type="text"
+                  class="form-control text-input"
+                  [id]="'setting-' + setting.id"
+                  [(ngModel)]="setting.value"
+                  [placeholder]="
+                    'Enter ' +
+                    getSettingLabel(setting.key)
+                  ">
+
+
+                <!-- SCHOOL ADDRESS -->
+
+                <textarea
+                  *ngIf="
+                    setting.key === 'SchoolAddress'
+                  "
+                  class="form-control textarea-input"
+                  [id]="'setting-' + setting.id"
+                  [(ngModel)]="setting.value"
+                  rows="3"
+                  placeholder="Enter school address">
+                </textarea>
+
+
+                <!-- ALLOWED FILE TYPES -->
+
+                <input
+                  *ngIf="
+                    setting.key === 'AllowedFileTypes'
+                  "
+                  type="text"
+                  class="form-control text-input"
+                  [id]="'setting-' + setting.id"
+                  [(ngModel)]="setting.value"
+                  placeholder="pdf,doc,docx,jpg,jpeg,png">
+
+              </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 ACTIVE STATUS
+            ========================================== -->
+
+            <div class="setting-active">
+
+              <label
+                class="mini-switch"
+                title="Active / Inactive">
+
+                <input
+                  type="checkbox"
+                  [(ngModel)]="setting.isActive">
+
+                <span class="mini-slider"></span>
+
+              </label>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </ng-container>
+
+    </div>
+
+
+    <!-- =================================================
+         ADDITIONAL CATEGORIES
+    ================================================== -->
+
+    <ng-container
+      *ngFor="let category of getAdditionalCategories()">
+
+      <div class="settings-section">
+
+
+        <!-- CATEGORY HEADER -->
+
+        <div class="section-header">
+
+          <div class="section-icon">
+
+            <i
+              [class]="getCategoryIcon(category)">
+            </i>
+
+          </div>
+
+          <div class="section-title">
+
+            <h2>
+              {{ category }}
+            </h2>
+
+            <p>
+              {{ getCategoryDescription(category) }}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- SETTINGS CARD -->
+
+        <div class="settings-card">
+
+          <div
+            *ngFor="
+              let setting of getSettingsByCategory(category);
+              trackBy: trackBySetting
+            "
+            class="setting-row">
+
+
+            <!-- SETTING INFORMATION -->
+
+            <div class="setting-info">
+
+              <label
+                class="setting-label"
+                [attr.for]="'additional-setting-' + setting.id">
+
+                {{ getSettingLabel(setting.key) }}
+
+              </label>
+
+              <p
+                *ngIf="setting.description"
+                class="setting-description">
+
+                {{ setting.description }}
+
+              </p>
+
+              <span class="setting-key">
+
+                <i class="fas fa-code"></i>
+
+                {{ setting.key }}
+
+              </span>
+
+            </div>
+
+
+            <!-- SETTING CONTROL -->
+
+            <div class="setting-control">
+
+
+              <!-- BOOLEAN -->
+
+              <div
+                *ngIf="isBoolean(setting)"
+                class="toggle-wrapper">
+
+                <label class="switch">
+
+                  <input
+                    type="checkbox"
+                    [id]="'additional-setting-' + setting.id"
+                    [checked]="getBooleanValue(setting)"
+                    (change)="
+                      setBooleanValue(
+                        setting,
+                        $any($event.target).checked
+                      )
+                    ">
+
+                  <span class="slider"></span>
+
+                </label>
+
+                <span class="toggle-status">
+
+                  {{
+                    getBooleanValue(setting)
+                      ? 'Enabled'
+                      : 'Disabled'
+                  }}
+
+                </span>
+
+              </div>
+
+
+              <!-- INTEGER -->
+
+              <div
+                *ngIf="isInteger(setting)"
+                class="number-wrapper">
+
+                <input
+                  type="number"
+                  class="form-control number-input"
+                  [id]="'additional-setting-' + setting.id"
+                  [ngModel]="getNumberValue(setting)"
+                  (ngModelChange)="
+                    setNumberValue(setting, $event)
+                  "
+                  min="0">
+
+              </div>
+
+
+              <!-- STRING -->
+
+              <div
+                *ngIf="isString(setting)"
+                class="text-wrapper">
+
+                <input
+                  type="text"
+                  class="form-control text-input"
+                  [id]="'additional-setting-' + setting.id"
+                  [(ngModel)]="setting.value">
+
+              </div>
+
+            </div>
+
+
+            <!-- ACTIVE STATUS -->
+
+            <div class="setting-active">
+
+              <label
+                class="mini-switch"
+                title="Active / Inactive">
+
+                <input
+                  type="checkbox"
+                  [(ngModel)]="setting.isActive">
+
+                <span class="mini-slider"></span>
+
+              </label>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </ng-container>
+
+  </div>
+
+
+  <!-- =====================================================
+       EMPTY STATE
+  ====================================================== -->
+
+  <div
+    *ngIf="
+      !loading &&
+      settings.length === 0
+    "
+    class="empty-state">
+
+    <div class="empty-icon">
+
+      <i class="fas fa-sliders-h"></i>
+
+    </div>
+
+    <h3>
+      No Application Settings Found
+    </h3>
+
+    <p>
+      There are currently no application settings configured.
+    </p>
+
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="loadSettings()">
+
+      <i class="fas fa-sync-alt"></i>
+
+      Reload Settings
+
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       BOTTOM ACTION BAR
+  ====================================================== -->
+
+  <div
+    *ngIf="
+      !loading &&
+      settings.length > 0
+    "
+    class="bottom-action-bar">
+
+    <div class="action-info">
+
+      <i class="fas fa-info-circle"></i>
+
+      <span>
+        Changes will take effect after saving.
+      </span>
+
+    </div>
+
+
+    <div class="action-buttons">
+
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="resetChanges()"
+        [disabled]="saving">
+
+        Cancel Changes
+
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="saveAll()"
+        [disabled]="saving">
+
+        <span
+          *ngIf="saving"
+          class="spinner-border spinner-border-sm">
+        </span>
+
+        <i
+          *ngIf="!saving"
+          class="fas fa-save">
+        </i>
+
+        {{ saving ? 'Saving...' : 'Save Changes' }}
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+

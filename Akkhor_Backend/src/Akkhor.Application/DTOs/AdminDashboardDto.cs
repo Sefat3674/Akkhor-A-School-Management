@@ -14,6 +14,8 @@ public class AdminDashboardDto
 
     public int TotalAdmins { get; set; }
 
+    public int TotalAcademicYears { get; set; }
+
     public int TotalClasses { get; set; }
 
     public int TotalSections { get; set; }
@@ -23,7 +25,6 @@ public class AdminDashboardDto
     public int TotalSubjects { get; set; }
 
     public int TotalCourseSubjects { get; set; }
-    public int TotalAcademicYears { get; set; }
 
     public int TotalEnrollments { get; set; }
 
@@ -33,34 +34,30 @@ public class AdminDashboardDto
 
     public int TotalSubmissions { get; set; }
 
+    public int PendingSubmissions { get; set; }
+
 
     // =====================================================
-    // ACADEMIC YEAR
+    // ACTIVE ACADEMIC YEAR
     // =====================================================
 
     public AcademicYearSummaryDto? ActiveAcademicYear { get; set; }
 
 
     // =====================================================
-    // ASSIGNMENT
+    // RECENT ASSIGNMENTS
     // =====================================================
 
-    public List<AdminAssignmentSummaryDto>
-        RecentAssignments
-    { get; set; }
+    public List<RecentAssignmentDto> RecentAssignments { get; set; }
         = new();
 
 
     // =====================================================
-    // SUBMISSION
+    // RECENT SUBMISSIONS
     // =====================================================
 
-    public List<AdminSubmissionSummaryDto>
-        RecentSubmissions
-    { get; set; }
+    public List<RecentSubmissionDto> RecentSubmissions { get; set; }
         = new();
-
-    public int PendingSubmissions { get; set; }
 }
 
 
@@ -83,30 +80,32 @@ public class AcademicYearSummaryDto
 
 
 // =========================================================
-// ASSIGNMENT SUMMARY
+// RECENT ASSIGNMENT
 // =========================================================
 
-public class AdminAssignmentSummaryDto
+public class RecentAssignmentDto
 {
     public Guid Id { get; set; }
 
     public string? Title { get; set; }
 
-    public string? Description { get; set; }
+    public string? SubjectName { get; set; }
+
+    public string? TeacherName { get; set; }
+
+    public string? CourseName { get; set; }
 
     public DateTime? DueDate { get; set; }
 
-    public bool IsActive { get; set; }
-
-    public int SubmissionCount { get; set; }
+    public string? Status { get; set; }
 }
 
 
 // =========================================================
-// SUBMISSION SUMMARY
+// RECENT SUBMISSION
 // =========================================================
 
-public class AdminSubmissionSummaryDto
+public class RecentSubmissionDto
 {
     public Guid Id { get; set; }
 

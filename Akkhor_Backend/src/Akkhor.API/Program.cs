@@ -226,6 +226,8 @@ builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 builder.Services.AddScoped<IAssignmentSubmissionRepository,AssignmentSubmissionRepository>();
 builder.Services.AddScoped<IAssignmentSubmissionService, AssignmentSubmissionService>();
 builder.Services.AddScoped<IStudentDashboardService, StudentDashboardService>();
+builder.Services.AddScoped<IApplicationSettingRepository, ApplicationSettingRepository>();
+builder.Services.AddScoped<IApplicationSettingService, ApplicationSettingService>();
 
 
 

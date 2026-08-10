@@ -368,15 +368,12 @@ export const routes: Routes = [
       // =================================================
 
       // Add this only when the settings component exists.
-      // {
-      //   path: 'admin/settings',
-      //   loadComponent: () =>
-      //     import(
-      //       './features/auth/Admin/settings/settings.component'
-      //     ).then(
-      //       m => m.SettingsComponent
-      //     )
-      // },
+      {
+        path: 'admin/settings',
+        loadComponent: () =>
+          import('./features/auth/Admin/application-setting/application-settings.component')
+            .then(m => m.ApplicationSettingsComponent)
+      },
 
 
       // =================================================

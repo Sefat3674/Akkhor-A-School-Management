@@ -146,6 +146,80 @@ public class AdminDashboardController : ControllerBase
             var pendingSubmissions =
                     await _context.AssignmentSubmissions.CountAsync(
                         x => x.Status == "Pending");
+            // =================================================
+            // RECENT ASSIGNMENTS
+            // =================================================
+
+            var recentAssignments =
+                 await _context.Assignments
+                     .Where(x => x.IsActive)
+                     .OrderByDescending(x => x.CreatedAt)
+                     .Take(5)
+                     .Select(x => new RecentAssignmentDto
+                     {
+                         Id = x.Id,
+
+                         Title = x.Title,
+
+                         SubjectName =
+                             x.Subject != null
+                                 ? x.Subject.Name
+                                 : null,
+
+                         TeacherName =
+                             x.Teacher != null
+                                 ? x.Teacher.FullName
+                                 : null,
+
+                         CourseName =
+                             x.Course != null
+                                 ? x.Course.CourseName
+                                 : null,
+
+                         // Assignment entity uses Deadline
+                         DueDate = x.Deadline,
+
+                         Status =
+                             x.IsPublished
+                                 ? "Published"
+                                 : "Draft"
+                     })
+                     .ToListAsync();
+
+
+            // =================================================
+            // RECENT SUBMISSIONS
+            // =================================================
+
+            var recentSubmissions =
+                await _context.AssignmentSubmissions
+                    .OrderByDescending(x => x.SubmittedAt)
+                    .Take(5)
+                    .Select(x => new RecentSubmissionDto
+                    {
+                        Id = x.Id,
+
+                        AssignmentId = x.AssignmentId,
+
+                        AssignmentTitle =
+                            x.Assignment.Title,
+
+                        StudentId =
+                            x.StudentId,
+
+                        StudentName =
+                            x.Student.FullName,
+
+                        SubmittedAt =
+                            x.SubmittedAt,
+
+                        Status =
+                            x.Status,
+
+                        Marks =
+                            x.Marks
+                    })
+                    .ToListAsync();
 
 
             // =================================================
@@ -223,7 +297,13 @@ public class AdminDashboardController : ControllerBase
                           pendingSubmissions,
 
                     ActiveAcademicYear =
-                        activeAcademicYear
+                        activeAcademicYear,
+
+                        RecentAssignments =
+                            recentAssignments,
+
+                    RecentSubmissions =
+                            recentSubmissions
                 };
 
 

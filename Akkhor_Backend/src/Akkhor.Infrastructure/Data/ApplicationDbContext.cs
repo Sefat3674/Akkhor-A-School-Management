@@ -41,6 +41,7 @@ public class ApplicationDbContext
      public DbSet<AssignmentSubmission> AssignmentSubmissions { get; set; }
 
     public DbSet<Assignment> Assignments { get; set; }
+    public DbSet<ApplicationSetting> ApplicationSettings{get;set;}
 
 
 
@@ -556,5 +557,47 @@ public class ApplicationDbContext
 
         builder.Entity<Assignment>()
             .HasIndex(x => x.Deadline);
+
+
+        // =====================================================
+        // APPLICATION SETTINGS
+        // =====================================================
+
+        builder.Entity<ApplicationSetting>()
+            .ToTable("ApplicationSettings");
+
+        builder.Entity<ApplicationSetting>()
+            .HasKey(x => x.Id);
+
+        builder.Entity<ApplicationSetting>()
+            .Property(x => x.Key)
+            .IsRequired()
+            .HasMaxLength(150);
+
+        builder.Entity<ApplicationSetting>()
+            .Property(x => x.Value)
+            .HasMaxLength(2000);
+
+        builder.Entity<ApplicationSetting>()
+            .Property(x => x.Description)
+            .HasMaxLength(500);
+
+        builder.Entity<ApplicationSetting>()
+            .Property(x => x.DataType)
+            .IsRequired()
+            .HasMaxLength(50);
+
+        builder.Entity<ApplicationSetting>()
+            .Property(x => x.IsActive)
+            .HasDefaultValue(true);
+
+        builder.Entity<ApplicationSetting>()
+            .Property(x => x.CreatedAt)
+            .HasColumnType("timestamp with time zone")
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        builder.Entity<ApplicationSetting>()
+            .HasIndex(x => x.Key)
+            .IsUnique();
     }
 }

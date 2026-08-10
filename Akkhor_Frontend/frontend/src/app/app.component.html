@@ -44,6 +44,15 @@
       <ng-container *ngIf="auth.isAdmin()">
 
 
+        <a
+          routerLink="/admin/dashboard"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }">
+
+          <i class="bi bi-speedometer2"></i>
+          Dashboard
+
+        </a>
 
         <!-- User Management -->
         <a
@@ -256,7 +265,15 @@
 
 
       <ng-container *ngIf="auth.isStudent()">
+          <a
+            routerLink="/student/dashboard"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }">
 
+            <i class="bi bi-speedometer2"></i>
+            Dashboard
+
+          </a>
 
 
           <a

@@ -3,9 +3,9 @@ import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
 
-  // ==========================
+  // =====================================================
   // AUTH
-  // ==========================
+  // =====================================================
 
   {
     path: 'login',
@@ -22,10 +22,9 @@ export const routes: Routes = [
   },
 
 
-
-  // ==========================
+  // =====================================================
   // APPLICATION
-  // ==========================
+  // =====================================================
 
   {
     path: '',
@@ -33,437 +32,559 @@ export const routes: Routes = [
 
     children: [
 
+      // =================================================
+      // DEFAULT
+      // =================================================
+
       {
         path: '',
-        redirectTo: 'dashboard',
+        redirectTo: 'admin/dashboard',
         pathMatch: 'full'
       },
 
 
-
-      // ==========================
-      // Dashboard
-      // ==========================
+      // =================================================
+      // ADMIN DASHBOARD
+      // =================================================
 
       {
-        path: 'dashboard',
+        path: 'admin/dashboard',
         loadComponent: () =>
-          import('./features/dashboard/dashboard.component')
-            .then(m => m.DashboardComponent)
+          import(
+            './features/auth/Admin/admin-dashboard/admin-dashboard.component'
+          ).then(
+            m => m.AdminDashboardComponent
+          )
       },
 
 
-
-      // ==========================
-      // ADMIN
-      // ==========================
-
-      // User List
+      // =================================================
+      // ADMIN - USER MANAGEMENT
+      // =================================================
 
       {
         path: 'admin/users',
         loadComponent: () =>
-          import('./features/auth/Admin/user-management/user-list/user-list.component')
-            .then(m => m.UserListComponent)
+          import(
+            './features/auth/Admin/user-management/user-list/user-list.component'
+          ).then(
+            m => m.UserListComponent
+          )
       },
-
-
-
-      // Add User
 
       {
         path: 'admin/users/add',
         loadComponent: () =>
-          import('./features/auth/Admin/user-management/add-user/add-user.component')
-            .then(m => m.AddUserComponent)
+          import(
+            './features/auth/Admin/user-management/add-user/add-user.component'
+          ).then(
+            m => m.AddUserComponent
+          )
       },
-
-
-
-      // Edit User
 
       {
         path: 'admin/users/edit/:id',
         loadComponent: () =>
-          import('./features/auth/Admin/user-management/edit-user/edit-user.component')
-            .then(m => m.EditUserComponent)
+          import(
+            './features/auth/Admin/user-management/edit-user/edit-user.component'
+          ).then(
+            m => m.EditUserComponent
+          )
       },
 
 
-
-      // User Profile
-
-      /*{
-        path: 'admin/users/profile/:id',
-        loadComponent: () =>
-          import('./features/auth/Admin/user-management/user-profile/user-profile.component')
-            .then(m => m.UserProfileComponent)
-      }, */
-
+      // =================================================
+      // ADMIN - ACADEMIC YEARS
+      // =================================================
 
       {
         path: 'admin/academic-years',
         loadComponent: () =>
-          import('./features/auth/Admin/academic-years/academic-years.component')
-            .then(m => m.AcademicYearsComponent)
+          import(
+            './features/auth/Admin/academic-years/academic-years.component'
+          ).then(
+            m => m.AcademicYearsComponent
+          )
       },
 
       {
-      path:'admin/academic-years/create',
-      loadComponent:()=>import(
-      './features/auth/Admin/academic-years/create-academic-year/create-academic-year.component'
-      )
-      .then(m=>m.CreateAcademicYearComponent)
+        path: 'admin/academic-years/create',
+        loadComponent: () =>
+          import(
+            './features/auth/Admin/academic-years/create-academic-year/create-academic-year.component'
+          ).then(
+            m => m.CreateAcademicYearComponent
+          )
       },
 
       {
-      path:'admin/academic-years/edit/:id',
-      loadComponent:()=>import(
-      './features/auth/Admin/academic-years/edit-academic-year/edit-academic-year.component'
-      )
-      .then(m=>m.EditAcademicYearComponent)
+        path: 'admin/academic-years/edit/:id',
+        loadComponent: () =>
+          import(
+            './features/auth/Admin/academic-years/edit-academic-year/edit-academic-year.component'
+          ).then(
+            m => m.EditAcademicYearComponent
+          )
       },
 
 
+      // =================================================
+      // ADMIN - CLASSES
+      // =================================================
+
       {
-        path:'admin/classes',
-        loadComponent:()=>import(
-        './features/auth/Admin/Class/class-list/class-list.component'
-        )
-        .then(m=>m.ClassListComponent)
-        },
+        path: 'admin/classes',
+        loadComponent: () =>
+          import(
+            './features/auth/Admin/Class/class-list/class-list.component'
+          ).then(
+            m => m.ClassListComponent
+          )
+      },
+
+      {
+        path: 'admin/classes/create',
+        loadComponent: () =>
+          import(
+            './features/auth/Admin/Class/class-form/class-form.component'
+          ).then(
+            m => m.ClassFormComponent
+          )
+      },
+
+      {
+        path: 'admin/classes/edit/:id',
+        loadComponent: () =>
+          import(
+            './features/auth/Admin/Class/class-form/class-form.component'
+          ).then(
+            m => m.ClassFormComponent
+          )
+      },
 
 
-        {
-          path: 'admin/classes/create',
-          loadComponent: () =>
-            import('./features/auth/Admin/Class/class-form/class-form.component')
-              .then(m => m.ClassFormComponent)
-        },
-        {
-          path: 'admin/classes/edit/:id',
-          loadComponent: () =>
-            import('./features/auth/Admin/Class/class-form/class-form.component')
-              .then(m => m.ClassFormComponent)
-        },
+      // =================================================
+      // ADMIN - SECTIONS
+      // =================================================
+
+      {
+        path: 'admin/sections',
+        loadComponent: () =>
+          import(
+            './features/auth/Admin/Section/section-list/section-list.component'
+          ).then(
+            m => m.SectionListComponent
+          )
+      },
+
+      {
+        path: 'admin/sections/create',
+        loadComponent: () =>
+          import(
+            './features/auth/Admin/Section/section-form/section-form.component'
+          ).then(
+            m => m.SectionFormComponent
+          )
+      },
+
+      {
+        path: 'admin/sections/edit/:id',
+        loadComponent: () =>
+          import(
+            './features/auth/Admin/Section/section-form/section-form.component'
+          ).then(
+            m => m.SectionFormComponent
+          )
+      },
 
 
+      // =================================================
+      // ADMIN - COURSES
+      // =================================================
 
-
-        {
-        path:'admin/sections',
-        loadComponent:()=>import(
-        './features/auth/Admin/Section/section-list/section-list.component'
-        )
-        .then(m=>m.SectionListComponent)
-        },
-
-
-        {
-          path: 'admin/sections/create',
-          loadComponent: () =>
-            import('./features/auth/Admin/Section/section-form/section-form.component')
-              .then(m => m.SectionFormComponent)
-        },
-        {
-          path: 'admin/sections/edit/:id',
-          loadComponent: () =>
-            import('./features/auth/Admin/Section/section-form/section-form.component')
-              .then(m => m.SectionFormComponent)
-        },
-
-
-
-        {
+      {
         path: 'admin/courses',
         loadComponent: () =>
-          import('./features/auth/Admin/Course/course-list/course-list.component')
-            .then(m => m.CourseListComponent)
+          import(
+            './features/auth/Admin/Course/course-list/course-list.component'
+          ).then(
+            m => m.CourseListComponent
+          )
       },
 
-      { 
+      {
         path: 'admin/courses/create',
         loadComponent: () =>
-          import('./features/auth/Admin/Course/course-form/course-form.component')
-            .then(m => m.CourseFormComponent)
+          import(
+            './features/auth/Admin/Course/course-form/course-form.component'
+          ).then(
+            m => m.CourseFormComponent
+          )
       },
 
       {
         path: 'admin/courses/edit/:id',
         loadComponent: () =>
-          import('./features/auth/Admin/Course/course-form/course-form.component')
-            .then(m => m.CourseFormComponent)
+          import(
+            './features/auth/Admin/Course/course-form/course-form.component'
+          ).then(
+            m => m.CourseFormComponent
+          )
       },
 
 
-
-      
+      // =================================================
+      // ADMIN - SUBJECTS
+      // =================================================
 
       {
         path: 'admin/subjects',
         loadComponent: () =>
-          import('./features/auth/Admin/Subject/subject-list/subject-list.component')
-            .then(m => m.SubjectListComponent)
+          import(
+            './features/auth/Admin/Subject/subject-list/subject-list.component'
+          ).then(
+            m => m.SubjectListComponent
+          )
       },
 
       {
         path: 'admin/subjects/create',
         loadComponent: () =>
-          import('./features/auth/Admin/Subject/subject-form/subject-form.component')
-            .then(m => m.SubjectFormComponent)
+          import(
+            './features/auth/Admin/Subject/subject-form/subject-form.component'
+          ).then(
+            m => m.SubjectFormComponent
+          )
       },
 
       {
         path: 'admin/subjects/edit/:id',
         loadComponent: () =>
-          import('./features/auth/Admin/Subject/subject-form/subject-form.component')
-            .then(m => m.SubjectFormComponent)
+          import(
+            './features/auth/Admin/Subject/subject-form/subject-form.component'
+          ).then(
+            m => m.SubjectFormComponent
+          )
       },
 
 
+      // =================================================
+      // ADMIN - COURSE SUBJECTS
+      // =================================================
 
-      // ==========================
-// COURSE SUBJECTS
-// ==========================
+      {
+        path: 'admin/course-subjects',
+        loadComponent: () =>
+          import(
+            './features/auth/Admin/course-subject/course-subject-list/course-subject-list.component'
+          ).then(
+            m => m.CourseSubjectListComponent
+          )
+      },
 
-{
-  path: 'admin/course-subjects',
-  loadComponent: () =>
-    import('./features/auth/Admin/course-subject/course-subject-list/course-subject-list.component')
-      .then(m => m.CourseSubjectListComponent)
-},
+      {
+        path: 'admin/course-subjects/create',
+        loadComponent: () =>
+          import(
+            './features/auth/Admin/course-subject/course-subject-form/course-subject-form.component'
+          ).then(
+            m => m.CourseSubjectFormComponent
+          )
+      },
 
-
-{
-  path: 'admin/course-subjects/create',
-  loadComponent: () =>
-    import('./features/auth/Admin/course-subject/course-subject-form/course-subject-form.component')
-      .then(m => m.CourseSubjectFormComponent)
-},
-
-
-{
-  path: 'admin/course-subjects/edit/:id',
-  loadComponent: () =>
-    import('./features/auth/Admin/course-subject/course-subject-form/course-subject-form.component')
-      .then(m => m.CourseSubjectFormComponent)
-},
-
-
-
-{
-  path: 'admin/student-enrollment',
-  loadComponent: () =>
-    import('./features/auth/Admin/student-enrollment/student-enrollment.component')
-      .then(m => m.StudentEnrollmentComponent)
-},
+      {
+        path: 'admin/course-subjects/edit/:id',
+        loadComponent: () =>
+          import(
+            './features/auth/Admin/course-subject/course-subject-form/course-subject-form.component'
+          ).then(
+            m => m.CourseSubjectFormComponent
+          )
+      },
 
 
-{
+      // =================================================
+      // ADMIN - STUDENT ENROLLMENT
+      // =================================================
+
+      {
+        path: 'admin/student-enrollment',
+        loadComponent: () =>
+          import(
+            './features/auth/Admin/student-enrollment/student-enrollment.component'
+          ).then(
+            m => m.StudentEnrollmentComponent
+          )
+      },
+
+
+      // =================================================
+      // ADMIN - ASSIGN TEACHER
+      // =================================================
+
+      {
         path: 'admin/assign-teacher',
         loadComponent: () =>
-          import('./features/auth/Admin/assign-teacher/assign-teacher.component')
-            .then(m => m.AssignTeacherComponent)
-  },
-        
-
-        
-{
-  path: 'teacher/dashboard',
-  loadComponent: () =>
-    import(
-      './features/auth/Teacher/teacher-dashboard/teacher-dashboard.component'
-    ).then(
-      m => m.TeacherDashboardComponent
-    )
-},
+          import(
+            './features/auth/Admin/assign-teacher/assign-teacher.component'
+          ).then(
+            m => m.AssignTeacherComponent
+          )
+      },
 
 
-  {
-  path: 'teacher/classes',
-  loadComponent: () =>
-    import(
-      './features/auth/Teacher/my-classes/my-classes.component'
-    )
-    .then(m => m.MyClassesComponent)
-},     
-
-
-    // Assignment List
-
-{
-  path: 'teacher/assignments',
-  loadComponent: () =>
-    import(
-      './features/auth/Teacher/assignments/assignment-list/assignment-list.component'
-    ).then(m => m.AssignmentListComponent)
-},
-
-
-// Create Assignment
-
-{
-  path: 'teacher/assignments/create',
-  loadComponent: () =>
-    import(
-      './features/auth/Teacher/assignments/assignment-form/assignment-form.component'
-    ).then(m => m.AssignmentFormComponent)
-},
-
-
-// Edit Assignment
-
-{
-  path: 'teacher/assignments/edit/:id',
-  loadComponent: () =>
-    import(
-      './features/auth/Teacher/assignments/assignment-form/assignment-form.component'
-    ).then(m => m.AssignmentFormComponent)
-},
-
-
-// Review Assignment Submissions
-
-{
-  path: 'teacher/assignments/review/:id',
-  loadComponent: () =>
-    import(
-      './features/auth/Teacher/assignments/review-assignment/review-assignment.component'
-    ).then(m => m.ReviewAssignmentComponent)
-},
-
-
-// --------------------------------------------------
-// SUBMISSIONS
-// --------------------------------------------------
-
-{
-  path: 'teacher/submissions',
-  loadComponent: () =>
-    import(
-      './features/auth/Teacher/assignments/review-assignment/review-assignment.component'
-    ).then(m => m.ReviewAssignmentComponent)
-},
-{
-  path: 'teacher/teacher-assignment-preview',
-  loadComponent: () =>
-    import(
-      './features/auth/Teacher/teacher-assignment-preview/teacher-assignment-preview.component'
-    ).then(m => m.TeacherAssignmentPreviewComponent)
-},
-
-// --------------------------------------------------
-// MARKS & FEEDBACK
-// --------------------------------------------------
-
-{
-  path: 'teacher/marks',
-  loadComponent: () =>
-    import(
-      './features/auth/Teacher/assignments/marks-feedback/marks-feedback.component'
-    ).then(m => m.MarksFeedbackComponent)
-},
-
-
-
-
-
-
-
-
-    // =====================================================
-// STUDENT
-// =====================================================
-
-// Student Assignments
-{
-  path: 'student/assignments',
-
-  loadComponent: () =>
-    import(
-      './features/auth/Student/student-assignment/student-assignment.component'
-    ).then(
-      m => m.StudentAssignmentComponent
-    )
-},
-
-{
-  path: 'student/assignments/:id',
-
-  loadComponent: () =>
-    import(
-      './features/auth/Student/student-assignment-details/student-assignment-details.component'
-    ).then(
-      m => m.StudentAssignmentDetailsComponent
-    )
-},
-
-{
-  path: 'student/assignments/:id/submit',
-
-  loadComponent: () =>
-    import(
-      './features/auth/Student/student-submission-page/student-submission-page.component'
-    ).then(
-      m => m.StudentSubmissionPageComponent
-    )
-},
-
-{
-  path: 'student/submissions',
-
-  loadComponent: () =>
-    import(
-      './features/auth/Student/student-submissions/student-submissions.component'
-    ).then(
-      m => m.StudentSubmissionsComponent
-    )
-},
-
-
-
-       
-
-      
-      /*
-      Future Modules
+      // =================================================
+      // ADMIN - ALL ASSIGNMENTS
+      // =================================================
 
       {
-        path:'admin/classes',
-        loadComponent:()=>import(...)
+        path: 'admin/assignments',
+        loadComponent: () =>
+          import(
+            './features/auth/Admin/assignments/admin-assignments.component'
+          ).then(
+            m => m.AdminAssignmentsComponent
+          )
+      },
+
+
+      // =================================================
+      // ADMIN - ALL SUBMISSIONS
+      // =================================================
+
+      {
+        path: 'admin/submissions',
+        loadComponent: () =>
+          import(
+            './features/auth/Admin/submissions/admin-submissions.component'
+          ).then(
+            m => m.AdminSubmissionsComponent
+          )
+      },
+
+
+      // =================================================
+      // ADMIN - SETTINGS
+      // =================================================
+
+      // Add this only when the settings component exists.
+      // {
+      //   path: 'admin/settings',
+      //   loadComponent: () =>
+      //     import(
+      //       './features/auth/Admin/settings/settings.component'
+      //     ).then(
+      //       m => m.SettingsComponent
+      //     )
+      // },
+
+
+      // =================================================
+      // TEACHER DASHBOARD
+      // =================================================
+
+      {
+        path: 'teacher/dashboard',
+        loadComponent: () =>
+          import(
+            './features/auth/Teacher/teacher-dashboard/teacher-dashboard.component'
+          ).then(
+            m => m.TeacherDashboardComponent
+          )
+      },
+
+
+      // =================================================
+      // TEACHER - CLASSES
+      // =================================================
+
+      {
+        path: 'teacher/classes',
+        loadComponent: () =>
+          import(
+            './features/auth/Teacher/my-classes/my-classes.component'
+          ).then(
+            m => m.MyClassesComponent
+          )
+      },
+
+
+      // =================================================
+      // TEACHER - ASSIGNMENTS
+      // =================================================
+
+      {
+        path: 'teacher/assignments',
+        loadComponent: () =>
+          import(
+            './features/auth/Teacher/assignments/assignment-list/assignment-list.component'
+          ).then(
+            m => m.AssignmentListComponent
+          )
       },
 
       {
-        path:'admin/subjects',
-        loadComponent:()=>import(...)
+        path: 'teacher/assignments/create',
+        loadComponent: () =>
+          import(
+            './features/auth/Teacher/assignments/assignment-form/assignment-form.component'
+          ).then(
+            m => m.AssignmentFormComponent
+          )
       },
 
       {
-        path:'admin/assign-teachers',
-        loadComponent:()=>import(...)
+        path: 'teacher/assignments/edit/:id',
+        loadComponent: () =>
+          import(
+            './features/auth/Teacher/assignments/assignment-form/assignment-form.component'
+          ).then(
+            m => m.AssignmentFormComponent
+          )
       },
 
       {
-        path:'admin/assignments',
-        loadComponent:()=>import(...)
+        path: 'teacher/assignments/review/:id',
+        loadComponent: () =>
+          import(
+            './features/auth/Teacher/assignments/review-assignment/review-assignment.component'
+          ).then(
+            m => m.ReviewAssignmentComponent
+          )
+      },
+
+
+      // =================================================
+      // TEACHER - SUBMISSIONS
+      // =================================================
+
+      {
+        path: 'teacher/submissions',
+        loadComponent: () =>
+          import(
+            './features/auth/Teacher/assignments/review-assignment/review-assignment.component'
+          ).then(
+            m => m.ReviewAssignmentComponent
+          )
+      },
+
+
+      // =================================================
+      // TEACHER - ASSIGNMENT PREVIEW
+      // =================================================
+
+      {
+        path: 'teacher/teacher-assignment-preview',
+        loadComponent: () =>
+          import(
+            './features/auth/Teacher/teacher-assignment-preview/teacher-assignment-preview.component'
+          ).then(
+            m => m.TeacherAssignmentPreviewComponent
+          )
+      },
+
+
+      // =================================================
+      // TEACHER - MARKS & FEEDBACK
+      // =================================================
+
+      {
+        path: 'teacher/marks',
+        loadComponent: () =>
+          import(
+            './features/auth/Teacher/assignments/marks-feedback/marks-feedback.component'
+          ).then(
+            m => m.MarksFeedbackComponent
+          )
+      },
+
+
+      // =================================================
+      // STUDENT DASHBOARD
+      // =================================================
+
+      {
+        path: 'student/dashboard',
+        loadComponent: () =>
+          import(
+            './features/auth/Student/student-dashboard/student-dashboard.component'
+          ).then(
+            m => m.StudentDashboardComponent
+          )
+      },
+
+
+      // =================================================
+      // STUDENT - ASSIGNMENTS
+      // =================================================
+
+      {
+        path: 'student/assignments',
+        loadComponent: () =>
+          import(
+            './features/auth/Student/student-assignment/student-assignment.component'
+          ).then(
+            m => m.StudentAssignmentComponent
+          )
       },
 
       {
-        path:'admin/submissions',
-        loadComponent:()=>import(...)
+        path: 'student/assignments/:id',
+        loadComponent: () =>
+          import(
+            './features/auth/Student/student-assignment-details/student-assignment-details.component'
+          ).then(
+            m => m.StudentAssignmentDetailsComponent
+          )
       },
 
       {
-        path:'admin/settings',
-        loadComponent:()=>import(...)
+        path: 'student/assignments/:id/submit',
+        loadComponent: () =>
+          import(
+            './features/auth/Student/student-submission-page/student-submission-page.component'
+          ).then(
+            m => m.StudentSubmissionPageComponent
+          )
+      },
+
+
+      // =================================================
+      // STUDENT - SUBMISSIONS
+      // =================================================
+
+      {
+        path: 'student/submissions',
+        loadComponent: () =>
+          import(
+            './features/auth/Student/student-submissions/student-submissions.component'
+          ).then(
+            m => m.StudentSubmissionsComponent
+          )
+      },
+
+
+      // =================================================
+      // STUDENT - RESULTS
+      // =================================================
+
+      {
+        path: 'student/results',
+        loadComponent: () =>
+          import(
+            './features/auth/Student/marks-feedback/marks-feedback.component'
+          ).then(
+            m => m.MarksFeedbackComponent
+          )
       }
-      */
 
     ]
-
   },
 
 
+  // =====================================================
+  // UNKNOWN ROUTE
+  // =====================================================
 
   {
     path: '**',

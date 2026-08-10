@@ -1,0 +1,315 @@
+<!-- =====================================================
+     STUDENT MARKS & FEEDBACK
+===================================================== -->
+
+<div class="marks-feedback-page">
+
+
+  <!-- ===================================================
+       HEADER
+  ==================================================== -->
+
+  <div class="page-header">
+
+    <div class="header-left">
+
+      <!-- BACK -->
+
+      <button
+        type="button"
+        class="back-btn"
+        (click)="goBack()">
+
+        <i class="fas fa-arrow-left"></i>
+
+        <span>
+          Back
+        </span>
+
+      </button>
+
+
+      <!-- TITLE -->
+
+      <div class="header-title">
+
+        <h2>
+          Marks & Feedback
+        </h2>
+
+        <p>
+          Select an assignment to view your marks
+          and teacher feedback.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- REFRESH -->
+
+    <button
+      type="button"
+      class="refresh-btn"
+      (click)="refresh()"
+      [disabled]="loading">
+
+      <i
+        class="fas"
+        [ngClass]="
+          loading
+            ? 'fa-spinner fa-spin'
+            : 'fa-sync-alt'
+        ">
+      </i>
+
+      <span>
+        Refresh
+      </span>
+
+    </button>
+
+  </div>
+
+
+
+  <!-- ===================================================
+       ERROR
+  ==================================================== -->
+
+  <div
+    class="alert alert-danger"
+    *ngIf="errorMessage">
+
+    <i class="fas fa-exclamation-circle"></i>
+
+    <span>
+      {{ errorMessage }}
+    </span>
+
+
+    <button
+      type="button"
+      class="alert-close"
+      (click)="errorMessage = ''"
+      aria-label="Close">
+
+      ×
+
+    </button>
+
+  </div>
+
+
+
+  <!-- ===================================================
+       MAIN CARD
+  ==================================================== -->
+
+  <section class="marks-card">
+
+
+    <!-- =================================================
+         CARD HEADER
+    ================================================== -->
+
+    <div class="card-heading">
+
+      <div class="heading-icon">
+
+        <i class="fas fa-award"></i>
+
+      </div>
+
+
+      <div>
+
+        <h3>
+          View Marks & Feedback
+        </h3>
+
+        <p>
+          Choose an assignment to view your submission
+          result, marks, and teacher feedback.
+        </p>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         LOADING
+    ================================================== -->
+
+    <div
+      class="loading-container"
+      *ngIf="loading">
+
+      <i class="fas fa-spinner fa-spin"></i>
+
+      <span>
+        Loading assignments...
+      </span>
+
+    </div>
+
+
+
+    <!-- =================================================
+         DROPDOWN
+    ================================================== -->
+
+    <div
+      class="assignment-selector"
+      *ngIf="!loading && assignments.length > 0">
+
+      <label for="assignmentSelect">
+
+        Select Assignment
+
+        <span class="required">
+          *
+        </span>
+
+      </label>
+
+
+      <div class="select-wrapper">
+
+        <i class="fas fa-file-alt select-icon"></i>
+
+
+        <select
+          id="assignmentSelect"
+          class="assignment-select"
+
+          [(ngModel)]="selectedAssignmentId"
+
+          (ngModelChange)="onAssignmentChange()">
+
+
+          <!-- DEFAULT -->
+
+          <option
+            value=""
+            disabled>
+
+            Select an assignment
+
+          </option>
+
+
+          <!-- ASSIGNMENTS -->
+
+          <option
+            *ngFor="
+              let assignment of assignments;
+              trackBy: trackByAssignmentId
+            "
+
+            [value]="assignment.id">
+
+            {{ assignment.title }}
+
+          </option>
+
+
+        </select>
+
+
+        <i
+          class="fas fa-chevron-down arrow-icon">
+        </i>
+
+      </div>
+
+
+      <small class="help-text">
+
+        Select an assignment to view your
+        marks and teacher feedback.
+
+      </small>
+
+    </div>
+
+
+
+    <!-- =================================================
+         NO ASSIGNMENTS
+    ================================================== -->
+
+    <div
+      class="empty-state"
+
+      *ngIf="
+        !loading &&
+        assignments.length === 0
+      ">
+
+
+      <div class="empty-icon">
+
+        <i class="fas fa-inbox"></i>
+
+      </div>
+
+
+      <h3>
+        No Assignments Available
+      </h3>
+
+
+      <p>
+        You don't have any assignments available
+        to view marks and feedback.
+      </p>
+
+
+      <button
+        type="button"
+        class="btn-view-assignments"
+        (click)="goBack()">
+
+        <i class="fas fa-list"></i>
+
+        View Assignments
+
+      </button>
+
+    </div>
+
+
+
+    <!-- =================================================
+         ASSIGNMENT COUNT
+    ================================================== -->
+
+    <div
+      class="assignment-count"
+
+      *ngIf="
+        !loading &&
+        assignments.length > 0
+      ">
+
+      <i class="fas fa-check-circle"></i>
+
+      <span>
+
+        {{ assignments.length }}
+
+        assignment(s) available
+
+      </span>
+
+    </div>
+
+
+  </section>
+
+
+</div>

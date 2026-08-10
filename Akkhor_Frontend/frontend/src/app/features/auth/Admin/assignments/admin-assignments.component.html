@@ -1,0 +1,496 @@
+<div class="admin-assignments-page">
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <div class="page-header">
+
+    <div class="header-content">
+
+      <div class="header-icon">
+        <i class="bi bi-file-earmark-text-fill"></i>
+      </div>
+
+      <div>
+
+        <h1>
+          All Assignments
+        </h1>
+
+        <p>
+          Manage and monitor all assignments
+          across the school.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       STATISTICS
+  ====================================================== -->
+
+  <div class="stats-grid">
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        <i class="bi bi-journal-text"></i>
+      </div>
+
+      <div>
+        <span>Total Assignments</span>
+        <strong>
+          {{ totalAssignments }}
+        </strong>
+      </div>
+
+    </div>
+
+
+    <div class="stat-card published">
+
+      <div class="stat-icon">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+
+      <div>
+        <span>Published</span>
+        <strong>
+          {{ publishedCount }}
+        </strong>
+      </div>
+
+    </div>
+
+
+    <div class="stat-card draft">
+
+      <div class="stat-icon">
+        <i class="bi bi-file-earmark"></i>
+      </div>
+
+      <div>
+        <span>Draft</span>
+        <strong>
+          {{ draftCount }}
+        </strong>
+      </div>
+
+    </div>
+
+
+    <div class="stat-card active">
+
+      <div class="stat-icon">
+        <i class="bi bi-lightning-fill"></i>
+      </div>
+
+      <div>
+        <span>Active</span>
+        <strong>
+          {{ activeCount }}
+        </strong>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       FILTER SECTION
+  ====================================================== -->
+
+  <div class="filter-card">
+
+    <div class="search-box">
+
+      <i class="bi bi-search"></i>
+
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+        placeholder="Search assignment, teacher, class, course..."
+      />
+
+    </div>
+
+
+    <select
+      [(ngModel)]="selectedStatus"
+      (change)="onStatusChange()">
+
+      <option value="all">
+        All Status
+      </option>
+
+      <option value="published">
+        Published
+      </option>
+
+      <option value="draft">
+        Draft
+      </option>
+
+    </select>
+
+
+    <button
+      type="button"
+      class="btn-clear"
+      (click)="clearFilters()">
+
+      <i class="bi bi-arrow-counterclockwise"></i>
+
+      Clear
+
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       LOADING
+  ====================================================== -->
+
+  <div
+    class="loading-state"
+    *ngIf="loading">
+
+    <div class="spinner"></div>
+
+    <p>
+      Loading assignments...
+    </p>
+
+  </div>
+
+
+  <!-- =====================================================
+       ERROR
+  ====================================================== -->
+
+  <div
+    class="error-state"
+    *ngIf="!loading && errorMessage">
+
+    <i class="bi bi-exclamation-triangle-fill"></i>
+
+    <span>
+      {{ errorMessage }}
+    </span>
+
+    <button
+      type="button"
+      (click)="loadAssignments()">
+
+      Retry
+
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       TABLE
+  ====================================================== -->
+
+  <div
+    class="table-card"
+    *ngIf="!loading && !errorMessage">
+
+    <div class="table-header">
+
+      <div>
+
+        <h2>
+          Assignments
+        </h2>
+
+        <span>
+          {{ filteredAssignments.length }}
+          assignment(s)
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              #
+            </th>
+
+            <th>
+              Assignment
+            </th>
+
+            <th>
+              Teacher
+            </th>
+
+            <th>
+              Class
+            </th>
+
+            <th>
+              Course
+            </th>
+
+            <th>
+              Subject
+            </th>
+
+            <th>
+              Deadline
+            </th>
+
+            <th>
+              Marks
+            </th>
+
+            <th>
+              Submissions
+            </th>
+
+            <th>
+              Status
+            </th>
+
+            <th>
+              Action
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="
+              let assignment of filteredAssignments;
+              let i = index
+            ">
+
+            <td>
+              {{ i + 1 }}
+            </td>
+
+
+            <td>
+
+              <div class="assignment-info">
+
+                <div class="assignment-icon">
+
+                  <i
+                    class="bi bi-file-earmark-text">
+                  </i>
+
+                </div>
+
+                <div>
+
+                  <strong>
+                    {{ assignment.title }}
+                  </strong>
+
+                  <small>
+                    {{
+                      assignment.description
+                      || 'No description'
+                    }}
+                  </small>
+
+                </div>
+
+              </div>
+
+            </td>
+
+
+            <td>
+
+              <span class="teacher-name">
+
+                <i class="bi bi-person-fill"></i>
+
+                {{
+                  assignment.teacherName
+                  || 'Unknown'
+                }}
+
+              </span>
+
+            </td>
+
+
+            <td>
+              {{ assignment.className || '-' }}
+            </td>
+
+
+            <td>
+              {{ assignment.courseName || '-' }}
+            </td>
+
+
+            <td>
+              {{ assignment.subjectName || '-' }}
+            </td>
+
+
+            <td>
+
+              <span class="deadline">
+
+                {{
+                  assignment.deadline
+                    | date:'dd MMM yyyy, hh:mm a'
+                }}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <span class="marks">
+
+                {{ assignment.maximumMarks }}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <span class="submission-count">
+
+                <i class="bi bi-people-fill"></i>
+
+                {{
+                  assignment.submissionCount
+                }}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <span
+                class="status-badge"
+                [class.published]="
+                  assignment.isPublished
+                "
+                [class.draft]="
+                  !assignment.isPublished
+                ">
+
+                {{
+                  assignment.isPublished
+                    ? 'Published'
+                    : 'Draft'
+                }}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <div class="action-buttons">
+
+                <button
+                  type="button"
+                  class="btn-view"
+                  title="View"
+                  (click)="viewAssignment(assignment)">
+
+                  <i class="bi bi-eye-fill"></i>
+
+                </button>
+
+
+                <button
+                  type="button"
+                  class="btn-download"
+                  title="Download attachment"
+                  *ngIf="
+                    assignment.attachmentUrl
+                  "
+                  (click)="downloadAttachment(assignment)">
+
+                  <i class="bi bi-download"></i>
+
+                </button>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+
+          <!-- EMPTY -->
+
+          <tr
+            *ngIf="
+              filteredAssignments.length === 0
+            ">
+
+            <td
+              colspan="11"
+              class="empty-state">
+
+              <div>
+
+                <i
+                  class="bi bi-file-earmark-x">
+                </i>
+
+                <h3>
+                  No assignments found
+                </h3>
+
+                <p>
+                  There are no assignments
+                  matching your filters.
+                </p>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,63 +1,98 @@
-<div class="student-assignment-details-page">
+
+<div class="teacher-assignment-details-page">
 
   <div class="details-container">
 
+    <!-- =====================================================
+         TOP NAVIGATION
+    ====================================================== -->
 
-    <!-- =================================================
-         BACK
-    ================================================== -->
+    <div class="top-navigation">
 
-    <button
-      type="button"
-      class="btn-back"
-      (click)="goBack()">
+      <button
+        type="button"
+        class="back-button"
+        (click)="goBack()">
 
-      <i class="fas fa-arrow-left"></i>
+        <span class="back-icon">
+          <i class="fas fa-arrow-left"></i>
+        </span>
 
-      Back to Assignments
+        <span>
+          Back to Assignments
+        </span>
 
-    </button>
+      </button>
 
 
+      <div class="breadcrumb">
 
-    <!-- =================================================
+        <span>
+          Student
+        </span>
+
+        <i class="fas fa-chevron-right"></i>
+
+        <span>
+          Assignments
+        </span>
+
+        <i class="fas fa-chevron-right"></i>
+
+        <strong>
+          Details
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
          LOADING
-    ================================================== -->
+    ====================================================== -->
 
     <div
-      class="loading-state"
+      class="loading-card"
       *ngIf="loading">
 
-      <div class="spinner"></div>
+      <div class="loading-spinner"></div>
+
+      <h3>
+        Loading Assignment
+      </h3>
 
       <p>
-        Loading assignment...
+        Please wait while assignment details are being loaded.
       </p>
 
     </div>
 
 
-
-    <!-- =================================================
+    <!-- =====================================================
          ERROR
-    ================================================== -->
+    ====================================================== -->
 
     <div
-      class="error-state"
+      class="error-card"
       *ngIf="!loading && errorMessage">
 
       <div class="error-icon">
 
-        <i class="fas fa-exclamation-circle"></i>
+        <i class="fas fa-exclamation-triangle"></i>
 
       </div>
 
 
       <div class="error-content">
 
-        <strong>
-          Assignment Not Found
-        </strong>
+        <span class="error-label">
+          Something went wrong
+        </span>
+
+        <h3>
+          Assignment could not be loaded
+        </h3>
 
         <p>
           {{ errorMessage }}
@@ -66,7 +101,7 @@
 
         <button
           type="button"
-          class="retry-btn"
+          class="retry-button"
           (click)="loadAssignment()">
 
           <i class="fas fa-redo"></i>
@@ -80,309 +115,103 @@
     </div>
 
 
-
-    <!-- =================================================
-         ASSIGNMENT DETAILS
-    ================================================== -->
+    <!-- =====================================================
+         MAIN ASSIGNMENT CONTENT
+    ====================================================== -->
 
     <div
-      class="assignment-details-card"
+      class="assignment-content"
       *ngIf="!loading && !errorMessage && assignment">
 
 
-      <!-- =================================================
-           HEADER
-      ================================================== -->
+      <!-- ===================================================
+           HERO HEADER
+      ==================================================== -->
 
-      <div class="assignment-header">
+      <section class="assignment-hero">
 
+        <div class="hero-main">
 
-        <div class="title-section">
+          <div class="assignment-type-icon">
 
-          <div class="assignment-icon">
-
-            <i class="fas fa-file-alt"></i>
-
-          </div>
-
-
-          <div>
-
-            <span class="page-label">
-
-              Assignment Details
-
-            </span>
-
-
-            <h1>
-
-              {{ assignment.title }}
-
-            </h1>
-
-
-            <span
-              class="subject-name"
-              *ngIf="assignment.subjectName">
-
-              {{ assignment.subjectName }}
-
-            </span>
-
-          </div>
-
-        </div>
-
-
-
-        <!-- STATUS -->
-
-        <span
-          class="status-badge"
-          [ngClass]="getStatusClass()">
-
-          <i
-            class="fas"
-            [ngClass]="{
-              'fa-clock': status === 'pending',
-              'fa-paper-plane': status === 'submitted',
-              'fa-check-circle': status === 'evaluated',
-              'fa-exclamation-triangle': status === 'overdue'
-            }">
-          </i>
-
-          {{ getStatusLabel() }}
-
-        </span>
-
-      </div>
-
-
-
-      <!-- =================================================
-           DESCRIPTION
-      ================================================== -->
-
-      <div class="details-section">
-
-        <h3>
-
-          <i class="fas fa-align-left"></i>
-
-          Description
-
-        </h3>
-
-
-        <div class="description-content">
-
-          {{ assignment.description || 'No description provided.' }}
-
-        </div>
-
-      </div>
-
-
-
-      <!-- =================================================
-           ASSIGNMENT INFORMATION
-      ================================================== -->
-
-      <div class="details-section">
-
-        <h3>
-
-          <i class="fas fa-info-circle"></i>
-
-          Assignment Information
-
-        </h3>
-
-
-        <div class="info-grid">
-
-
-          <!-- Course -->
-
-          <div class="info-item">
-
-            <span class="info-label">
-
-              <i class="fas fa-book"></i>
-
-              Course
-
-            </span>
-
-            <strong>
-
-              {{ assignment.courseName || '-' }}
-
-            </strong>
+            <i class="fas fa-file-signature"></i>
 
           </div>
 
 
+          <div class="hero-content">
 
-          <!-- Subject -->
+            <div class="hero-label">
 
-          <div class="info-item">
+              <span>
+                Assignment Details
+              </span>
 
-            <span class="info-label">
+              <span class="hero-dot"></span>
 
-              <i class="fas fa-book-open"></i>
-
-              Subject
-
-            </span>
-
-            <strong>
-
-              {{ assignment.subjectName || '-' }}
-
-            </strong>
-
-          </div>
-
-
-
-          <!-- Teacher -->
-
-          <div class="info-item">
-
-            <span class="info-label">
-
-              <i class="fas fa-user"></i>
-
-              Teacher
-
-            </span>
-
-            <strong>
-
-              {{ assignment.teacherName || '-' }}
-
-            </strong>
-
-          </div>
-
-
-
-          <!-- Maximum Marks -->
-
-          <div class="info-item">
-
-            <span class="info-label">
-
-              <i class="fas fa-star"></i>
-
-              Maximum Marks
-
-            </span>
-
-            <strong class="marks">
-
-              {{ assignment.maximumMarks }}
-
-            </strong>
-
-          </div>
-
-
-
-          <!-- Created -->
-
-          <div class="info-item">
-
-            <span class="info-label">
-
-              <i class="fas fa-calendar-plus"></i>
-
-              Created
-
-            </span>
-
-            <strong>
-
-              {{ formatDate(assignment.createdAt) }}
-
-            </strong>
-
-          </div>
-
-
-
-          <!-- Deadline -->
-
-          <div class="info-item">
-
-            <span class="info-label">
-
-              <i class="fas fa-calendar-alt"></i>
-
-              Deadline
-
-            </span>
-
-            <strong
-              [class.overdue]="isOverdue()">
-
-              {{ formatDeadline(assignment.deadline) }}
-
-            </strong>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-
-      <!-- =================================================
-           ASSIGNMENT FILE
-      ================================================== -->
-
-      <div
-        class="details-section"
-        *ngIf="assignment.attachmentUrl">
-
-        <h3>
-
-          <i class="fas fa-paperclip"></i>
-
-          Assignment File
-
-        </h3>
-
-
-        <div class="attachment-card">
-
-          <div class="attachment-info">
-
-            <div class="attachment-icon">
-
-              <i class="fas fa-file-pdf"></i>
+              <span>
+                Student Portal
+              </span>
 
             </div>
 
 
-            <div>
+            <h1>
+              {{ assignment.title }}
+            </h1>
 
-              <strong>
 
-                {{
-                  assignment.attachmentFileName
-                  || 'Assignment File'
-                }}
+            <p
+              class="hero-description"
+              *ngIf="assignment.description">
 
-              </strong>
+              {{ assignment.description }}
 
+            </p>
+
+
+            <div class="hero-meta">
+
+              <!-- Course -->
+
+              <span *ngIf="assignment.courseName">
+
+                <i class="fas fa-book"></i>
+
+                {{ assignment.courseName }}
+
+              </span>
+
+
+              <!-- Subject -->
+
+              <span *ngIf="assignment.subjectName">
+
+                <i class="fas fa-book-open"></i>
+
+                {{ assignment.subjectName }}
+
+              </span>
+
+
+              <!-- Teacher -->
+
+              <span *ngIf="assignment.teacherName">
+
+                <i class="fas fa-user-tie"></i>
+
+                {{ assignment.teacherName }}
+
+              </span>
+
+
+              <!-- Created -->
 
               <span>
 
-                Instructions / Reference File
+                <i class="fas fa-calendar"></i>
+
+                {{ formatDate(assignment.createdAt) }}
 
               </span>
 
@@ -390,48 +219,1116 @@
 
           </div>
 
+        </div>
 
-          <!-- DOWNLOAD ASSIGNMENT -->
 
-          <button
-            type="button"
-            class="btn-view-file"
-            (click)="downloadAssignmentFile()">
+        <!-- Assignment Status -->
 
-            <i class="fas fa-download"></i>
+        <div class="hero-status">
 
-            Download File
+          <span
+            class="status-badge"
+            [ngClass]="getStatusClass()">
 
-          </button>
+            <i
+              class="fas"
+              [ngClass]="{
+                'fa-clock': status === 'pending',
+                'fa-paper-plane': status === 'submitted',
+                'fa-check-circle': status === 'evaluated',
+                'fa-exclamation-triangle': status === 'overdue'
+              }">
+            </i>
+
+            {{ getStatusLabel() }}
+
+          </span>
 
         </div>
+
+      </section>
+
+
+      <!-- ===================================================
+           QUICK STATISTICS
+      ==================================================== -->
+
+      <section class="statistics-grid">
+
+
+        <!-- Maximum Marks -->
+
+        <div class="stat-card">
+
+          <div class="stat-icon blue">
+
+            <i class="fas fa-star"></i>
+
+          </div>
+
+
+          <div class="stat-content">
+
+            <span class="stat-label">
+              Maximum Marks
+            </span>
+
+            <strong>
+              {{ assignment.maximumMarks }}
+            </strong>
+
+            <small>
+              Total marks
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <!-- Deadline -->
+
+        <div class="stat-card">
+
+          <div class="stat-icon orange">
+
+            <i class="fas fa-calendar-alt"></i>
+
+          </div>
+
+
+          <div class="stat-content">
+
+            <span class="stat-label">
+              Submission Deadline
+            </span>
+
+
+            <strong
+              [class.danger-text]="isOverdue()">
+
+              {{ formatDeadline(assignment.deadline) }}
+
+            </strong>
+
+
+            <small
+              *ngIf="!isOverdue()">
+
+              Submit before the deadline
+
+            </small>
+
+
+            <small
+              class="danger-text"
+              *ngIf="isOverdue() && !submission">
+
+              Deadline passed
+
+            </small>
+
+
+            <small
+              class="success-text"
+              *ngIf="isOverdue() && submission">
+
+              Submission received
+
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <!-- Teacher -->
+
+        <div class="stat-card">
+
+          <div class="stat-icon purple">
+
+            <i class="fas fa-chalkboard-teacher"></i>
+
+          </div>
+
+
+          <div class="stat-content">
+
+            <span class="stat-label">
+              Assigned By
+            </span>
+
+            <strong>
+              {{ assignment.teacherName || 'Teacher' }}
+            </strong>
+
+            <small>
+              Course instructor
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <!-- Created -->
+
+        <div class="stat-card">
+
+          <div class="stat-icon green">
+
+            <i class="fas fa-calendar-plus"></i>
+
+          </div>
+
+
+          <div class="stat-content">
+
+            <span class="stat-label">
+              Created
+            </span>
+
+            <strong>
+              {{ formatDate(assignment.createdAt) }}
+            </strong>
+
+            <small>
+              Assignment created
+            </small>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ===================================================
+           MAIN GRID
+      ==================================================== -->
+
+      <div class="main-grid">
+
+
+        <!-- =================================================
+             LEFT COLUMN
+        ================================================== -->
+
+        <div class="left-column">
+
+
+          <!-- ===============================================
+               DESCRIPTION
+          ================================================ -->
+
+          <section class="content-card">
+
+            <div class="card-header">
+
+              <div class="card-title">
+
+                <span class="card-title-icon blue">
+
+                  <i class="fas fa-align-left"></i>
+
+                </span>
+
+
+                <div>
+
+                  <h2>
+                    Assignment Description
+                  </h2>
+
+                  <p>
+                    Instructions and requirements
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="description-box">
+
+              <p>
+
+                {{
+                  assignment.description
+                  || 'No description provided for this assignment.'
+                }}
+
+              </p>
+
+            </div>
+
+          </section>
+
+
+          <!-- ===============================================
+               ASSIGNMENT INFORMATION
+          ================================================ -->
+
+          <section class="content-card">
+
+            <div class="card-header">
+
+              <div class="card-title">
+
+                <span class="card-title-icon indigo">
+
+                  <i class="fas fa-info-circle"></i>
+
+                </span>
+
+
+                <div>
+
+                  <h2>
+                    Assignment Information
+                  </h2>
+
+                  <p>
+                    Academic and submission details
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="information-grid">
+
+
+              <!-- Course -->
+
+              <div class="information-item">
+
+                <span class="information-label">
+
+                  <i class="fas fa-book"></i>
+
+                  Course
+
+                </span>
+
+
+                <strong>
+
+                  {{ assignment.courseName || '-' }}
+
+                </strong>
+
+              </div>
+
+
+              <!-- Subject -->
+
+              <div class="information-item">
+
+                <span class="information-label">
+
+                  <i class="fas fa-book-open"></i>
+
+                  Subject
+
+                </span>
+
+
+                <strong>
+
+                  {{ assignment.subjectName || '-' }}
+
+                </strong>
+
+              </div>
+
+
+              <!-- Teacher -->
+
+              <div class="information-item">
+
+                <span class="information-label">
+
+                  <i class="fas fa-user-tie"></i>
+
+                  Teacher
+
+                </span>
+
+
+                <strong>
+
+                  {{ assignment.teacherName || '-' }}
+
+                </strong>
+
+              </div>
+
+
+              <!-- Maximum Marks -->
+
+              <div class="information-item">
+
+                <span class="information-label">
+
+                  <i class="fas fa-award"></i>
+
+                  Maximum Marks
+
+                </span>
+
+
+                <strong class="highlight-value">
+
+                  {{ assignment.maximumMarks }}
+
+                </strong>
+
+              </div>
+
+
+              <!-- Created -->
+
+              <div class="information-item">
+
+                <span class="information-label">
+
+                  <i class="fas fa-calendar-plus"></i>
+
+                  Created Date
+
+                </span>
+
+
+                <strong>
+
+                  {{ formatDate(assignment.createdAt) }}
+
+                </strong>
+
+              </div>
+
+
+              <!-- Deadline -->
+
+              <div class="information-item">
+
+                <span class="information-label">
+
+                  <i class="fas fa-hourglass-end"></i>
+
+                  Deadline
+
+                </span>
+
+
+                <strong
+                  [class.danger-text]="isOverdue()">
+
+                  {{ formatDeadline(assignment.deadline) }}
+
+                </strong>
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <!-- ===============================================
+               ASSIGNMENT ATTACHMENT
+          ================================================ -->
+
+          <section class="content-card">
+
+            <div class="card-header">
+
+              <div class="card-title">
+
+                <span class="card-title-icon red">
+
+                  <i class="fas fa-paperclip"></i>
+
+                </span>
+
+
+                <div>
+
+                  <h2>
+                    Assignment Attachment
+                  </h2>
+
+                  <p>
+                    Reference material provided by teacher
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- File Exists -->
+
+            <div
+              class="file-card"
+              *ngIf="assignment.attachmentUrl">
+
+              <div class="file-left">
+
+
+                <div class="file-icon pdf">
+
+                  <i class="fas fa-file-pdf"></i>
+
+                </div>
+
+
+                <div class="file-details">
+
+                  <strong>
+
+                    {{
+                      assignment.attachmentFileName
+                      || 'Assignment File'
+                    }}
+
+                  </strong>
+
+
+                  <span>
+                    Instructions / Reference Material
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <button
+                type="button"
+                class="download-button"
+                (click)="downloadAssignmentFile()">
+
+                <i class="fas fa-download"></i>
+
+                Download
+
+              </button>
+
+            </div>
+
+
+            <!-- No File -->
+
+            <div
+              class="empty-file"
+              *ngIf="!assignment.attachmentUrl">
+
+              <div class="empty-file-icon">
+
+                <i class="fas fa-file-circle-question"></i>
+
+              </div>
+
+
+              <div>
+
+                <strong>
+                  No attachment available
+                </strong>
+
+                <p>
+                  No reference file was attached to this assignment.
+                </p>
+
+              </div>
+
+            </div>
+
+          </section>
+
+        </div>
+
+
+        <!-- =================================================
+             RIGHT COLUMN
+        ================================================== -->
+
+        <aside class="right-column">
+
+
+          <!-- ===============================================
+               TEACHER CARD
+          ================================================ -->
+
+          <section class="teacher-card">
+
+            <div class="teacher-card-header">
+
+              <span>
+                Assignment Owner
+              </span>
+
+              <i class="fas fa-chalkboard-teacher"></i>
+
+            </div>
+
+
+            <div class="teacher-profile">
+
+              <div class="teacher-avatar">
+
+                <i class="fas fa-user-tie"></i>
+
+              </div>
+
+
+              <div>
+
+                <h3>
+
+                  {{ assignment.teacherName || 'Teacher' }}
+
+                </h3>
+
+                <span>
+                  Course Instructor
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="teacher-divider"></div>
+
+
+            <div class="teacher-info">
+
+
+              <!-- Course -->
+
+              <div>
+
+                <span>
+
+                  <i class="fas fa-book"></i>
+
+                  Course
+
+                </span>
+
+
+                <strong>
+
+                  {{ assignment.courseName || '-' }}
+
+                </strong>
+
+              </div>
+
+
+              <!-- Subject -->
+
+              <div>
+
+                <span>
+
+                  <i class="fas fa-book-open"></i>
+
+                  Subject
+
+                </span>
+
+
+                <strong>
+
+                  {{ assignment.subjectName || '-' }}
+
+                </strong>
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <!-- ===============================================
+               DEADLINE CARD
+          ================================================ -->
+
+          <section class="deadline-card">
+
+            <div class="deadline-icon">
+
+              <i class="fas fa-clock"></i>
+
+            </div>
+
+
+            <div>
+
+              <span>
+                Submission Deadline
+              </span>
+
+
+              <strong
+                [class.danger-text]="isOverdue()">
+
+                {{ formatDeadline(assignment.deadline) }}
+
+              </strong>
+
+
+              <small
+                *ngIf="!isOverdue()">
+
+                Submit your assignment before the deadline.
+
+              </small>
+
+
+              <small
+                class="danger-text"
+                *ngIf="isOverdue() && !submission">
+
+                The submission deadline has passed.
+
+              </small>
+
+
+              <small
+                class="success-text"
+                *ngIf="isOverdue() && submission">
+
+                Your submission has been received.
+
+              </small>
+
+            </div>
+
+          </section>
+
+
+          <!-- ===============================================
+               STUDENT SUBMISSION OVERVIEW
+          ================================================ -->
+
+          <section class="submission-overview">
+
+            <div class="overview-header">
+
+              <div>
+
+                <span>
+                  Your Submission
+                </span>
+
+                <h3>
+                  Submission Status
+                </h3>
+
+              </div>
+
+
+              <span
+                class="status-badge small"
+                [ngClass]="getSubmissionStatusClass()">
+
+                {{ getSubmissionStatusLabel() }}
+
+              </span>
+
+            </div>
+
+
+            <!-- Submitted -->
+
+            <div
+              class="submission-result"
+              *ngIf="submission">
+
+              <div
+                class="result-icon"
+                [ngClass]="{
+                  'success': isEvaluated(),
+                  'pending': !isEvaluated()
+                }">
+
+                <i
+                  class="fas"
+                  [ngClass]="{
+                    'fa-check': isEvaluated(),
+                    'fa-paper-plane': !isEvaluated()
+                  }">
+                </i>
+
+              </div>
+
+
+              <div>
+
+                <strong>
+
+                  {{
+                    isEvaluated()
+                    ? 'Assignment Evaluated'
+                    : 'Submission Received'
+                  }}
+
+                </strong>
+
+                <span>
+
+                  {{
+                    isEvaluated()
+                    ? 'Your assignment has been reviewed by the teacher.'
+                    : 'Your assignment has been submitted successfully.'
+                  }}
+
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <!-- Not Submitted -->
+
+            <div
+              class="submission-result"
+              *ngIf="!submission">
+
+              <div class="result-icon pending">
+
+                <i class="fas fa-clock"></i>
+
+              </div>
+
+
+              <div>
+
+                <strong>
+                  Not Submitted
+                </strong>
+
+                <span>
+                  You have not submitted this assignment yet.
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <!-- Submit Button -->
+
+            <button
+              type="button"
+              class="sidebar-submit-button"
+              *ngIf="!submission && !isOverdue()"
+              (click)="submitAssignment()">
+
+              <i class="fas fa-paper-plane"></i>
+
+              Submit Assignment
+
+            </button>
+
+
+            <!-- Edit Button -->
+
+            <button
+              type="button"
+              class="sidebar-edit-button"
+              *ngIf="submission && !isEvaluated()"
+              (click)="editSubmission()">
+
+              <i class="fas fa-edit"></i>
+
+              Edit Submission
+
+            </button>
+
+          </section>
+
+
+          <!-- ===============================================
+               EVALUATION CARD
+          ================================================ -->
+
+          <section
+            class="evaluation-card"
+            *ngIf="isEvaluated()">
+
+            <div class="evaluation-header">
+
+              <span>
+                Evaluation
+              </span>
+
+              <i class="fas fa-check-circle"></i>
+
+            </div>
+
+
+            <div class="marks-display">
+
+              <strong>
+
+                {{ submission?.marksObtained ?? '-' }}
+
+              </strong>
+
+
+              <span>
+
+                / {{ assignment.maximumMarks }}
+
+              </span>
+
+            </div>
+
+
+            <div
+              class="feedback"
+              *ngIf="submission?.feedback">
+
+              <span>
+                Teacher Feedback
+              </span>
+
+
+              <p>
+
+                {{ submission ?.feedback }}
+
+              </p>
+
+            </div>
+
+          </section>
+
+        </aside>
 
       </div>
 
 
+      <!-- ===================================================
+           STUDENT SUBMISSION
+      ==================================================== -->
 
-      <!-- =================================================
-           NO ASSIGNMENT FILE
-      ================================================== -->
-
-      <div
-        class="details-section"
-        *ngIf="!assignment.attachmentUrl">
-
-        <h3>
-
-          <i class="fas fa-paperclip"></i>
-
-          Assignment File
-
-        </h3>
+      <section class="content-card submission-card">
 
 
-        <div class="attachment-card">
+        <!-- Submission Header -->
 
-          <div class="attachment-info">
+        <div class="card-header">
 
-            <div class="attachment-icon">
+          <div class="card-title">
+
+            <span class="card-title-icon green">
+
+              <i class="fas fa-paper-plane"></i>
+
+            </span>
+
+
+            <div>
+
+              <h2>
+                My Submission
+              </h2>
+
+              <p>
+                Your submitted assignment
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <span
+            class="status-badge"
+            [ngClass]="getSubmissionStatusClass()">
+
+            {{ getSubmissionStatusLabel() }}
+
+          </span>
+
+        </div>
+
+
+        <!-- ===============================================
+             NOT SUBMITTED
+        ================================================ -->
+
+        <div
+          class="no-submission"
+          *ngIf="!submission">
+
+          <div class="no-submission-icon">
+
+            <i class="fas fa-inbox"></i>
+
+          </div>
+
+
+          <div>
+
+            <h3>
+              No Submission Yet
+            </h3>
+
+            <p>
+              You have not submitted this assignment yet.
+            </p>
+
+
+            <!-- Submit -->
+
+            <button
+              type="button"
+              class="action-primary inline-action"
+              *ngIf="!isOverdue()"
+              (click)="submitAssignment()">
+
+              <i class="fas fa-paper-plane"></i>
+
+              Submit Assignment
+
+            </button>
+
+
+            <!-- Deadline Passed -->
+
+            <span
+              class="deadline-warning"
+              *ngIf="isOverdue()">
+
+              <i class="fas fa-exclamation-triangle"></i>
+
+              The submission deadline has passed.
+
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- ===============================================
+             SUBMISSION EXISTS
+        ================================================ -->
+
+        <div
+          class="submission-content"
+          *ngIf="submission">
+
+
+          <!-- =============================================
+               SUBMISSION TEXT
+          ============================================== -->
+
+          <div
+            class="submission-text"
+            *ngIf="submission.submissionText">
+
+            <span>
+              Submitted Answer
+            </span>
+
+
+            <div class="submitted-answer-box">
+
+              <p>
+
+                {{ submission.submissionText }}
+
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <!-- =============================================
+               STUDENT ATTACHMENT
+          ============================================== -->
+
+          <div
+            class="student-file"
+            *ngIf="submission.attachmentUrl">
+
+
+            <div class="file-left">
+
+              <div class="file-icon document">
+
+                <i class="fas fa-file"></i>
+
+              </div>
+
+
+              <div class="file-details">
+
+                <strong>
+
+                  {{
+                    submission.attachmentFileName
+                    || 'Student Answer Script'
+                  }}
+
+                </strong>
+
+
+                <span>
+                  Submitted answer script
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="download-button"
+              (click)="downloadSubmissionFile()">
+
+              <i class="fas fa-download"></i>
+
+              Download
+
+            </button>
+
+          </div>
+
+
+          <!-- =============================================
+               NO SUBMISSION CONTENT
+          ============================================== -->
+
+          <div
+            class="empty-submission-content"
+            *ngIf="
+              !submission.submissionText &&
+              !submission.attachmentUrl
+            ">
+
+            <div class="empty-submission-icon">
 
               <i class="fas fa-file-circle-question"></i>
 
@@ -441,12 +1338,107 @@
             <div>
 
               <strong>
-                No Assignment File
+                No submission content
               </strong>
 
+              <p>
+                Your submission does not contain text or an attachment.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <!-- =============================================
+               SUBMISSION ACTION
+          ============================================== -->
+
+          <div
+            class="submission-actions"
+            *ngIf="!isEvaluated()">
+
+            <button
+              type="button"
+              class="action-primary"
+              (click)="editSubmission()">
+
+              <i class="fas fa-edit"></i>
+
+              Edit Submission
+
+            </button>
+
+          </div>
+
+
+          <!-- =============================================
+               EVALUATION RESULT
+          ============================================== -->
+
+          <div
+            class="evaluation-result"
+            *ngIf="isEvaluated()">
+
+
+            <!-- Marks -->
+
+            <div class="evaluation-score">
+
               <span>
-                No reference file was attached.
+                Marks Obtained
               </span>
+
+
+              <strong>
+
+                {{ submission.marksObtained ?? '-' }}
+
+                <small>
+
+                  / {{ assignment.maximumMarks }}
+
+                </small>
+
+              </strong>
+
+            </div>
+
+
+            <!-- Feedback -->
+
+            <div
+              class="evaluation-feedback"
+              *ngIf="submission?.feedback">
+
+              <span>
+                Teacher Feedback
+              </span>
+
+
+              <p>
+
+                {{ submission.feedback }}
+
+              </p>
+
+            </div>
+
+
+            <!-- No Feedback -->
+
+            <div
+              class="evaluation-feedback empty"
+              *ngIf="!submission?.feedback">
+
+              <span>
+                Teacher Feedback
+              </span>
+
+
+              <p>
+                No feedback was provided by the teacher.
+              </p>
 
             </div>
 
@@ -454,379 +1446,168 @@
 
         </div>
 
-      </div>
+      </section>
 
 
+      <!-- ===================================================
+           ACTION BAR
+      ==================================================== -->
 
-      <!-- =================================================
-           YOUR SUBMISSION
-      ================================================== -->
-
-      <div class="details-section submission-section">
-
-
-        <!-- Submission Header -->
-
-        <div class="submission-header">
-
-          <div>
-
-            <span class="section-label">
-
-              Your Submission
-
-            </span>
+      <div class="action-bar">
 
 
-            <h3>
+        <div class="action-information">
 
-              <i class="fas fa-paper-plane"></i>
-
-              Submission Status
-
-            </h3>
-
-          </div>
+          <i class="fas fa-info-circle"></i>
 
 
-          <span
-            class="status-badge"
-            [ngClass]="getSubmissionStatusClass()">
+          <span *ngIf="!submission && !isOverdue()">
 
-            <i
-              class="fas"
-              [ngClass]="{
-                'fa-paper-plane': !isEvaluated(),
-                'fa-check-circle': isEvaluated()
-              }">
-            </i>
+            You have not submitted this assignment yet.
 
-            {{ getSubmissionStatusLabel() }}
+          </span>
+
+
+          <span *ngIf="submission && !isEvaluated()">
+
+            Your assignment has been submitted. You can edit it
+            until it is evaluated.
+
+          </span>
+
+
+          <span *ngIf="isEvaluated()">
+
+            Your assignment has been evaluated by the teacher.
+
+          </span>
+
+
+          <span *ngIf="!submission && isOverdue()">
+
+            The submission deadline has passed.
 
           </span>
 
         </div>
 
 
-
-        <!-- =================================================
-             SUBMISSION TEXT
-        ================================================== -->
-
-        <div
-          class="submission-text"
-          *ngIf="submission?.submissionText">
-
-          <span class="info-label">
-
-            Submission Text
-
-          </span>
+        <div class="action-buttons">
 
 
-          <p>
-
-            {{ submission?.submissionText }}
-
-          </p>
-
-        </div>
-
-
-
-        <!-- =================================================
-             SUBMISSION FILE
-        ================================================== -->
-
-        <div
-          class="submission-file"
-          *ngIf="submission?.attachmentUrl">
-
-          <div>
-
-            <i class="fas fa-file"></i>
-
-            <strong>
-
-              {{
-                submission?.attachmentFileName
-                || 'Your Answer Script'
-              }}
-
-            </strong>
-
-          </div>
-
-
-          <!-- DOWNLOAD ANSWER SCRIPT -->
+          <!-- Back -->
 
           <button
             type="button"
-            class="btn-view-file"
-            (click)="downloadSubmissionFile()">
+            class="action-secondary"
+            (click)="goBack()">
 
-            <i class="fas fa-download"></i>
+            <i class="fas fa-arrow-left"></i>
 
-            Download Answer Script
+            Back
+
+          </button>
+
+
+          <!-- Submit -->
+
+          <button
+            type="button"
+            class="action-primary"
+            *ngIf="!submission && !isOverdue()"
+            (click)="submitAssignment()">
+
+            <i class="fas fa-paper-plane"></i>
+
+            Submit Assignment
+
+          </button>
+
+
+          <!-- Edit -->
+
+          <button
+            type="button"
+            class="action-primary"
+            *ngIf="submission && !isEvaluated()"
+            (click)="editSubmission()">
+
+            <i class="fas fa-edit"></i>
+
+            Edit Submission
+
+          </button>
+
+
+          <!-- Evaluated -->
+
+          <button
+            type="button"
+            class="action-completed"
+            *ngIf="isEvaluated()"
+            disabled>
+
+            <i class="fas fa-check-double"></i>
+
+            Evaluation Completed
+
+          </button>
+
+
+          <!-- Overdue -->
+
+          <button
+            type="button"
+            class="action-disabled"
+            *ngIf="!submission && isOverdue()"
+            disabled>
+
+            <i class="fas fa-lock"></i>
+
+            Submission Closed
 
           </button>
 
         </div>
-
-
-
-        <!-- =================================================
-             NO SUBMISSION FILE
-        ================================================== -->
-
-        <div
-          class="submission-file"
-          *ngIf="
-            submission &&
-            !submission.attachmentUrl
-          ">
-
-          <div>
-
-            <i class="fas fa-file-circle-question"></i>
-
-            <strong>
-              No Answer Script
-            </strong>
-
-          </div>
-
-        </div>
-
-
-
-        <!-- =================================================
-             NO SUBMISSION
-        ================================================== -->
-
-        <div
-          class="no-submission"
-          *ngIf="!submission">
-
-          <div class="no-submission-icon">
-
-            <i class="fas fa-file-circle-question"></i>
-
-          </div>
-
-
-          <div>
-
-            <h3>
-
-              No Submission Yet
-
-            </h3>
-
-            <p>
-
-              You have not submitted this assignment yet.
-
-            </p>
-
-          </div>
-
-        </div>
-
-
-
-        <!-- =================================================
-             EVALUATION
-        ================================================== -->
-
-        <div
-          class="evaluation-box"
-          *ngIf="isEvaluated()">
-
-
-          <!-- Marks -->
-
-          <div class="evaluation-item">
-
-            <span>
-
-              Marks
-
-            </span>
-
-
-            <strong>
-
-              {{ submission?.marksObtained ?? '-' }}
-
-              /
-
-              {{ assignment.maximumMarks }}
-
-            </strong>
-
-          </div>
-
-
-
-          <!-- Feedback -->
-
-          <div
-            class="evaluation-item"
-            *ngIf="submission?.feedback">
-
-            <span>
-
-              Teacher Feedback
-
-            </span>
-
-
-            <p>
-
-              {{ submission?.feedback }}
-
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-
-      <!-- =================================================
-           ACTIONS
-      ================================================== -->
-
-      <div class="assignment-actions">
-
-
-        <!-- Evaluated -->
-
-        <button
-          type="button"
-          class="btn-evaluated"
-          *ngIf="isEvaluated()"
-          disabled>
-
-          <i class="fas fa-check-double"></i>
-
-          Evaluated
-
-        </button>
-
-
-
-        <!-- Edit Existing Submission -->
-
-        <button
-          type="button"
-          class="btn-edit"
-          *ngIf="
-            submission &&
-            !isEvaluated()
-          "
-          (click)="editSubmission()">
-
-          <i class="fas fa-edit"></i>
-
-          Edit Submission
-
-        </button>
-
-
-
-        <!-- Submit -->
-
-        <button
-          type="button"
-          class="btn-submit"
-          *ngIf="
-            !submission &&
-            !isOverdue()
-          "
-          (click)="submitAssignment()">
-
-          <i class="fas fa-upload"></i>
-
-          Submit Assignment
-
-        </button>
-
-
-
-        <!-- Deadline Passed -->
-
-        <button
-          type="button"
-          class="btn-overdue"
-          *ngIf="
-            !submission &&
-            isOverdue()
-          "
-          disabled>
-
-          <i class="fas fa-exclamation-triangle"></i>
-
-          Deadline Passed
-
-        </button>
-
-
-
-        <!-- Back -->
-
-        <button
-          type="button"
-          class="btn-secondary"
-          (click)="goBack()">
-
-          <i class="fas fa-arrow-left"></i>
-
-          Back
-
-        </button>
 
       </div>
 
     </div>
 
 
-
-    <!-- =================================================
-         NOT FOUND
-    ================================================== -->
+    <!-- =====================================================
+         ASSIGNMENT NOT FOUND
+    ====================================================== -->
 
     <div
-      class="empty-state"
+      class="not-found-card"
       *ngIf="
         !loading &&
         !assignment &&
         !errorMessage
       ">
 
-      <div class="no-submission-icon">
+
+      <div class="not-found-icon">
 
         <i class="fas fa-file-circle-question"></i>
 
       </div>
 
 
-      <h3>
+      <h2>
         Assignment Not Found
-      </h3>
+      </h2>
 
 
       <p>
-        The assignment could not be loaded.
+        The requested assignment could not be found.
       </p>
 
 
       <button
         type="button"
-        class="btn-secondary"
+        class="action-secondary"
         (click)="goBack()">
 
         <i class="fas fa-arrow-left"></i>
@@ -840,3 +1621,4 @@
   </div>
 
 </div>
+

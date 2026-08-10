@@ -1,0 +1,1027 @@
+<!-- =========================================================
+     STUDENT DASHBOARD
+========================================================= -->
+
+<div class="student-dashboard-page">
+
+
+  <!-- =======================================================
+       PAGE HEADER
+  ======================================================== -->
+
+  <div class="page-header">
+
+    <div class="header-content">
+
+      <div class="header-icon">
+        <i class="fas fa-graduation-cap"></i>
+      </div>
+
+      <div class="header-text">
+
+        <span class="page-label">
+          Student Portal
+        </span>
+
+        <h1>
+          Student Dashboard
+        </h1>
+
+        <p>
+          Welcome back,
+          <strong>
+            {{ getStudentName() }}
+          </strong>
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="btn-refresh"
+      (click)="refresh()"
+      [disabled]="loading">
+
+      <i
+        class="fas fa-sync-alt"
+        [class.fa-spin]="loading">
+      </i>
+
+      <span>
+        Refresh
+      </span>
+
+    </button>
+
+  </div>
+
+
+  <!-- =======================================================
+       ERROR MESSAGE
+  ======================================================== -->
+
+  <div
+    class="error-alert"
+    *ngIf="errorMessage">
+
+    <div class="error-content">
+
+      <i class="fas fa-exclamation-circle"></i>
+
+      <span>
+        {{ errorMessage }}
+      </span>
+
+    </div>
+
+    <button
+      type="button"
+      class="btn-retry"
+      (click)="refresh()">
+
+      <i class="fas fa-redo"></i>
+
+      Try Again
+
+    </button>
+
+  </div>
+
+
+  <!-- =======================================================
+       LOADING
+  ======================================================== -->
+
+  <div
+    class="loading-state"
+    *ngIf="loading">
+
+    <div class="spinner"></div>
+
+    <p>
+      Loading dashboard...
+    </p>
+
+  </div>
+
+
+  <!-- =======================================================
+       DASHBOARD CONTENT
+  ======================================================== -->
+
+  <div
+    class="dashboard-content"
+    *ngIf="!loading && dashboard">
+
+
+    <!-- =====================================================
+         STUDENT INFORMATION
+    ====================================================== -->
+
+    <div class="student-info-card">
+
+      <!-- Avatar -->
+
+      <div class="student-avatar">
+
+        <img
+          *ngIf="dashboard.profileImageUrl"
+          [src]="dashboard.profileImageUrl"
+          alt="Student Profile">
+
+        <div
+          class="avatar-placeholder"
+          *ngIf="!dashboard.profileImageUrl">
+
+          <i class="fas fa-user-graduate"></i>
+
+        </div>
+
+      </div>
+
+
+      <!-- Student Details -->
+
+      <div class="student-details">
+
+        <div class="student-name-row">
+
+          <h2>
+            {{ getStudentName() }}
+          </h2>
+
+          <span class="student-badge">
+            Student
+          </span>
+
+        </div>
+
+
+        <p class="student-email">
+
+          <i class="fas fa-envelope"></i>
+
+          {{ getStudentEmail() }}
+
+        </p>
+
+
+        <!-- Student Meta -->
+
+        <div class="student-meta">
+
+
+          <!-- Class -->
+
+          <span class="meta-item">
+
+            <i class="fas fa-school"></i>
+
+            <span>
+
+              <small>
+                Class
+              </small>
+
+              <strong>
+                {{ getClassName() }}
+              </strong>
+
+            </span>
+
+          </span>
+
+
+          <!-- Section -->
+
+          <span class="meta-item">
+
+            <i class="fas fa-users"></i>
+
+            <span>
+
+              <small>
+                Section
+              </small>
+
+              <strong>
+                {{ getSectionName() }}
+              </strong>
+
+            </span>
+
+          </span>
+
+
+          <!-- Academic Year -->
+
+          <span class="meta-item">
+
+            <i class="fas fa-calendar-alt"></i>
+
+            <span>
+
+              <small>
+                Academic Year
+              </small>
+
+              <strong>
+                {{ getAcademicYearName() }}
+              </strong>
+
+            </span>
+
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         STATISTICS
+    ====================================================== -->
+
+    <div class="statistics-grid">
+
+
+      <!-- Total Assignments -->
+
+      <div class="stat-card">
+
+        <div class="stat-icon assignments">
+
+          <i class="fas fa-tasks"></i>
+
+        </div>
+
+        <div class="stat-content">
+
+          <span>
+            Total Assignments
+          </span>
+
+          <strong>
+            {{ statistics.totalAssignments ?? 0 }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- Pending -->
+
+      <div class="stat-card">
+
+        <div class="stat-icon pending">
+
+          <i class="fas fa-clock"></i>
+
+        </div>
+
+        <div class="stat-content">
+
+          <span>
+            Pending
+          </span>
+
+          <strong>
+            {{ statistics.pendingAssignments ?? 0 }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- Submitted -->
+
+      <div class="stat-card">
+
+        <div class="stat-icon submitted">
+
+          <i class="fas fa-paper-plane"></i>
+
+        </div>
+
+        <div class="stat-content">
+
+          <span>
+            Submitted
+          </span>
+
+          <strong>
+            {{ statistics.submittedAssignments ?? 0 }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- Graded -->
+
+      <div class="stat-card">
+
+        <div class="stat-icon graded">
+
+          <i class="fas fa-award"></i>
+
+        </div>
+
+        <div class="stat-content">
+
+          <span>
+            Graded
+          </span>
+
+          <strong>
+            {{ statistics.gradedAssignments ?? 0 }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- Overdue -->
+
+      <div class="stat-card">
+
+        <div class="stat-icon overdue">
+
+          <i class="fas fa-exclamation-triangle"></i>
+
+        </div>
+
+        <div class="stat-content">
+
+          <span>
+            Overdue
+          </span>
+
+          <strong>
+            {{ statistics.overdueAssignments ?? 0 }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- Submission Rate -->
+
+      <div class="stat-card">
+
+        <div class="stat-icon average">
+
+          <i class="fas fa-chart-line"></i>
+
+        </div>
+
+        <div class="stat-content">
+
+          <span>
+            Submission Rate
+          </span>
+
+          <strong>
+            {{ statistics.submissionRate ?? 0 }}%
+          </strong>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ASSIGNMENTS GRID
+    ====================================================== -->
+
+    <div class="dashboard-grid">
+
+
+      <!-- ===================================================
+           RECENT ASSIGNMENTS
+      ==================================================== -->
+
+      <div class="dashboard-card">
+
+        <div class="card-header">
+
+          <div>
+
+            <h3>
+
+              <i class="fas fa-tasks"></i>
+
+              Recent Assignments
+
+            </h3>
+
+            <p>
+              Your latest assignments
+            </p>
+
+          </div>
+
+
+          <a
+            routerLink="/student/assignments"
+            class="view-all">
+
+            View All
+
+            <i class="fas fa-arrow-right"></i>
+
+          </a>
+
+        </div>
+
+
+        <!-- Assignment List -->
+
+        <div
+          class="assignment-list"
+          *ngIf="recentAssignments.length > 0">
+
+
+          <div
+            class="assignment-item"
+            *ngFor="
+              let assignment of recentAssignments;
+              trackBy: trackAssignment
+            ">
+
+
+            <!-- Icon -->
+
+            <div class="assignment-icon">
+
+              <i class="fas fa-file-alt"></i>
+
+            </div>
+
+
+            <!-- Information -->
+
+            <div
+              class="assignment-info"
+              (click)="viewAssignment(assignment)">
+
+              <h4>
+
+                {{ assignment.title || 'Untitled Assignment' }}
+
+              </h4>
+
+
+              <p>
+
+                <i class="fas fa-book"></i>
+
+                {{ assignment.subjectName || '-' }}
+
+                <span
+                  *ngIf="assignment.courseName">
+
+                  • {{ assignment.courseName }}
+
+                </span>
+
+              </p>
+
+
+              <small>
+
+                <i class="fas fa-user"></i>
+
+                {{ assignment.teacherName || 'Teacher' }}
+
+                &nbsp; • &nbsp;
+
+                <i class="fas fa-calendar"></i>
+
+                Due:
+                {{ formatDate(assignment.dueDate) }}
+
+              </small>
+
+            </div>
+
+
+            <!-- Status -->
+
+            <div class="assignment-action">
+
+              <span
+                class="status-badge"
+                [ngClass]="
+                  getStatusClass(
+                    getAssignmentStatus(assignment)
+                  )
+                ">
+
+                {{ getAssignmentStatus(assignment) }}
+
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- Empty -->
+
+        <div
+          class="empty-state"
+          *ngIf="recentAssignments.length === 0">
+
+          <i class="fas fa-inbox"></i>
+
+          <h4>
+            No Recent Assignments
+          </h4>
+
+          <p>
+            You don't have any recent assignments.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- ===================================================
+           UPCOMING ASSIGNMENTS
+      ==================================================== -->
+
+      <div class="dashboard-card">
+
+        <div class="card-header">
+
+          <div>
+
+            <h3>
+
+              <i class="fas fa-calendar-alt"></i>
+
+              Upcoming Assignments
+
+            </h3>
+
+            <p>
+              Assignments you need to complete
+            </p>
+
+          </div>
+
+
+          <a
+            routerLink="/student/assignments"
+            class="view-all">
+
+            View All
+
+            <i class="fas fa-arrow-right"></i>
+
+          </a>
+
+        </div>
+
+
+        <!-- Upcoming List -->
+
+        <div
+          class="assignment-list"
+          *ngIf="upcomingAssignments.length > 0">
+
+
+          <div
+            class="assignment-item"
+            *ngFor="
+              let assignment of upcomingAssignments;
+              trackBy: trackAssignment
+            ">
+
+
+            <!-- Icon -->
+
+            <div class="assignment-icon upcoming">
+
+              <i class="fas fa-calendar-check"></i>
+
+            </div>
+
+
+            <!-- Information -->
+
+            <div
+              class="assignment-info"
+              (click)="viewAssignment(assignment)">
+
+              <h4>
+
+                {{ assignment.title || 'Untitled Assignment' }}
+
+              </h4>
+
+
+              <p>
+
+                <i class="fas fa-book"></i>
+
+                {{ assignment.subjectName || '-' }}
+
+                <span
+                  *ngIf="assignment.courseName">
+
+                  • {{ assignment.courseName }}
+
+                </span>
+
+              </p>
+
+
+              <small>
+
+                <i class="fas fa-calendar"></i>
+
+                Due:
+                {{ formatDate(assignment.dueDate) }}
+
+              </small>
+
+            </div>
+
+
+            <!-- Action -->
+
+            <div class="assignment-action">
+
+
+              <span
+                class="status-badge"
+                [ngClass]="
+                  getStatusClass(
+                    getAssignmentStatus(assignment)
+                  )
+                ">
+
+                {{ getAssignmentStatus(assignment) }}
+
+              </span>
+
+
+              <button
+                type="button"
+                class="btn-submit"
+                *ngIf="
+                  !assignment.isSubmitted &&
+                  getAssignmentStatus(assignment) !== 'Submitted' &&
+                  getAssignmentStatus(assignment) !== 'Graded'
+                "
+                (click)="submitAssignment(assignment)">
+
+                <i class="fas fa-paper-plane"></i>
+
+                Submit
+
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- Empty -->
+
+        <div
+          class="empty-state"
+          *ngIf="upcomingAssignments.length === 0">
+
+          <i class="fas fa-calendar-check"></i>
+
+          <h4>
+            No Upcoming Assignments
+          </h4>
+
+          <p>
+            You are all caught up!
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RECENT SUBMISSIONS
+    ====================================================== -->
+
+    <div class="dashboard-card submissions-card">
+
+
+      <!-- Header -->
+
+      <div class="card-header">
+
+        <div>
+
+          <h3>
+
+            <i class="fas fa-paper-plane"></i>
+
+            Recent Submissions
+
+          </h3>
+
+          <p>
+            Your latest assignment submissions
+          </p>
+
+        </div>
+
+
+        <a
+          routerLink="/student/submissions"
+          class="view-all">
+
+          View All
+
+          <i class="fas fa-arrow-right"></i>
+
+        </a>
+
+      </div>
+
+
+      <!-- Table -->
+
+      <div
+        class="table-wrapper"
+        *ngIf="recentSubmissions.length > 0">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Assignment
+              </th>
+
+              <th>
+                Submitted
+              </th>
+
+              <th>
+                Status
+              </th>
+
+              <th>
+                Marks
+              </th>
+
+              <th>
+                Action
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            <tr
+              *ngFor="
+                let submission of recentSubmissions;
+                trackBy: trackSubmission
+              ">
+
+
+              <!-- Assignment -->
+
+              <td>
+
+                <div class="submission-assignment">
+
+                  <div class="submission-icon">
+
+                    <i class="fas fa-file-alt"></i>
+
+                  </div>
+
+                  <strong>
+
+                    {{
+                      submission.assignmentTitle ||
+                      'Assignment'
+                    }}
+
+                  </strong>
+
+                </div>
+
+              </td>
+
+
+              <!-- Submitted -->
+
+              <td>
+
+                <span class="date-text">
+
+                  <i class="fas fa-clock"></i>
+
+                  {{
+                    formatDateTime(
+                      submission.submittedAt
+                    )
+                  }}
+
+                </span>
+
+              </td>
+
+
+              <!-- Status -->
+
+              <td>
+
+                <span
+                  class="status-badge"
+                  [ngClass]="
+                    getStatusClass(
+                      submission.status
+                    )
+                  ">
+
+                  {{
+                    submission.status ||
+                    (
+                      submission.isGraded
+                        ? 'Graded'
+                        : 'Pending'
+                    )
+                  }}
+
+                </span>
+
+              </td>
+
+
+              <!-- Marks -->
+
+              <td>
+
+                <ng-container
+                  *ngIf="
+                    submission.marksObtained !== null &&
+                    submission.marksObtained !== undefined
+                  ">
+
+                  <strong class="marks">
+
+                    {{ submission.marksObtained }}
+
+                    <span
+                      *ngIf="submission.totalMarks">
+
+                      /
+                      {{ submission.totalMarks }}
+
+                    </span>
+
+                  </strong>
+
+                  <small
+                    class="percentage"
+                    *ngIf="
+                      submission.totalMarks
+                    ">
+
+                    {{
+                      (
+                        (submission.marksObtained /
+                        submission.totalMarks) * 100
+                      ).toFixed(0)
+                    }}%
+
+                  </small>
+
+                </ng-container>
+
+
+                <span
+                  class="not-graded"
+                  *ngIf="
+                    submission.marksObtained === null ||
+                    submission.marksObtained === undefined
+                  ">
+
+                  Not graded
+
+                </span>
+
+              </td>
+
+
+              <!-- Action -->
+
+              <td>
+
+                <button
+                  type="button"
+                  class="btn-view"
+                  (click)="viewSubmission(submission)">
+
+                  <i class="fas fa-eye"></i>
+
+                  View
+
+                </button>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+
+      <!-- Empty -->
+
+      <div
+        class="empty-state"
+        *ngIf="recentSubmissions.length === 0">
+
+        <i class="fas fa-paper-plane"></i>
+
+        <h4>
+          No Submissions Yet
+        </h4>
+
+        <p>
+          Your submitted assignments will appear here.
+        </p>
+
+      </div>
+
+    </div>
+
+
+  </div>
+
+
+  <!-- =======================================================
+       NO DASHBOARD
+  ======================================================== -->
+
+  <div
+    class="empty-dashboard"
+    *ngIf="!loading && !dashboard && !errorMessage">
+
+    <i class="fas fa-graduation-cap"></i>
+
+    <h3>
+      Dashboard Unavailable
+    </h3>
+
+    <p>
+      Student dashboard information could not be loaded.
+    </p>
+
+    <button
+      type="button"
+      class="btn-refresh"
+      (click)="refresh()">
+
+      <i class="fas fa-redo"></i>
+
+      Reload Dashboard
+
+    </button>
+
+  </div>
+
+</div>

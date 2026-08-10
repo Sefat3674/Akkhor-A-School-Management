@@ -1,0 +1,462 @@
+<div class="admin-submissions-page">
+
+  <!-- HEADER -->
+
+  <div class="page-header">
+
+    <div class="header-content">
+
+      <div class="header-icon">
+        <i class="bi bi-file-earmark-check-fill"></i>
+      </div>
+
+      <div>
+
+        <h1>
+          All Submissions
+        </h1>
+
+        <p>
+          Monitor student submissions and
+          evaluation status.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- STATISTICS -->
+
+  <div class="stats-grid">
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        <i class="bi bi-files"></i>
+      </div>
+
+      <div>
+
+        <span>
+          Total Submissions
+        </span>
+
+        <strong>
+          {{ totalSubmissions }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="stat-card pending">
+
+      <div class="stat-icon">
+        <i class="bi bi-clock-fill"></i>
+      </div>
+
+      <div>
+
+        <span>
+          Pending
+        </span>
+
+        <strong>
+          {{ pendingCount }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="stat-card evaluated">
+
+      <div class="stat-icon">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+
+      <div>
+
+        <span>
+          Evaluated
+        </span>
+
+        <strong>
+          {{ evaluatedCount }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="stat-card marks">
+
+      <div class="stat-icon">
+        <i class="bi bi-award-fill"></i>
+      </div>
+
+      <div>
+
+        <span>
+          Marks Awarded
+        </span>
+
+        <strong>
+          {{ totalMarks }}
+        </strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- FILTER -->
+
+  <div class="filter-card">
+
+    <div class="search-box">
+
+      <i class="bi bi-search"></i>
+
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+        placeholder="Search student or assignment..."
+      />
+
+    </div>
+
+
+    <select
+      [(ngModel)]="selectedStatus"
+      (change)="onStatusChange()">
+
+      <option value="all">
+        All Status
+      </option>
+
+      <option value="Submitted">
+        Submitted
+      </option>
+
+      <option value="Evaluated">
+        Evaluated
+      </option>
+
+    </select>
+
+
+    <button
+      type="button"
+      class="btn-clear"
+      (click)="clearFilters()">
+
+      <i class="bi bi-arrow-counterclockwise"></i>
+
+      Clear
+
+    </button>
+
+  </div>
+
+
+  <!-- LOADING -->
+
+  <div
+    class="loading-state"
+    *ngIf="loading">
+
+    <div class="spinner"></div>
+
+    <p>
+      Loading submissions...
+    </p>
+
+  </div>
+
+
+  <!-- ERROR -->
+
+  <div
+    class="error-state"
+    *ngIf="!loading && errorMessage">
+
+    <i class="bi bi-exclamation-triangle-fill"></i>
+
+    <span>
+      {{ errorMessage }}
+    </span>
+
+    <button
+      type="button"
+      (click)="loadSubmissions()">
+
+      Retry
+
+    </button>
+
+  </div>
+
+
+  <!-- TABLE -->
+
+  <div
+    class="table-card"
+    *ngIf="!loading && !errorMessage">
+
+    <div class="table-header">
+
+      <div>
+
+        <h2>
+          Student Submissions
+        </h2>
+
+        <span>
+          {{ filteredSubmissions.length }}
+          submission(s)
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>#</th>
+
+            <th>Assignment</th>
+
+            <th>Student</th>
+
+            <th>Submitted At</th>
+
+            <th>Marks</th>
+
+            <th>Status</th>
+
+            <th>Feedback</th>
+
+            <th>Attachment</th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="
+              let submission of filteredSubmissions;
+              let i = index
+            ">
+
+            <td>
+              {{ i + 1 }}
+            </td>
+
+
+            <td>
+
+              <div class="assignment-info">
+
+                <div class="assignment-icon">
+
+                  <i class="bi bi-journal-text"></i>
+
+                </div>
+
+                <strong>
+                  {{
+                    submission.assignmentTitle
+                    || 'Unknown Assignment'
+                  }}
+                </strong>
+
+              </div>
+
+            </td>
+
+
+            <td>
+
+              <div class="student-info">
+
+                <div class="student-avatar">
+
+                  {{
+                    submission.studentName
+                      ?.charAt(0)
+                      ?.toUpperCase()
+                      || 'S'
+                  }}
+
+                </div>
+
+                <div>
+
+                  <strong>
+                    {{
+                      submission.studentName
+                      || 'Unknown Student'
+                    }}
+                  </strong>
+
+                  <small>
+                    {{ submission.studentId }}
+                  </small>
+
+                </div>
+
+              </div>
+
+            </td>
+
+
+            <td>
+
+              {{
+                submission.submittedAt
+                  | date:'dd MMM yyyy, hh:mm a'
+              }}
+
+            </td>
+
+
+            <td>
+
+              <strong class="marks">
+
+                {{
+                  submission.marksObtained
+                    ?? '-'
+                }}
+
+              </strong>
+
+            </td>
+
+
+            <td>
+
+              <span
+                class="status-badge"
+                [class.submitted]="
+                  submission.status
+                    .toLowerCase() === 'submitted'
+                "
+                [class.evaluated]="
+                  submission.status
+                    .toLowerCase() === 'evaluated'
+                ">
+
+                {{ submission.status }}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <span
+                class="feedback"
+                [title]="
+                  submission.feedback || ''
+                ">
+
+                {{
+                  submission.feedback
+                  || 'No feedback'
+                }}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <button
+                *ngIf="
+                  submission.attachmentUrl
+                "
+                type="button"
+                class="btn-download"
+                (click)="
+                  downloadAttachment(submission)
+                ">
+
+                <i class="bi bi-download"></i>
+
+                Download
+
+              </button>
+
+              <span
+                *ngIf="
+                  !submission.attachmentUrl
+                "
+                class="no-file">
+
+                No file
+
+              </span>
+
+            </td>
+
+          </tr>
+
+
+          <tr
+            *ngIf="
+              filteredSubmissions.length === 0
+            ">
+
+            <td
+              colspan="8"
+              class="empty-state">
+
+              <i
+                class="bi bi-inbox">
+              </i>
+
+              <h3>
+                No submissions found
+              </h3>
+
+              <p>
+                No submissions match
+                your current filters.
+              </p>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>

@@ -262,3 +262,78 @@ The backend follows a layered architecture.
                     │       Database       │
                     └──────────────────────┘
 
+
+# Project Structure
+
+The project is organized into separate frontend, backend, domain, application, infrastructure, and testing layers.
+
+```text
+Akkhor-A-School-Management/
+│
+├── Akkhor_Backend/
+│   │
+│   ├── src/
+│   │   │
+│   │   ├── Akkhor.API/
+│   │   │   ├── Controllers/
+│   │   │   ├── Middleware/
+│   │   │   ├── Properties/
+│   │   │   ├── Program.cs
+│   │   │   └── appsettings.json
+│   │   │
+│   │   ├── Akkhor.Application/
+│   │   │   ├── DTOs/
+│   │   │   ├── Interfaces/
+│   │   │   ├── Services/
+│   │   │   └── ...
+│   │   │
+│   │   ├── Akkhor.Domain/
+│   │   │   ├── Entities/
+│   │   │   └── ...
+│   │   │
+│   │   └── Akkhor.Infrastructure/
+│   │       ├── Data/
+│   │       ├── Repositories/
+│   │       ├── Configurations/
+│   │       ├── Migrations/
+│   │       └── ...
+│   │
+│   ├── tests/
+│   │   └── Akkhor.Tests/
+│   │       │
+│   │       ├── Authorization/
+│   │       │   ├── AdminAuthorizationTests.cs
+│   │       │   ├── StudentAuthorizationTests.cs
+│   │       │   ├── TeacherAuthorizationTests.cs
+│   │       │   └── TestAuthenticationHandler.cs
+│   │       │
+│   │       ├── Controllers/
+│   │       │   └── AuthControllerTests.cs
+│   │       │
+│   │       └── service/
+│   │           ├── AssignmentServiceTests.cs
+│   │           ├── AssignmentSubmissionServiceTests.cs
+│   │           ├── ClassServiceTests.cs
+│   │           ├── StudentEnrollmentServiceTests.cs
+│   │           ├── TeacherAssignmentServiceTests.cs
+│   │           └── UserManagementServiceTests.cs
+│   │
+│   └── Akkhor.sln
+│
+├── Akkhor_Frontend/
+│   │
+│   └── frontend/
+│       ├── src/
+│       │   ├── app/
+│       │   ├── assets/
+│       │   ├── environments/
+│       │   └── ...
+│       ├── angular.json
+│       ├── package.json
+│       ├── package-lock.json
+│       ├── tsconfig.json
+│       └── ...
+│
+├── README.md
+└── .gitignore
+

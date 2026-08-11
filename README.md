@@ -203,4 +203,62 @@ The backend follows a layered architecture.
                     ┌──────────────────────┐
                     │      Akkhor.API      │
                     │ Controllers
+                    └──────────┬───────────┘
+                               │
+                               │ 
+                               ▼
+                    ┌──────────────────────┐
+                    │     Angular UI       │
+                    │   TypeScript / HTML  │
+                    │        / SCSS        │
+                    └──────────┬───────────┘
+                               │
+                               │ HTTP / REST API
+                               ▼
+                    ┌──────────────────────┐
+                    │      Akkhor.API      │
+                    │                      │
+                    │ Controllers          │
+                    │ JWT Authentication   │
+                    │ Authorization        │
+                    │ Middleware           │
+                    │ Swagger / OpenAPI    │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │  Akkhor.Application  │
+                    │                      │
+                    │ Services             │
+                    │ DTOs                 │
+                    │ Interfaces           │
+                    │ Business Logic       │
+                    │ Validation            │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │    Akkhor.Domain     │
+                    │                      │
+                    │ Entities             │
+                    │ Domain Models        │
+                    │ Business Concepts    │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │ Akkhor.Infrastructure│
+                    │                      │
+                    │ Repositories         │
+                    │ Entity Framework Core│
+                    │ ApplicationDbContext │
+                    │ Migrations           │
+                    │ Identity Persistence │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │     PostgreSQL       │
+                    │       Database       │
+                    └──────────────────────┘
 

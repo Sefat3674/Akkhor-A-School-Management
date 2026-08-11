@@ -1523,7 +1523,7 @@ https://q-rp.com/c/4CIs
 
 # Author
 
-**Sefat Ahmed Akkhor**
+**MD. SEFAT AHMED**
 
 Akkhor - Assignment & Submission Management System
 

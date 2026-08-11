@@ -1323,22 +1323,22 @@ Replace the placeholders below with the actual credentials used for evaluation.
 ## Admin
 
 ```text
-Email: YOUR_ADMIN_EMAIL
-Password: YOUR_ADMIN_PASSWORD
+Email: admin@akkhor.com
+Password: Admin@12345
 ```
 
 ## Teacher
 
 ```text
-Email: YOUR_TEACHER_EMAIL
-Password: YOUR_TEACHER_PASSWORD
+Email: teacher@akkhor.com
+Password: Teacher@12345
 ```
 
 ## Student
 
 ```text
-Email: YOUR_STUDENT_EMAIL
-Password: YOUR_STUDENT_PASSWORD
+Email: student@akkhor.com
+Password: Student@12345
 ```
 
 > Do not use production credentials or personal passwords in the repository.

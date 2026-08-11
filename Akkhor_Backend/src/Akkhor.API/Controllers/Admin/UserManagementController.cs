@@ -1,11 +1,13 @@
 ﻿using Akkhor.Application.DTOs.UserManagement;
 using Akkhor.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Akkhor.API.Controllers;
 
 [ApiController]
 [Route("api/users")]
+[Authorize(Roles = "Admin,SuperAdmin")]
 public class UserManagementController : ControllerBase
 {
 

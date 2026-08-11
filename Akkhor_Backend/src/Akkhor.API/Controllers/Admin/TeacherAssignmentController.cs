@@ -1,6 +1,7 @@
 ﻿using Akkhor.Application.DTOs.TeacherAssignments;
 using Akkhor.Application.Interfaces.Services;
 using Akkhor.Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,7 @@ namespace Akkhor.API.Controllers.Admin;
 
 [ApiController]
 [Route("api/teacher-assignments")]
+[Authorize(Roles = "Admin,SuperAdmin")]
 public class TeacherAssignmentController : ControllerBase
 {
     private readonly ITeacherAssignmentService _service;

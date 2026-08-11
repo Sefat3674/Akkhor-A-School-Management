@@ -8,7 +8,7 @@ namespace Akkhor.API.Controllers.Teacher;
 
 [ApiController]
 [Route("api/assignments")]
-[Authorize]
+[Authorize(Roles = "Teacher")]
 public class AssignmentController : ControllerBase
 {
     private readonly IAssignmentService _service;

@@ -1,11 +1,13 @@
 ﻿using Akkhor.Application.DTOs.Courses;
 using Akkhor.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Akkhor.API.Controllers.Admin;
 
 [ApiController]
 [Route("api/courses")]
+[Authorize(Roles = "Admin,SuperAdmin")]
 public class CourseController : ControllerBase
 {
     private readonly ICourseService _service;

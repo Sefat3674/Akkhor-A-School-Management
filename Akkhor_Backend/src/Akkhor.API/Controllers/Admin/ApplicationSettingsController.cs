@@ -9,7 +9,7 @@ namespace Akkhor.API.Controllers.Admin;
 
 [ApiController]
 [Route("api/application-settings")]
-[Authorize]
+[Authorize(Roles = "Admin,SuperAdmin")]
 public class ApplicationSettingsController : ControllerBase
 {
     private readonly IApplicationSettingService _service;

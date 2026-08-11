@@ -8,7 +8,6 @@ namespace Akkhor.API.Controllers;
 
 [ApiController]
 [Route("api/assignment-submissions")]
-[Authorize]
 public class AssignmentSubmissionController : ControllerBase
 {
     private readonly IAssignmentSubmissionService _service;
@@ -22,14 +21,10 @@ public class AssignmentSubmissionController : ControllerBase
         _environment = environment;
     }
 
-
     // =====================================================
     // GET ALL SUBMISSIONS
-    // =====================================================
-    // Admin / Teacher
-    //
-    // GET:
-    // api/assignment-submissions
+    // Admin / Teacher / SuperAdmin
+    // GET: api/assignment-submissions
     // =====================================================
 
     [HttpGet]
@@ -38,8 +33,7 @@ public class AssignmentSubmissionController : ControllerBase
     {
         try
         {
-            var submissions =
-                await _service.GetAllAsync();
+            var submissions = await _service.GetAllAsync();
 
             return Ok(submissions);
         }
@@ -55,13 +49,10 @@ public class AssignmentSubmissionController : ControllerBase
         }
     }
 
-
     // =====================================================
     // GET SUBMISSION BY ID
-    // =====================================================
-    //
-    // GET:
-    // api/assignment-submissions/{id}
+    // Authenticated users
+    // GET: api/assignment-submissions/{id}
     // =====================================================
 
     [HttpGet("{id:guid}")]
@@ -70,8 +61,7 @@ public class AssignmentSubmissionController : ControllerBase
     {
         try
         {
-            var submission =
-                await _service.GetByIdAsync(id);
+            var submission = await _service.GetByIdAsync(id);
 
             if (submission == null)
             {
@@ -95,14 +85,10 @@ public class AssignmentSubmissionController : ControllerBase
         }
     }
 
-
     // =====================================================
     // GET SUBMISSIONS BY ASSIGNMENT
-    // =====================================================
-    // Teacher
-    //
-    // GET:
-    // api/assignment-submissions/assignment/{assignmentId}
+    // Teacher / Admin / SuperAdmin
+    // GET: api/assignment-submissions/assignment/{assignmentId}
     // =====================================================
 
     [HttpGet("assignment/{assignmentId:guid}")]
@@ -131,13 +117,9 @@ public class AssignmentSubmissionController : ControllerBase
         }
     }
 
-
     // =====================================================
     // GET SUBMISSION BY ASSIGNMENT + STUDENT
-    // =====================================================
-    //
-    // GET:
-    // api/assignment-submissions/assignment/{assignmentId}/student/{studentId}
+    // Teacher / Admin / SuperAdmin
     // =====================================================
 
     [HttpGet(
@@ -179,14 +161,10 @@ public class AssignmentSubmissionController : ControllerBase
         }
     }
 
-
     // =====================================================
     // GET MY SUBMISSIONS
-    // =====================================================
     // Student
-    //
-    // GET:
-    // api/assignment-submissions/my
+    // GET: api/assignment-submissions/my
     // =====================================================
 
     [HttpGet("my")]
@@ -195,8 +173,7 @@ public class AssignmentSubmissionController : ControllerBase
     {
         try
         {
-            var studentId =
-                GetCurrentUserId();
+            var studentId = GetCurrentUserId();
 
             if (string.IsNullOrWhiteSpace(studentId))
             {
@@ -208,8 +185,7 @@ public class AssignmentSubmissionController : ControllerBase
 
             var submissions =
                 await _service
-                    .GetMySubmissionsAsync(
-                        studentId);
+                    .GetMySubmissionsAsync(studentId);
 
             return Ok(submissions);
         }
@@ -226,12 +202,9 @@ public class AssignmentSubmissionController : ControllerBase
         }
     }
 
-
     // =====================================================
     // GET MY SUBMISSION BY ASSIGNMENT
-    // =====================================================
     // Student
-    //
     // GET:
     // api/assignment-submissions/my/assignment/{assignmentId}
     // =====================================================
@@ -244,8 +217,7 @@ public class AssignmentSubmissionController : ControllerBase
     {
         try
         {
-            var studentId =
-                GetCurrentUserId();
+            var studentId = GetCurrentUserId();
 
             if (string.IsNullOrWhiteSpace(studentId))
             {
@@ -285,17 +257,11 @@ public class AssignmentSubmissionController : ControllerBase
         }
     }
 
-
     // =====================================================
     // CREATE / SUBMIT ASSIGNMENT
-    // =====================================================
     // Student
-    //
-    // POST:
-    // api/assignment-submissions
-    //
-    // Content-Type:
-    // multipart/form-data
+    // POST: api/assignment-submissions
+    // Content-Type: multipart/form-data
     // =====================================================
 
     [HttpPost]
@@ -311,8 +277,7 @@ public class AssignmentSubmissionController : ControllerBase
                 return BadRequest(ModelState);
             }
 
-            var studentId =
-                GetCurrentUserId();
+            var studentId = GetCurrentUserId();
 
             if (string.IsNullOrWhiteSpace(studentId))
             {
@@ -322,11 +287,6 @@ public class AssignmentSubmissionController : ControllerBase
                 });
             }
 
-
-            // =================================================
-            // VALIDATE ASSIGNMENT ID
-            // =================================================
-
             if (dto.AssignmentId == Guid.Empty)
             {
                 return BadRequest(new
@@ -334,7 +294,6 @@ public class AssignmentSubmissionController : ControllerBase
                     message = "Assignment ID is required."
                 });
             }
-
 
             // =================================================
             // SAVE ATTACHMENT
@@ -349,16 +308,11 @@ public class AssignmentSubmissionController : ControllerBase
                         "uploads",
                         "submissions");
 
-
-                // Create folder
                 if (!Directory.Exists(uploadFolder))
                 {
-                    Directory.CreateDirectory(
-                        uploadFolder);
+                    Directory.CreateDirectory(uploadFolder);
                 }
 
-
-                // Generate unique filename
                 var extension =
                     Path.GetExtension(
                         Attachment.FileName);
@@ -366,26 +320,20 @@ public class AssignmentSubmissionController : ControllerBase
                 var fileName =
                     $"{Guid.NewGuid()}{extension}";
 
-
                 var filePath =
                     Path.Combine(
                         uploadFolder,
                         fileName);
 
-
-                // Save file
                 await using (
                     var stream =
                         new FileStream(
                             filePath,
                             FileMode.Create))
                 {
-                    await Attachment.CopyToAsync(
-                        stream);
+                    await Attachment.CopyToAsync(stream);
                 }
 
-
-                // Store metadata
                 dto.AttachmentUrl =
                     $"/uploads/submissions/{fileName}";
 
@@ -399,16 +347,10 @@ public class AssignmentSubmissionController : ControllerBase
                     Attachment.Length;
             }
 
-
-            // =================================================
-            // CREATE SUBMISSION
-            // =================================================
-
             var submission =
                 await _service.CreateAsync(
                     dto,
                     studentId);
-
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -445,17 +387,10 @@ public class AssignmentSubmissionController : ControllerBase
         }
     }
 
-
     // =====================================================
     // UPDATE MY SUBMISSION
-    // =====================================================
     // Student
-    //
-    // PUT:
-    // api/assignment-submissions/{id}
-    //
-    // Content-Type:
-    // multipart/form-data
+    // PUT: api/assignment-submissions/{id}
     // =====================================================
 
     [HttpPut("{id:guid}")]
@@ -472,8 +407,7 @@ public class AssignmentSubmissionController : ControllerBase
                 return BadRequest(ModelState);
             }
 
-            var studentId =
-                GetCurrentUserId();
+            var studentId = GetCurrentUserId();
 
             if (string.IsNullOrWhiteSpace(studentId))
             {
@@ -482,11 +416,6 @@ public class AssignmentSubmissionController : ControllerBase
                     message = "Student ID not found."
                 });
             }
-
-
-            // =================================================
-            // SAVE NEW ATTACHMENT
-            // =================================================
 
             if (Attachment != null &&
                 Attachment.Length > 0)
@@ -497,13 +426,10 @@ public class AssignmentSubmissionController : ControllerBase
                         "uploads",
                         "submissions");
 
-
                 if (!Directory.Exists(uploadFolder))
                 {
-                    Directory.CreateDirectory(
-                        uploadFolder);
+                    Directory.CreateDirectory(uploadFolder);
                 }
-
 
                 var extension =
                     Path.GetExtension(
@@ -517,17 +443,14 @@ public class AssignmentSubmissionController : ControllerBase
                         uploadFolder,
                         fileName);
 
-
                 await using (
                     var stream =
                         new FileStream(
                             filePath,
                             FileMode.Create))
                 {
-                    await Attachment.CopyToAsync(
-                        stream);
+                    await Attachment.CopyToAsync(stream);
                 }
-
 
                 dto.AttachmentUrl =
                     $"/uploads/submissions/{fileName}";
@@ -542,27 +465,19 @@ public class AssignmentSubmissionController : ControllerBase
                     Attachment.Length;
             }
 
-
-            // =================================================
-            // UPDATE
-            // =================================================
-
             var submission =
                 await _service.UpdateAsync(
                     id,
                     dto,
                     studentId);
 
-
             if (submission == null)
             {
                 return NotFound(new
                 {
-                    message =
-                        "Submission not found."
+                    message = "Submission not found."
                 });
             }
-
 
             return Ok(new
             {
@@ -607,25 +522,19 @@ public class AssignmentSubmissionController : ControllerBase
         }
     }
 
-
     // =====================================================
     // DELETE MY SUBMISSION
-    // =====================================================
     // Student
-    //
-    // DELETE:
-    // api/assignment-submissions/{id}
+    // DELETE: api/assignment-submissions/{id}
     // =====================================================
 
     [HttpDelete("{id:guid}")]
     [Authorize(Roles = "Student")]
-    public async Task<IActionResult> Delete(
-        Guid id)
+    public async Task<IActionResult> Delete(Guid id)
     {
         try
         {
-            var studentId =
-                GetCurrentUserId();
+            var studentId = GetCurrentUserId();
 
             if (string.IsNullOrWhiteSpace(studentId))
             {
@@ -635,22 +544,18 @@ public class AssignmentSubmissionController : ControllerBase
                 });
             }
 
-
             var deleted =
                 await _service.DeleteAsync(
                     id,
                     studentId);
 
-
             if (!deleted)
             {
                 return NotFound(new
                 {
-                    message =
-                        "Submission not found."
+                    message = "Submission not found."
                 });
             }
-
 
             return Ok(new
             {
@@ -687,14 +592,10 @@ public class AssignmentSubmissionController : ControllerBase
         }
     }
 
-
     // =====================================================
     // EVALUATE / GRADE SUBMISSION
-    // =====================================================
     // Teacher
-    //
-    // PUT:
-    // api/assignment-submissions/{id}/evaluate
+    // PUT: api/assignment-submissions/{id}/evaluate
     // =====================================================
 
     [HttpPut("{id:guid}/evaluate")]
@@ -710,8 +611,7 @@ public class AssignmentSubmissionController : ControllerBase
                 return BadRequest(ModelState);
             }
 
-            var teacherId =
-                GetCurrentUserId();
+            var teacherId = GetCurrentUserId();
 
             if (string.IsNullOrWhiteSpace(teacherId))
             {
@@ -721,13 +621,11 @@ public class AssignmentSubmissionController : ControllerBase
                 });
             }
 
-
             var submission =
                 await _service.EvaluateAsync(
                     id,
                     dto,
                     teacherId);
-
 
             if (submission == null)
             {
@@ -737,7 +635,6 @@ public class AssignmentSubmissionController : ControllerBase
                         "Submission not found."
                 });
             }
-
 
             return Ok(new
             {
@@ -773,14 +670,9 @@ public class AssignmentSubmissionController : ControllerBase
         }
     }
 
-
     // =====================================================
     // GET SUBMISSION COUNT
-    // =====================================================
-    // Teacher
-    //
-    // GET:
-    // api/assignment-submissions/assignment/{assignmentId}/count
+    // Teacher / Admin / SuperAdmin
     // =====================================================
 
     [HttpGet(
@@ -815,14 +707,9 @@ public class AssignmentSubmissionController : ControllerBase
         }
     }
 
-
     // =====================================================
     // GET PENDING SUBMISSION COUNT
-    // =====================================================
-    // Teacher
-    //
-    // GET:
-    // api/assignment-submissions/assignment/{assignmentId}/pending-count
+    // Teacher / Admin / SuperAdmin
     // =====================================================
 
     [HttpGet(
@@ -858,13 +745,9 @@ public class AssignmentSubmissionController : ControllerBase
         }
     }
 
-
     // =====================================================
     // DOWNLOAD SUBMISSION ATTACHMENT
-    // =====================================================
-    //
-    // GET:
-    // api/assignment-submissions/{id}/attachment
+    // Authenticated users
     // =====================================================
 
     [HttpGet("{id:guid}/attachment")]
@@ -886,7 +769,6 @@ public class AssignmentSubmissionController : ControllerBase
                 });
             }
 
-
             if (string.IsNullOrWhiteSpace(
                 submission.AttachmentUrl))
             {
@@ -897,7 +779,6 @@ public class AssignmentSubmissionController : ControllerBase
                 });
             }
 
-
             var relativePath =
                 submission.AttachmentUrl
                     .TrimStart('/')
@@ -905,15 +786,12 @@ public class AssignmentSubmissionController : ControllerBase
                         '/',
                         Path.DirectorySeparatorChar);
 
-
             var filePath =
                 Path.Combine(
                     _environment.WebRootPath,
                     relativePath);
 
-
-            if (!System.IO.File.Exists(
-                filePath))
+            if (!System.IO.File.Exists(filePath))
             {
                 return NotFound(new
                 {
@@ -922,11 +800,9 @@ public class AssignmentSubmissionController : ControllerBase
                 });
             }
 
-
             var contentType =
                 submission.AttachmentContentType
                 ?? "application/octet-stream";
-
 
             return PhysicalFile(
                 filePath,
@@ -945,7 +821,6 @@ public class AssignmentSubmissionController : ControllerBase
                 });
         }
     }
-
 
     // =====================================================
     // CURRENT USER ID

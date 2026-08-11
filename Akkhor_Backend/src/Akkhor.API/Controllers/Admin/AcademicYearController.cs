@@ -1,12 +1,14 @@
 ﻿using Akkhor.Application.DTOs.AcademicYear;
 using Akkhor.Application.Interfaces.Repositories;
 using Akkhor.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Akkhor.API.Controllers;
 
 [ApiController]
 [Route("api/academic-years")]
+[Authorize(Roles = "Admin,SuperAdmin")]
 public class AcademicYearController : ControllerBase
 {
     private readonly IAcademicYearRepository _repository;

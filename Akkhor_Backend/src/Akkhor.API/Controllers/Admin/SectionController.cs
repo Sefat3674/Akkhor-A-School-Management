@@ -1,11 +1,13 @@
 ﻿using Akkhor.Application.DTOs.Sections;
 using Akkhor.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Akkhor.API.Controllers.Academic;
 
 [ApiController]
 [Route("api/sections")]
+[Authorize(Roles = "Admin,SuperAdmin")]
 public class SectionController : ControllerBase
 {
     private readonly ISectionService _service;

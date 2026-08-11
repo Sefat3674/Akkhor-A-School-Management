@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Akkhor.Infrastructure.Data;
+﻿using Akkhor.Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-
+[Authorize]
 [ApiController]
 [Route("api/test")]
 public class TestController : ControllerBase

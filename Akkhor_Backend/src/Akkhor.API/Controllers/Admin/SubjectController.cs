@@ -1,11 +1,13 @@
 ﻿using Akkhor.Application.DTOs.Subjects;
 using Akkhor.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Akkhor.API.Controllers.Admin;
 
 [ApiController]
 [Route("api/subjects")]
+[Authorize(Roles = "Admin,SuperAdmin")]
 public class SubjectController : ControllerBase
 {
     private readonly ISubjectService _service;

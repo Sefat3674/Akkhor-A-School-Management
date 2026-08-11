@@ -1,5 +1,6 @@
 ﻿using Akkhor.Application.DTOs.StudentEnrollments;
 using Akkhor.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Akkhor.API.Controllers.Admin;
@@ -7,6 +8,7 @@ namespace Akkhor.API.Controllers.Admin;
 
 [ApiController]
 [Route("api/student-enrollments")]
+[Authorize(Roles = "Admin,SuperAdmin")]
 public class StudentEnrollmentController : ControllerBase
 {
     private readonly IStudentEnrollmentService _service;

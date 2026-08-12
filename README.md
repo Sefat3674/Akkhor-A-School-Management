@@ -72,7 +72,7 @@ The following screenshots demonstrate the main features and workflows of the Akk
 
 ### Login
 
-![Akkhor Login](ScreenShort/Login.png)
+![Akkhor Login](Frontend_Images/Login.png)
 
 ---
 
@@ -80,19 +80,19 @@ The following screenshots demonstrate the main features and workflows of the Akk
 
 ### Admin Dashboard
 
-![Admin Dashboard](ScreenShort/Admin-Dashboard.png)
+![Admin Dashboard](Frontend_Images/Admin-Dashboard.png)
 
 ### User Management
 
-![User Management](ScreenShort/User-management.png)
+![User Management](Frontend_Images/User-management.png)
 
 ### All Assignments
 
-![All Assignments - Admin](ScreenShort/All-Assignment-Admin.png)
+![All Assignments - Admin](Frontend_Images/All-Assignment-Admin.png)
 
 ### All Submissions
 
-![All Submissions - Admin](ScreenShort/All-submission-Admin.png)
+![All Submissions - Admin](Frontend_Images/All-submission-Admin.png)
 
 ---
 
@@ -100,15 +100,15 @@ The following screenshots demonstrate the main features and workflows of the Akk
 
 ### Teacher Dashboard
 
-![Teacher Dashboard](ScreenShort/Teacher-Dashboard.png)
+![Teacher Dashboard](Frontend_Images/Teacher-Dashboard.png)
 
 ### Create Assignment
 
-![Create Assignment](ScreenShort/create-assignment.png)
+![Create Assignment](Frontend_Images/create-assignment.png)
 
 ### Review Student Submission
 
-![Teacher Review Submission](ScreenShort/teacher-review-submission.png)
+![Teacher Review Submission](Frontend_Images/teacher-review-submission.png)
 
 ---
 
@@ -116,23 +116,23 @@ The following screenshots demonstrate the main features and workflows of the Akk
 
 ### Student Dashboard
 
-![Student Dashboard](ScreenShort/Student-Dashboard.png)
+![Student Dashboard](Frontend_Images/Student-Dashboard.png)
 
 ### My Assignments
 
-![Student My Assignments](ScreenShort/Student-My-assignment.png)
+![Student My Assignments](Frontend_Images/Student-My-assignment.png)
 
 ### Assignment Details
 
-![Student Assignment Details](ScreenShort/Student-assignment-Details.png)
+![Student Assignment Details](Frontend_Images/Student-assignment-Details.png)
 
 ### Submit Assignment
 
-![Student Submission](ScreenShort/Student-Submission.png)
+![Student Submission](Frontend_Images/Student-Submission.png)
 
 ### Marks and Teacher Feedback
 
-![Student Marks and Feedback](ScreenShort/Student-review-marks.png)
+![Student Marks and Feedback](Frontend_Images/Student-review-marks.png)
 ---
 # Key Features
 

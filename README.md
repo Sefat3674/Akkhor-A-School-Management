@@ -64,7 +64,7 @@ The frontend is developed using Angular, TypeScript, HTML, and SCSS.
 PostgreSQL is used as the relational database, with Entity Framework Core handling database access and migrations.
 
 ---
-# Frontend
+# Frontend Screenshots
 
 The following screenshots demonstrate the main features and workflows of the Akkhor Assignment & Submission Management System.
 
@@ -72,7 +72,7 @@ The following screenshots demonstrate the main features and workflows of the Akk
 
 ### Login
 
-![Akkhor Login](ScreenShort/login.png)
+![Akkhor Login](ScreenShort/Login.png)
 
 ---
 
@@ -80,27 +80,35 @@ The following screenshots demonstrate the main features and workflows of the Akk
 
 ### Admin Dashboard
 
-![Admin Dashboard](ScreenShort/admin-dashboard.png)
+![Admin Dashboard](ScreenShort/Admin-Dashboard.png)
 
 ### User Management
 
-![User Management](ScreenShort/user-management.png)
+![User Management](ScreenShort/User-management.png)
 
-### Assignment Management
+### All Assignments
 
-![Assignment Management](ScreenShort/assignment-management-2.png)
+![All Assignments - Admin](ScreenShort/All-Assignment-Admin.png)
+
+### All Submissions
+
+![All Submissions - Admin](ScreenShort/All-submission-Admin.png)
 
 ---
 
 ## Teacher
 
-### Teacher Create Assignment
+### Teacher Dashboard
 
-![Teacher Create Assignment](ScreenShort/Teacher-create-assignment.png)
+![Teacher Dashboard](ScreenShort/Teacher-Dashboard.png)
 
-### Teacher Review Submission and Marks
+### Create Assignment
 
-![Teacher Review Submission](ScreenShort/Teacher-Review-submission-marks.png)
+![Create Assignment](ScreenShort/create-assignment.png)
+
+### Review Student Submission
+
+![Teacher Review Submission](ScreenShort/teacher-review-submission.png)
 
 ---
 
@@ -108,23 +116,23 @@ The following screenshots demonstrate the main features and workflows of the Akk
 
 ### Student Dashboard
 
-![Student Dashboard](ScreenShort/Student-dashboard-1.png)
+![Student Dashboard](ScreenShort/Student-Dashboard.png)
 
 ### My Assignments
 
-![My Assignments](ScreenShort/My%20Assignment.png)
+![Student My Assignments](ScreenShort/Student-My-assignment.png)
 
 ### Assignment Details
 
-![Assignment Details](ScreenShort/Assignment-details-student.png)
+![Student Assignment Details](ScreenShort/Student-assignment-Details.png)
 
 ### Submit Assignment
 
-![Submission](ScreenShort/Submission-1.png)
+![Student Submission](ScreenShort/Student-Submission.png)
 
 ### Marks and Teacher Feedback
 
-![Student Marks and Feedback](ScreenShort/Student-show-marks-feedback.png)
+![Student Marks and Feedback](ScreenShort/Student-review-marks.png)
 ---
 # Key Features
 

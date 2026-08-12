@@ -63,7 +63,68 @@ The frontend is developed using Angular, TypeScript, HTML, and SCSS.
 PostgreSQL is used as the relational database, with Entity Framework Core handling database access and migrations.
 
 ---
+# Screenshots
 
+The following screenshots demonstrate the main features and workflows of the Akkhor Assignment & Submission Management System.
+
+## Authentication
+
+### Login
+
+![Akkhor Login](ScreenShort/login.png)
+
+---
+
+## Admin
+
+### Admin Dashboard
+
+![Admin Dashboard](ScreenShort/admin-dashboard.png)
+
+### User Management
+
+![User Management](ScreenShort/user-management.png)
+
+### Assignment Management
+
+![Assignment Management](ScreenShort/assignment-management-2.png)
+
+---
+
+## Teacher
+
+### Teacher Create Assignment
+
+![Teacher Create Assignment](ScreenShort/Teacher-create-assignment.png)
+
+### Teacher Review Submission and Marks
+
+![Teacher Review Submission](ScreenShort/Teacher-Review-submission-marks.png)
+
+---
+
+## Student
+
+### Student Dashboard
+
+![Student Dashboard](ScreenShort/Student-dashboard-1.png)
+
+### My Assignments
+
+![My Assignments](ScreenShort/My%20Assignment.png)
+
+### Assignment Details
+
+![Assignment Details](ScreenShort/Assignment-details-student.png)
+
+### Submit Assignment
+
+![Submission](ScreenShort/Submission-1.png)
+
+### Marks and Teacher Feedback
+
+![Student Marks and Feedback](ScreenShort/Student-show-marks-feedback.png)
+---
 # Key Features
 
 ## Authentication

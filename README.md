@@ -11,7 +11,7 @@ This project was developed as part of the **Assistant Software Engineer Recruitm
 ## Table of Contents
 
 * [Project Overview](#project-overview)
-* [frontend](#Screenshots)
+* [frontend](#Frontend)
 * [Key Features](#key-features)
 * [User Roles and Permissions](#user-roles-and-permissions)
 * [Technology Stack](#technology-stack)
@@ -64,7 +64,7 @@ The frontend is developed using Angular, TypeScript, HTML, and SCSS.
 PostgreSQL is used as the relational database, with Entity Framework Core handling database access and migrations.
 
 ---
-# Screenshots
+# Frontend
 
 The following screenshots demonstrate the main features and workflows of the Akkhor Assignment & Submission Management System.
 

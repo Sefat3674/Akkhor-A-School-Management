@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
     CommonModule,
     RouterLink
   ],
-  templateUrl: './dashboard.component.html'
+  templateUrl: './user-dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
 

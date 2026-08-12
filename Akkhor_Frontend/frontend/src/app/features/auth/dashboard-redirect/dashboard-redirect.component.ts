@@ -4,80 +4,83 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-dashboard-redirect',
   standalone: true,
-  template: `
-    <div class="dashboard-redirect">
-      <div class="spinner"></div>
-      <p>Loading dashboard...</p>
-    </div>
-  `,
-  styles: [`
-    .dashboard-redirect {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: #f8fafc;
-      color: #475569;
-    }
-
-    .spinner {
-      width: 42px;
-      height: 42px;
-      border: 4px solid #e2e8f0;
-      border-top-color: #2563eb;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin-bottom: 15px;
-    }
-
-    p {
-      margin: 0;
-      font-size: 15px;
-      font-weight: 500;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-  `]
+  template: '',
 })
 export class DashboardRedirectComponent implements OnInit {
 
-  constructor(
-    private router: Router
-  ) {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
-    const role =
-      localStorage.getItem('role') ||
-      localStorage.getItem('userRole');
 
-    if (!role) {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
       this.router.navigate(['/login']);
       return;
     }
 
-    switch (role.toLowerCase()) {
+    try {
 
-      case 'admin':
-      case 'superadmin':
-        this.router.navigate(['/dashboard']);
-        break;
+      const payload = JSON.parse(
+        atob(token.split('.')[1])
+      );
 
-      case 'teacher':
-        this.router.navigate(['/teacher/dashboard']);
-        break;
+      const role =
+        payload.role ||
+        payload[
+          'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        ];
 
-      case 'student':
-        this.router.navigate(['/student/dashboard']);
-        break;
+      switch (role) {
 
-      default:
-        this.router.navigate(['/login']);
-        break;
+        // ADMIN
+        case 'Admin':
+        case 'SuperAdmin':
+          this.router.navigateByUrl('/admin/dashboard', {
+            replaceUrl: true
+          });
+          break;
+
+        // TEACHER
+        case 'Teacher':
+          this.router.navigateByUrl('/teacher/dashboard', {
+            replaceUrl: true
+          });
+          break;
+
+        // STUDENT
+        case 'Student':
+          this.router.navigateByUrl('/student/dashboard', {
+            replaceUrl: true
+          });
+          break;
+
+        // NORMAL USER
+        case 'Normal User':
+        case 'NormalUser':
+        case 'User':
+          this.router.navigateByUrl('/user/dashboard', {
+            replaceUrl: true
+          });
+          break;
+
+        default:
+          localStorage.removeItem('token');
+          this.router.navigateByUrl('/login', {
+            replaceUrl: true
+          });
+          break;
+      }
+
+    } catch (error) {
+
+      console.error('Invalid JWT token:', error);
+
+      localStorage.removeItem('token');
+
+      this.router.navigateByUrl('/login', {
+        replaceUrl: true
+      });
     }
   }
 }

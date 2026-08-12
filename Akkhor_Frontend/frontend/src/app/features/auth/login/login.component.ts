@@ -20,6 +20,11 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl: './login.component.html'
 })
 export class LoginComponent {
+
+  // =====================================================
+  // LOGIN FORM
+  // =====================================================
+
   form = this.fb.nonNullable.group({
     email: [
       '',
@@ -38,9 +43,19 @@ export class LoginComponent {
     ]
   });
 
+  // =====================================================
+  // UI STATE
+  // =====================================================
+
   loading = signal(false);
+
   errorMessage = signal<string | null>(null);
+
   showPassword = signal(false);
+
+  // =====================================================
+  // CONSTRUCTOR
+  // =====================================================
 
   constructor(
     private readonly fb: FormBuilder,
@@ -48,7 +63,12 @@ export class LoginComponent {
     private readonly router: Router
   ) {}
 
+  // =====================================================
+  // LOGIN
+  // =====================================================
+
   submit(): void {
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -57,28 +77,137 @@ export class LoginComponent {
     this.loading.set(true);
     this.errorMessage.set(null);
 
-    const { email, password } = this.form.getRawValue();
+    const {
+      email,
+      password
+    } = this.form.getRawValue();
 
     this.auth
-      .login(email.trim(), password)
+      .login(
+        email.trim(),
+        password
+      )
       .pipe(
-        finalize(() => this.loading.set(false))
+        finalize(() => {
+          this.loading.set(false);
+        })
       )
       .subscribe({
+
+        // ===============================================
+        // LOGIN SUCCESS
+        // ===============================================
+
         next: () => {
-          this.router.navigate(['/dashboard']);
+
+          const role = this.auth
+            .getRole()
+            .toLowerCase();
+
+          console.log('Logged in role:', role);
+
+          switch (role) {
+
+            // ===========================================
+            // ADMIN
+            // ===========================================
+
+            case 'admin':
+            case 'superadmin':
+
+              this.router.navigate([
+                '/admin/dashboard'
+              ]);
+
+              break;
+
+            // ===========================================
+            // TEACHER
+            // ===========================================
+
+            case 'teacher':
+
+              this.router.navigate([
+                '/teacher/dashboard'
+              ]);
+
+              break;
+
+            // ===========================================
+            // STUDENT
+            // ===========================================
+
+            case 'student':
+
+              this.router.navigate([
+                '/student/dashboard'
+              ]);
+
+              break;
+
+            // ===========================================
+            // NORMAL USER
+            // ===========================================
+
+            case 'normal user':
+            case 'normaluser':
+            case 'user':
+
+              this.router.navigate([
+                '/dashboard'
+              ]);
+
+              break;
+
+            // ===========================================
+            // UNKNOWN ROLE
+            // ===========================================
+
+            default:
+
+              console.error(
+                'Unknown user role:',
+                role
+              );
+
+              this.errorMessage.set(
+                'Unable to determine your user role.'
+              );
+
+              break;
+          }
         },
 
+        // ===============================================
+        // LOGIN ERROR
+        // ===============================================
+
         error: err => {
+
+          console.error(
+            'Login error:',
+            err
+          );
+
           this.errorMessage.set(
             err?.error?.message ??
             'Invalid email address or password.'
           );
         }
+
       });
   }
 
+  // =====================================================
+  // PASSWORD VISIBILITY
+  // =====================================================
+
   togglePassword(): void {
-    this.showPassword.update(value => !value);
+
+    this.showPassword.update(
+      value => !value
+    );
+
   }
+
 }

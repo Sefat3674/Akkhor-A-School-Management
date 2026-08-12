@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { DashboardRedirectComponent } from './core/components/dashboard-redirect/dashboard-redirect.component';
 
 export const routes: Routes = [
 
@@ -33,12 +34,12 @@ export const routes: Routes = [
     children: [
 
       // =================================================
-      // DEFAULT
+      // DEFAULT - ROLE BASED DASHBOARD REDIRECT
       // =================================================
 
       {
         path: '',
-        redirectTo: 'admin/dashboard',
+        component: DashboardRedirectComponent,
         pathMatch: 'full'
       },
 
@@ -367,12 +368,14 @@ export const routes: Routes = [
       // ADMIN - SETTINGS
       // =================================================
 
-      // Add this only when the settings component exists.
       {
         path: 'admin/settings',
         loadComponent: () =>
-          import('./features/auth/Admin/application-setting/application-settings.component')
-            .then(m => m.ApplicationSettingsComponent)
+          import(
+            './features/auth/Admin/application-setting/application-settings.component'
+          ).then(
+            m => m.ApplicationSettingsComponent
+          )
       },
 
 
@@ -573,6 +576,21 @@ export const routes: Routes = [
           ).then(
             m => m.MarksFeedbackComponent
           )
+      },
+
+
+      // =================================================
+      // NORMAL USER DASHBOARD
+      // =================================================
+
+      {
+        path: 'user/dashboard',
+        loadComponent: () =>
+          import(
+            './features/auth/User/user-dashboard/user-dashboard.component'
+          ).then(
+            m => m.DashboardComponent
+          )
       }
 
     ]
@@ -585,7 +603,7 @@ export const routes: Routes = [
 
   {
     path: '**',
-    redirectTo: 'dashboard'
+    redirectTo: ''
   }
 
 ];

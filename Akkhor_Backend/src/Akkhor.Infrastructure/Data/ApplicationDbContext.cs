@@ -16,9 +16,9 @@ public class ApplicationDbContext
 
 
     // Identity Tables
-    public DbSet<Users> Users { get; set; }
+    //public DbSet<Users> Users { get; set; }
 
-    public DbSet<Roles> Roles { get; set; }
+    //public DbSet<Roles> Roles { get; set; }
 
 
     // Academic Module

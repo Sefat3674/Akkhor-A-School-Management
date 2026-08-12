@@ -11,6 +11,7 @@ This project was developed as part of the **Assistant Software Engineer Recruitm
 ## Table of Contents
 
 * [Project Overview](#project-overview)
+* [frontend](#Screenshots)
 * [Key Features](#key-features)
 * [User Roles and Permissions](#user-roles-and-permissions)
 * [Technology Stack](#technology-stack)

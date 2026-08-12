@@ -1465,37 +1465,7 @@ Potential future improvements include:
 
 ---
 
-# Submission Checklist
 
-Before submitting the project, verify the following:
-
-```text
-[ ] Git repository is accessible
-[ ] Frontend is included
-[ ] Backend/API is included
-[ ] PostgreSQL database configuration is documented
-[ ] EF Core migration files are included
-[ ] Seed/sample data is included where applicable
-[ ] JWT authentication works
-[ ] Role-based authorization works
-[ ] Admin account is available
-[ ] Teacher account is available
-[ ] Student account is available
-[ ] README.md is complete
-[ ] .env.example is included
-[ ] No real passwords are committed
-[ ] No API secrets are committed
-[ ] Backend builds successfully
-[ ] Frontend builds successfully
-[ ] Database can be created using documented instructions
-[ ] dotnet test passes
-[ ] Swagger works
-[ ] Assignment workflow works
-[ ] Submission workflow works
-[ ] Repository is pushed to GitHub/GitLab
-[ ] Final repository URL is verified
-[ ] Recruitment submission form is completed
-```
 
 ---
 

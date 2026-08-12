@@ -196,28 +196,33 @@ The following screenshots demonstrate the main features and workflows of the Akk
 
 | Feature                  | Admin | Teacher | Student |
 | ------------------------ | :---: | :-----: | :-----: |
-| Login                    |  Yes  |   Yes   |   Yes   |
-| User Management          |  Yes  |    No   |    No   |
-| Academic Year Management |  Yes  |    No   |    No   |
-| Class Management         |  Yes  |    No   |    No   |
-| Course Management        |  Yes  |    No   |    No   |
-| Subject Management       |  Yes  |    No   |    No   |
-| Teacher Assignment       |  Yes  |    No   |    No   |
-| Create Assignment        |   No  |   Yes   |    No   |
-| Update Assignment        |   No  |   Yes   |    No   |
-| Delete Assignment        |   No  |   Yes   |    No   |
-| Publish Assignment       |   No  |   Yes   |    No   |
-| Save Assignment as Draft |   No  |   Yes   |    No   |
-| View Assignments         |  Yes  |   Yes   |   Yes   |
-| Submit Assignment        |   No  |    No   |   Yes   |
-| Update Submission        |   No  |    No   |   Yes   |
-| View Submissions         |  Yes  |   Yes   |   Own   |
-| Grade Submission         |   No  |   Yes   |    No   |
-| Provide Feedback         |   No  |   Yes   |    No   |
-| Change Submission Status |   No  |   Yes   |    No   |
+| Login                    |   ✓   |    ✓    |    ✓    |
+| User Management          |   ✓   |    ✗    |    ✗    |
+| Academic Year Management |   ✓   |    ✗    |    ✗    |
+| Class Management         |   ✓   |    ✗    |    ✗    |
+| Course Management        |   ✓   |    ✗    |    ✗    |
+| Subject Management       |   ✓   |    ✗    |    ✗    |
+| Teacher Assignment       |   ✓   |    ✗    |    ✗    |
+| Create Assignment        |   ✗   |    ✓    |    ✗    |
+| Update Assignment        |   ✗   |    ✓    |    ✗    |
+| Delete Assignment        |   ✗   |    ✓    |    ✗    |
+| Publish Assignment       |   ✗   |    ✓    |    ✗    |
+| Save Assignment as Draft |   ✗   |    ✓    |    ✗    |
+| View Assignments         |   ✓   |    ✓    |    ✓    |
+| Submit Assignment        |   ✗   |    ✗    |    ✓    |
+| Update Submission        |   ✗   |    ✗    |    ✓    |
+| View Submissions         |   ✓   |    ✓    |   Own   |
+| Grade Submission         |   ✗   |    ✓    |    ✗    |
+| Provide Feedback         |   ✗   |    ✓    |    ✗    |
+| Change Submission Status |   ✗   |    ✓    |    ✗    |
 
 ---
+### Permission Legend
 
+- ✓ — Permission available
+- ✗ — Permission not available
+- **Own** — Student can view only their own submission
+---
 # Technology Stack
 
 ## Frontend

@@ -606,7 +606,7 @@ Angular CLI: Compatible with package.json
 Clone the repository:
 
 ```bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
+git clone https://github.com/Sefat3674/Akkhor-Assignment-Submission-Management-System.git
 ```
 
 Navigate into the project:
